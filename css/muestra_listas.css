@@ -1,0 +1,35 @@
+.color_enlace 
+{
+	font: italic;
+	color: #0000FF;
+}
+
+#con_ciudad, #sin_ciudad, #con_municipio, #sin_municipio, #con_asentamiento, #sin_asentamiento
+{
+	display: inline;
+}
+
+
+#etiqueta
+{
+	display: inline;
+}
+
+#casetas
+{
+	padding: 10px;
+	background-color: #CDC9C9;
+	width: 100%;
+}
+
+
+#sin_cp 
+{
+	display: inline;
+	color: #FF0000;	
+}
+
+.exporta_lista 
+{
+	color: #8E6B23;	
+}
