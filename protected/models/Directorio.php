@@ -123,23 +123,21 @@ class Directorio extends CActiveRecord
 	{
 		if ($this->isNewRecord) {
 
-			$correo=Directorio::model()->findByAttributes(array('correo'=>$this->correo));
-			$correo_alternativo=Directorio::model()->findByAttributes(array('correo_alternativo'=>$this->correo_alternativo));
-				
-			if ($correo != null || $correo_alternativo != null) {
-				//return 'el correo esta repetido';
-				return false;
+			if ($this->correo != '' && $this->correo_alternativo != '')
+			{
+				$correo=Directorio::model()->findByAttributes(array('correo'=>$this->correo));
+				$correo_alternativo=Directorio::model()->findByAttributes(array('correo_alternativo'=>$this->correo_alternativo));
 
-				//	} else {
-				//return parent::beforeSave();
-				//}
+				if ($correo != null || $correo_alternativo != null) {
+					return false;
 
+				} else {
+					return parent::beforeSave();
+				}
 
 			} else {
 				return parent::beforeSave();
 			}
-
-			//return parent::beforeSave();
 		}
 	}
 

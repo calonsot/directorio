@@ -60,10 +60,16 @@ $this->menu=array(
 				),
 				'direccion',
 				'asentamiento',
-				'tipo_asentamiento_id',
+				array(
+						'name'=>'tipo_asentamiento_id',
+						'value'=>DirectorioController::validaTipoAsentamiento($model->tipo_asentamiento_id),
+				),
 				'municipio',
 				'ciudad',
-				'estado',
+				array(
+						'name'=>'estado',
+						'value'=>DirectorioController::validaEstado($model->estado),
+				),
 				'cp',
 				'paises_id',
 				array(

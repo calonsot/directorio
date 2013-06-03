@@ -573,27 +573,41 @@ $(document).ready(
 					tags = datos.split("-|-");
 					$('#ciudad_id').empty().append("<option value=''>---No esta en una ciudad---</option>").attr("disabled","disabled");
 					$('#tipo_asentamiento_id').empty().append("<option value=''>---Selecciona el tipo de colonia---</option>").attr("disabled","disabled");
-				
+					
+					$('#municipio_lista, #asentamiento_lista').removeAttr("disabled");
+	    			$('#sin_cp, #con_ciudad, #sin_ciudad, #con_municipio, #sin_municipio, #con_asentamiento, #sin_asentamiento').slideUp();
+	    			
+	    			$('#ciudad, #municipio, #asentamiento').val('');
+	    			$('#datos_ciudad, #datos_municipio, #datos_asentamiento').slideUp();
+	    			$('.datos_ciudad_id, #datos_municipio_lista, #datos_asentamiento_lista').slideDown();
+
 						$('#estado option[value="' + tags[0] + '"]').attr("selected", "selected");
-		    			$('#municipio_lista').empty().append(tags[1]);
-		    			$('#asentamiento_lista').empty().append(tags[2]);
-		    			
+
+						//para poner el municipio en la lista y como valor
+						tag_municipio=tags[1].split("#-#");
+						$('#municipio_lista').empty().append(tags[1]);
+						$('#municipio').val(tag_municipio[1]);
+						
+						//pone el asentamiento de la lista y el valor
+						tag_asentamiento=tags[2].split("#-#");
+						$('#asentamiento_lista').empty().append(tag_asentamiento[0]);
+						
+						if (tag_asentamiento[1] == '1') 
+						{
+							$('#asentamiento').val(tag_asentamiento[2]);
+						}
+								    			
 		    			if (tags[4] != '0') 
 		    			{
-		    				$('#ciudad_id').empty().append(tags[4]).removeAttr("disabled");
+		    				tag_ciudad=tags[4].split("#-#");
+		    				$('#ciudad_id').empty().append(tag_ciudad[0]).removeAttr("disabled");
+		    				$('#ciudad').val(tag_ciudad[1]);
 		    			}
 		    			
 		    			if (tags[5] == '1') 
 		    			{
 		    				$('#tipo_asentamiento_id').empty().append(tags[3]).removeAttr("disabled");
 		    			} 
-		    			
-		    			$('#municipio_lista, #asentamiento_lista').removeAttr("disabled");
-		    			$('#sin_cp, #con_ciudad, #sin_ciudad, #con_municipio, #sin_municipio, #con_asentamiento, #sin_asentamiento').slideUp();
-		    			
-		    			$('#ciudad, #municipio, #asentamiento').val('');
-		    			$('#datos_ciudad, #datos_municipio, #datos_asentamiento').slideUp();
-		    			$('.datos_ciudad_id, #datos_municipio_lista, #datos_asentamiento_lista').slideDown();
 			
 				} else 
 		    	{

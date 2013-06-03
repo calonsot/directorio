@@ -180,22 +180,24 @@ class DirectorioController extends Controller
 		if($results != null)
 		{
 			$ciudad = '0';
+			$tipo_asentamiento='0';
 			$estado = $results[0]['id_e'];
 			$municipio = CHtml::tag('option',
-					array('value'=>$results[0]['id_m']),CHtml::encode($results[0]['nombre_m']),true);
-			$tipo_asentamiento = CHtml::tag('option',
-					array('value'=>$results[0]['id_asen']),CHtml::encode($results[0]['nombre_asen']),true);
+					array('value'=>$results[0]['id_m']),CHtml::encode($results[0]['nombre_m']),true)."#-#".$results[0]['nombre_m'];
 
 			if ($results[0]['id_cd'] != null)
 			{
 				$ciudad = CHtml::tag('option',
-						array('value'=>$results[0]['id_cd']),CHtml::encode($results[0]['nombre_cd']),true);
+						array('value'=>$results[0]['id_cd']),CHtml::encode($results[0]['nombre_cd']),true)."#-#".$results[0]['nombre_cd'];
 			}
 
 			if(count($results) === 1)
 			{
 				$asentamiento = CHtml::tag('option',
-						array('value'=>$results[0]['id_e']),CHtml::encode($results[0]['nombre_a']),true);
+						array('value'=>$results[0]['id_e']),CHtml::encode($results[0]['nombre_a']),true)."#-#1#-#".$results[0]['nombre_a'];
+				
+				$tipo_asentamiento = CHtml::tag('option',
+						array('value'=>$results[0]['id_asen']),CHtml::encode($results[0]['nombre_asen']),true);
 
 				echo $estado."-|-".$municipio."-|-".$asentamiento."-|-".$tipo_asentamiento."-|-".$ciudad."-|-1";
 
@@ -220,7 +222,7 @@ class DirectorioController extends Controller
 					}
 				}
 
-				echo $estado."-|-".$municipio."-|-".$asentamiento."-|-".$tipo_asentamiento."-|-".$ciudad."-|-n";
+				echo $estado."-|-".$municipio."-|-".$asentamiento."#-#0-|-".$tipo_asentamiento."-|-".$ciudad."-|-n";
 			}
 
 		} else {
@@ -439,6 +441,33 @@ class DirectorioController extends Controller
 			echo '0';
 	}
 
+	public static function validaEstado ($estado) 
+	{
+		$model=Estado::model()->findByPk($estado);
+		
+		if ($model!=null) 
+		{
+			return $model->nombre;
+		
+		} else {
+			return null;
+		}
+	}
+	
+	public static function validaTipoAsentamiento ($tipo_a)
+	{
+		$model=TipoAsentamiento::model()->findByPk($tipo_a);
+	
+		if ($model!=null)
+		{
+			return $model->nombre;
+	
+		} else {
+			return null;
+		}
+	}
+	
+	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.

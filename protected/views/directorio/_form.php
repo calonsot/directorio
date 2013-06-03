@@ -244,12 +244,6 @@
 			<?php //echo $form->error($model,'ciudad'); ?>
 		</div>
 
-		<div class="row">
-			<?php //echo $form->labelEx($model,'estado'); ?>
-			<?php //echo $form->textField($model,'estado',array('size'=>60,'maxlength'=>255)); ?>
-			<?php //echo $form->error($model,'estado'); ?>
-		</div>
-
 		<div id="datos_nacional">
 			<div class="row">
 				<?php echo $form->labelEx($model,'cp'); ?>
@@ -363,6 +357,11 @@
 			<?php echo $form->error($model,'direccion'); ?>
 		</div>
 
+		<div class="row" style="display: none;">
+			<?php //echo $form->labelEx($model,'estado'); ?>
+			<?php //echo $form->textField($model,'estado',array('size'=>60,'maxlength'=>255)); ?>
+			<?php //echo $form->error($model,'estado'); ?>
+		</div>
 	</div>
 
 	<div id="datos_otro_domicilio" style="display: none">
