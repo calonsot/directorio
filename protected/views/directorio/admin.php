@@ -111,7 +111,11 @@ or <b>=</b>).
                 'filter'=>CHtml::listData(Estado::model()->findAll(), 'id', 'nombre'),
 				'value'=>'Controller::situacionEstado($data->estado)',
                 ),
-				//'estado_alternativo',
+				/*array(
+				 'name'=>"estado",
+						//'filter'=>CHtml::listData(Estado::model()->findAll(), 'id', 'nombre'),
+						'value'=>$this->renderPrueba(),
+				),*/
 				'cp',
 				//'cp_alternativo',
 				//'observaciones',
@@ -123,9 +127,12 @@ or <b>=</b>).
                 'name'=>"tipo_id",
                 'filter'=>CHtml::listData(Tipo::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'),
 				'value'=>'Tipo::model()->findByPk($data->tipo_id)->nombre',
-               ),
-
-		//'usuarios_id',
+               	),
+				array(
+						'name'=>"usuarios_id",
+						'filter'=>CHtml::listData(Usuarios::model()->findAll(), 'id', 'usuario'),
+						'value'=>'Usuarios::model()->findByPk($data->usuarios_id)->usuario',
+				),
 		//'institucion_id',
 		//'sector_idsector',
 		//'paises_id',

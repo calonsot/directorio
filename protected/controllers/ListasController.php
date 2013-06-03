@@ -150,21 +150,6 @@ class ListasController extends Controller
 	}
 
 	/**
-	 * Exporta la lista al browser
-	 */
-	public function actionDameLaLista()
-	{
-		$model=new Listas('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Listas']))
-			$model->attributes=$_GET['Listas'];
-
-		$this->render('admin',array(
-				'model'=>$model,
-		));
-	}
-
-	/**
 	 * Arroja al browser el archivo
 	 * @param integer $id el identificador de la lista
 	 * @throws CHttpException

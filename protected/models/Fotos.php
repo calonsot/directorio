@@ -43,8 +43,10 @@ class Fotos extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombre, ruta, formato, peso, fec_alta, fec_act', 'required'),
+			//array('nombre, ruta, formato, peso, fec_alta, fec_act', 'required'),
+			//array('ruta', 'required'),
 			array('nombre, ruta, formato, peso', 'length', 'max'=>255),
+			array('nombre', 'file', 'types'=>'jpg, gif, png, jpeg'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, nombre, ruta, formato, peso, fec_alta, fec_act', 'safe', 'on'=>'search'),
@@ -70,12 +72,12 @@ class Fotos extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'nombre' => 'Nombre',
+			'nombre' => 'Foto',
 			'ruta' => 'Ruta',
 			'formato' => 'Formato',
 			'peso' => 'Peso',
-			'fec_alta' => 'Fec Alta',
-			'fec_act' => 'Fec Act',
+			'fec_alta' => 'Fecha de subida',
+			'fec_act' => 'Fecha de ultima actualización',
 		);
 	}
 

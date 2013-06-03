@@ -9,10 +9,13 @@
 	<?php $form=$this->beginWidget('CActiveForm', array(
 			'id'=>'directorio-form',
 			'enableAjaxValidation'=>false,
+			'htmlOptions'=>array('enctype'=>'multipart/form-data'),
 )); ?>
 
 	<p class="note">
-		Campos con <span class="required">*</span> son necesarios.
+		Campos con <span class="required">*</span> son necesarios. <br> Campos
+		con <span style="color: #FFA500;">*</span> se necesita al menos un
+		campo.
 	</p>
 
 	<?php echo $form->errorSummary($model); ?>
@@ -84,15 +87,23 @@
 		</tr>
 	</table>
 
+	<div class="row" align="justify">
+		<?php echo $form->labelEx(Fotos::model(),'nombre'); ?>
+		<?php echo CHtml::activeFileField(Fotos::model(), 'nombre'); ?>
+		<?php echo $form->error(Fotos::model(),'nombre'); ?>
+	</div>
+
 	<div id="datos_persona">
 		<div class="row">
-			<?php echo $form->labelEx($model,'nombre'); ?>
+			<?php echo $form->labelEx($model,'nombre', array('id'=>'etiqueta')); ?>
+			<span class="required">*</span><br>
 			<?php echo $form->textField($model,'nombre',array('size'=>60,'maxlength'=>255, 'id'=>'nombre')); ?>
 			<?php echo $form->error($model,'nombre'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx($model,'apellido'); ?>
+			<?php echo $form->labelEx($model,'apellido', array('id'=>'etiqueta')); ?>
+			<span class="required">*</span><br>
 			<?php echo $form->textField($model,'apellido',array('size'=>60,'maxlength'=>255, 'id'=>'apellido')); ?>
 			<?php echo $form->error($model,'apellido'); ?>
 		</div>
@@ -100,14 +111,16 @@
 
 	<div id="datos_institucion" style="display: none">
 		<div class="row">
-			<?php echo $form->labelEx($model,'institucion'); ?>
+			<?php echo $form->labelEx($model,'institucion', array('id'=>'etiqueta')); ?>
+			<span class="required">*</span><br>
 			<?php echo $form->textField($model,'institucion',array('size'=>60,'maxlength'=>255, 'id'=>'institucion')); ?>
 			<?php echo $form->error($model,'institucion'); ?>
 		</div>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'tipo_id'); ?>
+		<?php echo $form->labelEx($model,'tipo_id', array('id'=>'etiqueta')); ?>
+		<span class="required">*</span><br>
 		<?php echo $form->dropDownList($model, 'tipo_id',  CHtml::listData(Tipo::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'), 
 				array('empty'=>'---Selecciona el tipo de clasificación---', 'id'=>'tipo'
 				)); ?>
@@ -116,7 +129,8 @@
 
 	<div id="datos_principal">
 		<div class="row">
-			<?php echo $form->labelEx($model,'correo'); ?>
+			<?php echo $form->labelEx($model,'correo', array('id'=>'etiqueta')); ?>
+			<span style="color: #FFA500;">*</span><br>
 			<?php echo $form->textField($model,'correo',array('size'=>60,'maxlength'=>255)); ?>
 
 			<div id="datos_correo_repetido" style="display: none">
@@ -133,7 +147,8 @@
 
 		<div id="datos_correos" style="display: none">
 			<div class="row">
-				<?php echo $form->labelEx($model,'correo_alternativo'); ?>
+				<?php echo $form->labelEx($model,'correo_alternativo', array('id'=>'etiqueta')); ?>
+				<span style="color: #FFA500;">*</span><br>
 				<?php echo $form->textField($model,'correo_alternativo',array('size'=>60,'maxlength'=>255)); ?>
 
 				<div id="datos_correo_alternativo_repetido" style="display: none">
@@ -145,14 +160,16 @@
 			</div>
 
 			<div class="row">
-				<?php echo $form->labelEx($model,'correos'); ?>
+				<?php echo $form->labelEx($model,'correos', array('id'=>'etiqueta')); ?>
+				<span style="color: #FFA500;">*</span><br>
 				<?php echo $form->textArea($model,'correos',array('rows'=>6, 'cols'=>50)); ?>
 				<?php echo $form->error($model,'correos'); ?>
 			</div>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx($model,'telefono_particular'); ?>
+			<?php echo $form->labelEx($model,'telefono_particular', array('id'=>'etiqueta')); ?>
+			<span style="color: #FFA500;">*</span><br>
 			<?php echo $form->textField($model,'telefono_particular',array('size'=>60,'maxlength'=>255)); ?>
 			<?php echo $form->error($model,'telefono_particular'); ?>
 		</div>
@@ -163,19 +180,22 @@
 
 		<div id="datos_telefonos" style="display: none">
 			<div class="row">
-				<?php echo $form->labelEx($model,'telefono_oficina'); ?>
+				<?php echo $form->labelEx($model,'telefono_oficina', array('id'=>'etiqueta')); ?>
+				<span style="color: #FFA500;">*</span><br>
 				<?php echo $form->textField($model,'telefono_oficina',array('size'=>60,'maxlength'=>255)); ?>
 				<?php echo $form->error($model,'telefono_oficina'); ?>
 			</div>
 
 			<div class="row">
-				<?php echo $form->labelEx($model,'telefono_casa'); ?>
+				<?php echo $form->labelEx($model,'telefono_casa', array('id'=>'etiqueta')); ?>
+				<span style="color: #FFA500;">*</span><br>
 				<?php echo $form->textField($model,'telefono_casa',array('size'=>60,'maxlength'=>255)); ?>
 				<?php echo $form->error($model,'telefono_casa'); ?>
 			</div>
 
 			<div class="row">
-				<?php echo $form->labelEx($model,'telefonos'); ?>
+				<?php echo $form->labelEx($model,'telefonos', array('id'=>'etiqueta')); ?>
+				<span style="color: #FFA500;">*</span><br>
 				<?php echo $form->textArea($model,'telefonos',array('rows'=>6, 'cols'=>50)); ?>
 				<?php echo $form->error($model,'telefonos'); ?>
 			</div>
@@ -224,24 +244,6 @@
 				)); ?>
 				<?php echo $form->error($model,'paises_id'); ?>
 			</div>
-		</div>
-
-		<div class="row">
-			<?php //echo $form->labelEx($model,'asentamiento'); ?>
-			<?php //echo $form->textField($model,'asentamiento',array('size'=>60,'maxlength'=>255)); ?>
-			<?php //echo $form->error($model,'asentamiento'); ?>
-		</div>
-
-		<div class="row">
-			<?php //echo $form->labelEx($model,'municipio'); ?>
-			<?php //echo $form->textField($model,'municipio',array('size'=>60,'maxlength'=>255)); ?>
-			<?php //echo $form->error($model,'municipio'); ?>
-		</div>
-
-		<div class="row">
-			<?php //echo $form->labelEx($model,'ciudad'); ?>
-			<?php //echo $form->textField($model,'ciudad',array('size'=>60,'maxlength'=>255)); ?>
-			<?php //echo $form->error($model,'ciudad'); ?>
 		</div>
 
 		<div id="datos_nacional">
@@ -405,89 +407,89 @@
 
 	<div id="datos_medios" style="display: none;">
 		<div class="row">
-			<?php echo $form->labelEx(Medios::model(),'grupo'); ?>
-			<?php echo $form->textField(Medios::model(),'grupo',array('size'=>60,'maxlength'=>255,'id'=>'grupo')); ?>
-			<?php echo $form->error(Medios::model(),'grupo'); ?>
+			<?php echo $form->labelEx($model_m,'grupo'); ?>
+			<?php echo $form->textField($model_m,'grupo',array('size'=>60,'maxlength'=>255,'id'=>'grupo')); ?>
+			<?php echo $form->error($model_m,'grupo'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx(Medios::model(),'medio'); ?>
-			<?php echo $form->textField(Medios::model(),'medio',array('size'=>60,'maxlength'=>255,'id'=>'medio')); ?>
-			<?php echo $form->error(Medios::model(),'medio'); ?>
+			<?php echo $form->labelEx($model_m,'medio'); ?>
+			<?php echo $form->textField($model_m,'medio',array('size'=>60,'maxlength'=>255,'id'=>'medio')); ?>
+			<?php echo $form->error($model_m,'medio'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx(Medios::model(),'tipo_medio'); ?>
-			<?php echo $form->textField(Medios::model(),'tipo_medio',array('size'=>60,'maxlength'=>255,'id'=>'tipo_medio')); ?>
-			<?php echo $form->error(Medios::model(),'tipo_medio'); ?>
+			<?php echo $form->labelEx($model_m,'tipo_medio'); ?>
+			<?php echo $form->textField($model_m,'tipo_medio',array('size'=>60,'maxlength'=>255,'id'=>'tipo_medio')); ?>
+			<?php echo $form->error($model_m,'tipo_medio'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx(Medios::model(),'perfil_medio'); ?>
-			<?php echo $form->textField(Medios::model(),'perfil_medio',array('size'=>60,'maxlength'=>255,'id'=>'perfil_medio')); ?>
-			<?php echo $form->error(Medios::model(),'perfil_medio'); ?>
+			<?php echo $form->labelEx($model_m,'perfil_medio'); ?>
+			<?php echo $form->textField($model_m,'perfil_medio',array('size'=>60,'maxlength'=>255,'id'=>'perfil_medio')); ?>
+			<?php echo $form->error($model_m,'perfil_medio'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx(Medios::model(),'programa'); ?>
-			<?php echo $form->textField(Medios::model(),'programa',array('size'=>60,'maxlength'=>255,'id'=>'programa')); ?>
-			<?php echo $form->error(Medios::model(),'programa'); ?>
+			<?php echo $form->labelEx($model_m,'programa'); ?>
+			<?php echo $form->textField($model_m,'programa',array('size'=>60,'maxlength'=>255,'id'=>'programa')); ?>
+			<?php echo $form->error($model_m,'programa'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx(Medios::model(),'seccion'); ?>
-			<?php echo $form->textField(Medios::model(),'seccion',array('size'=>60,'maxlength'=>255,'id'=>'seccion')); ?>
-			<?php echo $form->error(Medios::model(),'seccion'); ?>
+			<?php echo $form->labelEx($model_m,'seccion'); ?>
+			<?php echo $form->textField($model_m,'seccion',array('size'=>60,'maxlength'=>255,'id'=>'seccion')); ?>
+			<?php echo $form->error($model_m,'seccion'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx(Medios::model(),'suplemento'); ?>
-			<?php echo $form->textField(Medios::model(),'suplemento',array('size'=>60,'maxlength'=>255,'id'=>'suplemento')); ?>
-			<?php echo $form->error(Medios::model(),'suplemento'); ?>
+			<?php echo $form->labelEx($model_m,'suplemento'); ?>
+			<?php echo $form->textField($model_m,'suplemento',array('size'=>60,'maxlength'=>255,'id'=>'suplemento')); ?>
+			<?php echo $form->error($model_m,'suplemento'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx(Medios::model(),'columna'); ?>
-			<?php echo $form->textField(Medios::model(),'columna',array('size'=>60,'maxlength'=>255,'id'=>'columna')); ?>
-			<?php echo $form->error(Medios::model(),'columna'); ?>
+			<?php echo $form->labelEx($model_m,'columna'); ?>
+			<?php echo $form->textField($model_m,'columna',array('size'=>60,'maxlength'=>255,'id'=>'columna')); ?>
+			<?php echo $form->error($model_m,'columna'); ?>
 		</div>
 	</div>
 
 	<div id="datos_documental" style="display: none;">
 		<div class="row">
-			<?php echo $form->labelEx(Documental::model(),'grado_academico'); ?>
-			<?php echo $form->textField(Documental::model(),'grado_academico',array('size'=>60,'maxlength'=>255,'id'=>'grado_academico')); ?>
-			<?php echo $form->error(Documental::model(),'grado_academico'); ?>
+			<?php echo $form->labelEx($model_c,'grado_academico'); ?>
+			<?php echo $form->textField($model_c,'grado_academico',array('size'=>60,'maxlength'=>255,'id'=>'grado_academico')); ?>
+			<?php echo $form->error($model_c,'grado_academico'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx(Documental::model(),'sigla_institucion'); ?>
-			<?php echo $form->textField(Documental::model(),'sigla_institucion',array('size'=>60,'maxlength'=>255,'id'=>'sigla_institucion')); ?>
-			<?php echo $form->error(Documental::model(),'sigla_institucion'); ?>
+			<?php echo $form->labelEx($model_c,'sigla_institucion'); ?>
+			<?php echo $form->textField($model_c,'sigla_institucion',array('size'=>60,'maxlength'=>255,'id'=>'sigla_institucion')); ?>
+			<?php echo $form->error($model_c,'sigla_institucion'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx(Documental::model(),'dependencia'); ?>
-			<?php echo $form->textField(Documental::model(),'dependencia',array('size'=>60,'maxlength'=>255,'id'=>'dependencia')); ?>
-			<?php echo $form->error(Documental::model(),'dependencia'); ?>
+			<?php echo $form->labelEx($model_c,'dependencia'); ?>
+			<?php echo $form->textField($model_c,'dependencia',array('size'=>60,'maxlength'=>255,'id'=>'dependencia')); ?>
+			<?php echo $form->error($model_c,'dependencia'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx(Documental::model(),'sigla_dependencia'); ?>
-			<?php echo $form->textField(Documental::model(),'sigla_dependencia',array('size'=>60,'maxlength'=>255,'id'=>'sigla_dependencia')); ?>
-			<?php echo $form->error(Documental::model(),'sigla_dependencia'); ?>
+			<?php echo $form->labelEx($model_c,'sigla_dependencia'); ?>
+			<?php echo $form->textField($model_c,'sigla_dependencia',array('size'=>60,'maxlength'=>255,'id'=>'sigla_dependencia')); ?>
+			<?php echo $form->error($model_c,'sigla_dependencia'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx(Documental::model(),'subdependencia'); ?>
-			<?php echo $form->textField(Documental::model(),'subdependencia',array('size'=>60,'maxlength'=>255,'id'=>'subdependencia')); ?>
-			<?php echo $form->error(Documental::model(),'subdependencia'); ?>
+			<?php echo $form->labelEx($model_c,'subdependencia'); ?>
+			<?php echo $form->textField($model_c,'subdependencia',array('size'=>60,'maxlength'=>255,'id'=>'subdependencia')); ?>
+			<?php echo $form->error($model_c,'subdependencia'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx(Documental::model(),'actividad'); ?>
-			<?php echo $form->textField(Documental::model(),'actividad',array('size'=>60,'maxlength'=>255,'id'=>'actividad')); ?>
-			<?php echo $form->error(Documental::model(),'actividad'); ?>
+			<?php echo $form->labelEx($model_c,'actividad'); ?>
+			<?php echo $form->textField($model_c,'actividad',array('size'=>60,'maxlength'=>255,'id'=>'actividad')); ?>
+			<?php echo $form->error($model_c,'actividad'); ?>
 		</div>
 	</div>
 

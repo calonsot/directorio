@@ -48,9 +48,12 @@ class DirectorioController extends Controller
 		$model=$this->loadModel($id);
 		$model->veces_consulta++;
 
+		$model_m=Medios::model()->findByPk($id);
+		$model_c=Documental::model()->findByPk($id);
+
 		if($model->saveAttributes(array('veces_consulta'))) {
 			$this->render('view',array(
-					'model'=>$model,
+					'model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c,
 			));
 
 		} else {
@@ -65,7 +68,10 @@ class DirectorioController extends Controller
 	public function actionCreate()
 	{
 		$model=new Directorio;
-
+		$model_m=new Medios();
+		$model_c=new Documental();
+		$model_f=new Fotos();
+		
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -75,9 +81,26 @@ class DirectorioController extends Controller
 			$model->fec_alta=self::fechaAlta();
 			$model->usuarios_id=Yii::app()->user->id_usuario;
 
+			//parte de la foto
+			$model_f->attributes=$_POST['Fotos'];
+			$archivo=CUploadedFile::getInstance($model_f, 'nombre');
+
+			if ($archivo != null) {
+				$model_f->fec_alta=self::fechaAlta();
+				$model_f->nombre=$archivo->getName();
+				$model_f->formato=$archivo->getType();
+				$model_f->peso=$archivo->getSize();
+				$model_f->ruta=$archivo;
+					
+				if ($model_f->save())
+				{
+					$archivo->saveAs(dirname(__FILE__).'/../../imagenes/contactos/'.$archivo);
+					$model->fotos_id=$model_f->id;
+				}
+			}
+
 			if($model->save()) {
 				//parte de medios
-				$model_m=new Medios();
 				$model_m->attributes=$_POST['Medios'];
 				$model_m->fec_alta=self::fechaAlta();
 				$model_m->usuarios_id=Yii::app()->user->id_usuario;
@@ -85,7 +108,6 @@ class DirectorioController extends Controller
 
 				if($model_m->save()) {
 					//parte de centro documental
-					$model_c=new Documental();
 					$model_c->attributes=$_POST['Documental'];
 					$model_c->fec_alta=self::fechaAlta();
 					$model_c->usuarios_id=Yii::app()->user->id_usuario;
@@ -98,7 +120,7 @@ class DirectorioController extends Controller
 		}
 
 		$this->render('create',array(
-				'model'=>$model,
+				'model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 'model_f'=>$model_f,
 		));
 	}
 
@@ -110,6 +132,9 @@ class DirectorioController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
+		$model_m=Medios::model()->findByPk($id);
+		$model_c=Documental::model()->findByPk($id);
+		$model_f=Fotos::model()->findByPk($model->fotos_id);
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -117,12 +142,18 @@ class DirectorioController extends Controller
 		if(isset($_POST['Directorio']))
 		{
 			$model->attributes=$_POST['Directorio'];
+
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+			{
+				$model_m->attributes=$_POST['Medios'];
+
+				if($model_m->save())
+					$this->redirect(array('view','id'=>$model->id));
+			}
 		}
 
 		$this->render('update',array(
-				'model'=>$model,
+				'model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 'model_f'=>$model_f,
 		));
 	}
 
@@ -195,7 +226,7 @@ class DirectorioController extends Controller
 			{
 				$asentamiento = CHtml::tag('option',
 						array('value'=>$results[0]['id_e']),CHtml::encode($results[0]['nombre_a']),true)."#-#1#-#".$results[0]['nombre_a'];
-				
+
 				$tipo_asentamiento = CHtml::tag('option',
 						array('value'=>$results[0]['id_asen']),CHtml::encode($results[0]['nombre_asen']),true);
 
@@ -336,7 +367,7 @@ class DirectorioController extends Controller
 							array('value'=>$value),CHtml::encode($subcategory),true);
 				}
 			}
-			
+
 			$cadena.="-|-".$cp->codigo;
 
 		} else {
@@ -441,33 +472,43 @@ class DirectorioController extends Controller
 			echo '0';
 	}
 
-	public static function validaEstado ($estado) 
+	/**
+	 *
+	 * @param String $estado
+	 * @return el nombre del estado o null
+	 */
+	public static function validaEstado ($estado)
 	{
 		$model=Estado::model()->findByPk($estado);
-		
-		if ($model!=null) 
-		{
-			return $model->nombre;
-		
-		} else {
-			return null;
-		}
-	}
-	
-	public static function validaTipoAsentamiento ($tipo_a)
-	{
-		$model=TipoAsentamiento::model()->findByPk($tipo_a);
-	
+
 		if ($model!=null)
 		{
 			return $model->nombre;
-	
+
 		} else {
 			return null;
 		}
 	}
-	
-	
+
+	/**
+	 *
+	 * @param String $tipo_a el tipo de asentamiento
+	 * @return el nombre del tipo de asentamiento o null
+	 */
+	public static function validaTipoAsentamiento ($tipo_a)
+	{
+		$model=TipoAsentamiento::model()->findByPk($tipo_a);
+
+		if ($model!=null)
+		{
+			return $model->nombre;
+
+		} else {
+			return null;
+		}
+	}
+
+
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.

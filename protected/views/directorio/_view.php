@@ -6,11 +6,21 @@
 <div class="view">
 
 	<?php 
-	if ($data->es_institucion == 1) {
-		echo CHtml::link(CHtml::encode($data->institucion), array('view', 'id'=>$data->id));
-	} else {
-		echo CHtml::link(CHtml::encode($data->nombre.' '.$data->apellido), array('view', 'id'=>$data->id));
+	if ($data->fotos_id != '' && $data->fotos_id !=null) {
+		echo CHtml::image('/directorio/imagenes/contactos/'.Fotos::model()->findByPk($data->fotos_id)->nombre, 
+				$data->es_institucion ? $data->institucion : $data->nombre.' '.$data->apellido, array('width'=>'15%', 'align'=>'right'));
+	}else {
+		echo CHtml::image('/directorio/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'15%', 'align'=>'right'));
 	}
+	?>
+
+	<?php 
+	//if ($data->es_institucion == 1) {
+	//	echo CHtml::link(CHtml::encode($data->institucion), array('view', 'id'=>$data->id));
+	//} else {
+	//	echo CHtml::link(CHtml::encode($data->nombre.' '.$data->apellido), array('view', 'id'=>$data->id));
+	//}
+	echo CHtml::link(CHtml::encode($data->es_institucion ? $data->institucion : $data->nombre.' '.$data->apellido), array('view', 'id'=>$data->id));
 	?>
 	<br /> <b><?php echo CHtml::encode($data->getAttributeLabel('es_internacional')); ?>:</b>
 	<?php echo CHtml::encode($data->es_internacional ? 'Sí' : 'No'); ?>

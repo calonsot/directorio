@@ -121,24 +121,47 @@ class Directorio extends CActiveRecord
 	 */
 	public function beforeSave()
 	{
-		if ($this->isNewRecord) {
+		if(($this->es_institucion==1 && trim($this->institucion) != '')
+		|| ($this->es_institucion==0 && trim($this->nombre != '') && trim($this->apellido != '')))
+		{
 
-			if ($this->correo != '' && $this->correo_alternativo != '')
+			if ($this->correo != '' || $this->correo_alternativo != '' || trim($this->correos) != ''
+					|| trim($this->telefono_particular) != '' || trim($this->telefono_oficina) != ''
+							|| trim($this->telefono_casa) != '' || trim($this->telefonos) != '')
 			{
-				$correo=Directorio::model()->findByAttributes(array('correo'=>$this->correo));
-				$correo_alternativo=Directorio::model()->findByAttributes(array('correo_alternativo'=>$this->correo_alternativo));
+				$criteria = new CDbCriteria;
 
-				if ($correo != null || $correo_alternativo != null) {
-					return false;
+				if (trim($this->correo) != '')
+				{
+					$correo="correo='".$this->correo."' OR correo_alternativo='".$this->correo."'";
+					$criteria->condition=$correo;
+					$model=Directorio::model()->find($criteria);
 
-				} else {
-					return parent::beforeSave();
+					if ($model != null)
+						return false;
 				}
 
-			} else {
+				if (trim($this->correo_alternativo) != '')
+				{
+					$correo_alternativo="correo='".$this->correo_alternativo."' OR correo_alternativo='".$this->correo_alternativo."'";
+					$criteria->condition=$correo_alternativo;
+					$model=Directorio::model()->find($criteria);
+
+					if ($model != null)
+						return false;
+				}
+
 				return parent::beforeSave();
+
+			} else {
+				return false;
 			}
+
+		} else {
+			return false;
 		}
+
+
 	}
 
 

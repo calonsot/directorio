@@ -18,4 +18,4 @@ $this->menu=array(
 
 <h1>Crea un contacto</h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php echo $this->renderPartial('_form', array('model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 'model_f'=>$model_f,)); ?>

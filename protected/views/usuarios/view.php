@@ -7,6 +7,10 @@ $this->breadcrumbs=array(
 	'Mi cuenta',
 );*/
 
+$this->pageTitle=Yii::app()->name . ' - Mi cuenta';
+
+if (Yii::app()->user->id_usuario == $model->id) {
+	
 $this->menu=array(
 	//array('label'=>'Lista de usuarios', 'url'=>array('index')),
 	//array('label'=>'Registrarse', 'url'=>array('create')),
@@ -14,6 +18,7 @@ $this->menu=array(
 	//array('label'=>'Borra usuarios', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
 	//array('label'=>'Administra usuarios', 'url'=>array('admin')),
 );
+}
 ?>
 
 <h1><?php echo $model->nombre.' '.$model->apellido; ?></h1>

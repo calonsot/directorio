@@ -24,4 +24,4 @@ $this->menu=array(
 echo $model->es_institucion ? $model->institucion : $model->nombre.' '.$model->apellido; 
 ?></h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php echo $this->renderPartial('_form', array('model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 'model_f'=>$model_f, )); ?>

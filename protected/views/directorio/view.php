@@ -2,10 +2,10 @@
 /* @var $this DirectorioController */
 /* @var $model Directorio */
 /*
-$this->breadcrumbs=array(
-		//'Directorios'=>array('index'),
-		'Información del contacto',
-);*/
+ $this->breadcrumbs=array(
+ 		//'Directorios'=>array('index'),
+ 		'Información del contacto',
+ );*/
 
 $this->menu=array(
 		//array('label'=>'List Directorio', 'url'=>array('index')),
@@ -73,8 +73,8 @@ $this->menu=array(
 				'cp',
 				'paises_id',
 				array(
-				'label'=>'',
-				'value'=>'------------------------------------------DOMICILIO ALTERNATIVO------------------------------------------------',
+						'label'=>'',
+						'value'=>'------------------------------------------DOMICILIO ALTERNATIVO------------------------------------------------',
 				),
 				'direccion_alternativa',
 				'asentamiento_alternativo',
@@ -85,8 +85,8 @@ $this->menu=array(
 				'cp_alternativo',
 				'paises_id1',
 				array(
-				'label'=>'',
-				'value'=>'-----------------------------------------------DATOS ASISTENTE-------------------------------------------------------',
+						'label'=>'',
+						'value'=>'-----------------------------------------------DATOS ASISTENTE-------------------------------------------------------',
 				),
 				'nombre_asistente',
 				'apellido_asistente',
@@ -97,7 +97,76 @@ $this->menu=array(
 				'veces_consulta',
 				'fec_alta',
 				'fec_act',
-				'usuarios_id',
+				array(
+						'name'=>'usuarios_id',
+						'type'=>'raw',
+						'value'=>CHtml::link(CHtml::encode(Usuarios::model()->findByPk($model->usuarios_id)->usuario),
+						array('usuarios/view', 'id'=>$model->usuarios_id)),
+				),
 				'fotos_id',
+				array(
+				'label'=>'',
+				'value'=>'-------------------------------------------------DATOS MEDIOS---------------------------------------------------------',
+				),
+				array(
+						'name'=>'grupo',
+						'value'=>$model_m->grupo,
+				),
+				array(
+						'name'=>'medio',
+						'value'=>$model_m->medio,
+				),
+				array(
+						'name'=>'tipo_medio',
+						'value'=>$model_m->tipo_medio,
+				),
+				array(
+						'name'=>'perfil_medio',
+						'value'=>$model_m->perfil_medio,
+				),
+				array(
+						'name'=>'programa',
+						'value'=>$model_m->programa,
+				),
+				array(
+						'name'=>'seccion',
+						'value'=>$model_m->seccion,
+				),
+				array(
+						'name'=>'suplemento',
+						'value'=>$model_m->suplemento,
+				),
+				array(
+						'name'=>'columna',
+						'value'=>$model_m->columna,
+				),
+				array(
+				'label'=>'',
+				'value'=>'--------------------------------------DATOS CENTRO DOCUMENTAL---------------------------------------------',
+				),
+				array(
+				'name'=>'grado_academico',
+				'value'=>$model_c->grado_academico,
+				),
+				array(
+				'name'=>'sigla_institucion',
+				'value'=>$model_c->sigla_institucion,
+				),
+				array(
+				'name'=>'dependencia',
+				'value'=>$model_c->dependencia,
+				),
+				array(
+				'name'=>'sigla_dependencia',
+				'value'=>$model_c->sigla_dependencia,
+				),
+				array(
+				'name'=>'subdependencia',
+				'value'=>$model_c->subdependencia,
+				),
+				array(
+				'name'=>'actividad',
+				'value'=>$model_c->actividad,
+				),
 		),
 )); ?>
