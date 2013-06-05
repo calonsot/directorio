@@ -12,9 +12,11 @@ $this->menu=array(
 );
 ?>
 
-<h1>Tus contactos mas vistos</h1>
+<h1>Contactos más vistos</h1>
 
 <?php $this->widget('zii.widgets.CListView', array(
 	'dataProvider'=>$dataProvider,
 	'itemView'=>'_view',
 )); ?>
+
+

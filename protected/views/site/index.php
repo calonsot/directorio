@@ -4,24 +4,21 @@
 $this->pageTitle=Yii::app()->name;
 ?>
 
-<h1>Bienvenido al <i><?php echo CHtml::encode(Yii::app()->name); ?> </i></h1>
-<p>Congratulations! You have successfully created your Yii application.</p>
+<h1>
+	Bienvenido al <i><?php echo CHtml::encode(Yii::app()->name); ?> </i>
+</h1>
 
-<p>You may change the content of this page by modifying the following two files:</p>
+<p>Puedes empezar por:</p>
 <ul>
-	<li>View file: <code><?php echo __FILE__; ?></code></li>
-	<li>Layout file: <code><?php echo $this->getLayoutFile('main'); ?></code></li>
+	<li>Crear un <?php echo CHtml::link(CHtml::encode('contacto.'), array('directorio/create')) ?>
+	</li>
+	<li>Crear una <?php echo CHtml::link(CHtml::encode('lista.'), array('listas/create')) ?>
+	</li>
+	<li>Buscar un  <?php echo CHtml::link(CHtml::encode('contacto.'), array('directorio/admin')) ?>
+	</li>
+	<li>Buscar una <?php echo CHtml::link(CHtml::encode('lista.'), array('listas/admin')) ?>
+	</li>
 </ul>
 
-<p>For more details on how to further develop this application, please read
-the <a href="http://www.yiiframework.com/doc/">documentation</a>.
-Feel free to ask in the <a href="http://www.yiiframework.com/forum/">forum</a>,
-should you have any questions.</p>
 
-<?php $activas=Listas::model()->findAllByAttributes(array('esta_activa'=>1)); 
-//print_r($activas); 
-foreach ($activas as $act) {
-$act->esta_activa=0;
-}
-//$activas->save();
-?>
+

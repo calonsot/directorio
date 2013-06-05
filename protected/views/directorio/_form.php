@@ -88,9 +88,9 @@
 	</table>
 
 	<div class="row" align="justify">
-		<?php echo $form->labelEx(Fotos::model(),'nombre'); ?>
-		<?php echo CHtml::activeFileField(Fotos::model(), 'nombre'); ?>
-		<?php echo $form->error(Fotos::model(),'nombre'); ?>
+		<?php echo $form->labelEx($model_f,'nombre'); ?>
+		<?php echo $form->fileField($model_f, 'nombre'); ?>
+		<?php echo $form->error($model_f,'nombre'); ?>
 	</div>
 
 	<div id="datos_persona">

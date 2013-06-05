@@ -133,7 +133,12 @@ class Directorio extends CActiveRecord
 
 				if (trim($this->correo) != '')
 				{
-					$correo="correo='".$this->correo."' OR correo_alternativo='".$this->correo."'";
+					if ($this->isNewRecord)
+						$correo="correo='".$this->correo."' OR correo_alternativo='".$this->correo."'";
+
+					else
+						$correo="(correo='".$this->correo."' OR correo_alternativo='".$this->correo."') AND id != ".$this->id;
+
 					$criteria->condition=$correo;
 					$model=Directorio::model()->find($criteria);
 
@@ -143,7 +148,12 @@ class Directorio extends CActiveRecord
 
 				if (trim($this->correo_alternativo) != '')
 				{
-					$correo_alternativo="correo='".$this->correo_alternativo."' OR correo_alternativo='".$this->correo_alternativo."'";
+					if ($this->isNewRecord)
+						$correo_alternativo="correo='".$this->correo_alternativo."' OR correo_alternativo='".$this->correo_alternativo."'";
+
+					else
+						$correo_alternativo="(correo='".$this->correo_alternativo."' OR correo_alternativo='".$this->correo_alternativo."') AND id != ".$this->id;
+
 					$criteria->condition=$correo_alternativo;
 					$model=Directorio::model()->find($criteria);
 
@@ -295,7 +305,7 @@ class Directorio extends CActiveRecord
 		$criteria->compare('municipio_alternativo',$this->municipio_alternativo,true);
 		$criteria->compare('ciudad',$this->ciudad,true);
 		$criteria->compare('ciudad_alternativa',$this->ciudad_alternativa,true);
-		$criteria->compare('estado',$this->estado,true);
+		$criteria->compare('estado',$this->estado);
 		$criteria->compare('estado_alternativo',$this->estado_alternativo,true);
 		$criteria->compare('cp',$this->cp,true);
 		$criteria->compare('cp_alternativo',$this->cp_alternativo,true);
@@ -318,7 +328,7 @@ class Directorio extends CActiveRecord
 		$criteria->compare('tipo_asentamiento_id1',$this->tipo_asentamiento_id1);
 
 		return new CActiveDataProvider($this, array(
-				'criteria'=>$criteria,
+				'criteria'=>$criteria, 'pagination'=>array('pageSize'=>50),
 		));
 	}
 }

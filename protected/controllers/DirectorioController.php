@@ -71,7 +71,7 @@ class DirectorioController extends Controller
 		$model_m=new Medios();
 		$model_c=new Documental();
 		$model_f=new Fotos();
-		
+
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -90,11 +90,12 @@ class DirectorioController extends Controller
 				$model_f->nombre=$archivo->getName();
 				$model_f->formato=$archivo->getType();
 				$model_f->peso=$archivo->getSize();
-				$model_f->ruta=$archivo;
+				$ruta=dirname(__FILE__).'/../../imagenes/contactos/'.$archivo;
+				$model_f->ruta='../../imagenes/contactos/'.$archivo;
 					
 				if ($model_f->save())
 				{
-					$archivo->saveAs(dirname(__FILE__).'/../../imagenes/contactos/'.$archivo);
+					$archivo->saveAs($ruta);
 					$model->fotos_id=$model_f->id;
 				}
 			}
@@ -134,7 +135,14 @@ class DirectorioController extends Controller
 		$model=$this->loadModel($id);
 		$model_m=Medios::model()->findByPk($id);
 		$model_c=Documental::model()->findByPk($id);
-		$model_f=Fotos::model()->findByPk($model->fotos_id);
+		$model_foto=Fotos::model()->findByPk($model->fotos_id);
+
+		if ($model_foto == null)
+		{
+			$model_f=new Fotos();
+		} else {
+			$model_f=Fotos::model()->findByPk($model->fotos_id);
+		}
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -143,12 +151,35 @@ class DirectorioController extends Controller
 		{
 			$model->attributes=$_POST['Directorio'];
 
+			$model_f->attributes=$_POST['Fotos'];
+			$archivo=CUploadedFile::getInstance($model_f, 'nombre');
+
+			if ($archivo != null) {
+				$model_f->fec_alta=self::fechaAlta();
+				$model_f->nombre=$archivo->getName();
+				$model_f->formato=$archivo->getType();
+				$model_f->peso=$archivo->getSize();
+				$ruta=dirname(__FILE__).'/../../imagenes/contactos/'.$archivo;
+				$model_f->ruta='../../imagenes/contactos/'.$archivo;
+				
+				if ($model_f->save())
+				{
+					$archivo->saveAs($ruta);
+					$model->fotos_id=$model_f->id;
+				}
+			}
+
 			if($model->save())
 			{
 				$model_m->attributes=$_POST['Medios'];
 
 				if($model_m->save())
-					$this->redirect(array('view','id'=>$model->id));
+				{
+					$model_c->attributes=$_POST['Documental'];
+
+					if($model_c->save())
+						$this->redirect(array('view','id'=>$model->id));
+				}
 			}
 		}
 
@@ -177,8 +208,11 @@ class DirectorioController extends Controller
 	public function actionIndex()
 	{
 		//$this->setIdUsuario(Yii::app()->user->id);
-		$dataProvider=new CActiveDataProvider('Directorio',array (
-				'criteria' => array ('condition' => 'usuarios_id='.Yii::app()->user->id_usuario, 'order'=>'veces_consulta DESC')));
+		//$dataProvider=new CActiveDataProvider('Directorio',array (
+		//'criteria' => array ('condition' => 'usuarios_id='.Yii::app()->user->id_usuario, 'order'=>'veces_consulta DESC')));
+		$dataProvider=new CActiveDataProvider('Directorio', array(
+				'criteria' => array ('order'=>'veces_consulta DESC'),
+		));
 		$this->render('index',array(
 				'dataProvider'=>$dataProvider,
 		));

@@ -29,7 +29,7 @@ class ListasController extends Controller
 		return array(
 
 				array('allow', // allow authenticated user to perform 'create' and 'update' actions
-						'actions'=>array('index','view','create','update','admin','delete', 'imprimelista'),
+						'actions'=>array('index','view','create','update','admin','delete', 'imprimelista', 'activa'),
 						'users'=>array('@','admin'),
 				),
 				array('deny',  // deny all users
@@ -189,7 +189,7 @@ class ListasController extends Controller
 		$contactos=explode(',', $model->cadena);
 		$atributos=explode(',', $model->atributos);
 		$contador=0;
-		
+
 		foreach ($contactos as $id)
 		{
 			$model_cont=Directorio::model()->findByPk($id);
@@ -226,9 +226,9 @@ class ListasController extends Controller
 
 					foreach ($atributos as $a)
 					{
-						$cadena[$a]=$model_cont->$a;
+						$cadena[$a]=$model_cont->{trim($a)};
 					}
-					
+
 					$cadena_final[$contador]=$cadena;
 					$contador++;
 				}
@@ -297,6 +297,30 @@ class ListasController extends Controller
 		}
 
 		return $correos_finales;
+	}
+
+	/**
+	 * Borra todos los registros seleccionados
+	 * @throws Exception ecepcion si no lo pudo borrar
+	 */
+	public function actionActiva()
+	{
+		$id=$_GET['id'];
+		$lista=Listas::model()->findByPk($id);
+		$lista->esta_activa=1;
+		$activas=Listas::model()->findAllByAttributes(array('esta_activa'=>1));
+
+		foreach ($activas as $act)
+		{
+			$act->esta_activa=0;
+			$act->saveAttributes(array('esta_activa'));
+		}
+
+		if($lista->saveAttributes(array('esta_activa')))
+			echo 'ok';
+
+		else
+			throw new Exception("Lo sentimos no se pudo hacer la opracion",500);
 	}
 
 	/**

@@ -3,13 +3,25 @@
 /* @var $data Listas */
 ?>
 
+<script>
+function reloadGrid(data) {
+    location.reload();
+}
+</script>
+
+
+<?php $form=$this->beginWidget('CActiveForm', array(
+		'enableAjaxValidation'=>true,
+)); ?>
+
+
 <div class="view">
 
 	<?php echo CHtml::link(CHtml::encode($data->nombre), array('view', 'id'=>$data->id)); ?>
 	<br /> <b><?php echo CHtml::encode($data->getAttributeLabel('atributos')); ?>:</b>
 	<?php echo CHtml::encode($data->atributos); ?>
 	<br /> <b><?php echo CHtml::encode($data->getAttributeLabel('esta_activa')); ?>:</b>
-	<?php echo CHtml::encode($data->esta_activa); ?>
+	<?php echo CHtml::encode($data->esta_activa) ? 'Sí' : 'No'; ?>
 	<br />
 
 	<?php	
@@ -33,6 +45,21 @@
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('veces_consulta')); ?>:</b>
 	<?php echo CHtml::encode($data->veces_consulta); ?>
-	<br />
+
+	<?php if (!$data->esta_activa) { ?>
+
+	<div align="right">
+		<?php echo CHtml::ajaxSubmitButton('Activar',array('listas/activa','id'=>$data->id), 
+		array('success'=>'reloadGrid')); ?>
+	</div>
+	<?php } else { ?>
+	
+	<div align="right">
+		<?php echo CHtml::ajaxSubmitButton('Activar',array('listas/activa','id'=>$data->id), 
+		array('success'=>'reloadGrid'), array('disabled'=>'disabled')); ?>
+	</div>
+
+	<?php } ?>
+	<?php $this->endWidget(); ?>
 
 </div>

@@ -38,6 +38,7 @@ Yii::app()->clientScript->registerScript('search', "
 <script>
 function reloadGrid(data) {
     $.fn.yiiGridView.update('directorio-grid');
+    alert('Los contactos se exportarón');
 }
 </script>
 
@@ -88,11 +89,11 @@ or <b>=</b>).
 				'apellido',
 				'institucion',
 				'correo',
-				'correo_alternativo',
+				//'correo_alternativo',
 				//'correos',
 				'telefono_particular',
-				'telefono_oficina',
-				'telefono_casa',
+				//'telefono_oficina',
+				//'telefono_casa',
 				//'telefonos',
 				//'puesto',
 				//'nombre_asistente',
@@ -116,7 +117,7 @@ or <b>=</b>).
 						//'filter'=>CHtml::listData(Estado::model()->findAll(), 'id', 'nombre'),
 						'value'=>$this->renderPrueba(),
 				),*/
-				'cp',
+				//'cp',
 				//'cp_alternativo',
 				//'observaciones',
 				//'veces_consulta',

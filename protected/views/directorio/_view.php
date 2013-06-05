@@ -7,10 +7,10 @@
 
 	<?php 
 	if ($data->fotos_id != '' && $data->fotos_id !=null) {
-		echo CHtml::image('/directorio/imagenes/contactos/'.Fotos::model()->findByPk($data->fotos_id)->nombre, 
-				$data->es_institucion ? $data->institucion : $data->nombre.' '.$data->apellido, array('width'=>'15%', 'align'=>'right'));
+		echo CHtml::image(Fotos::model()->findByPk($data->fotos_id)->ruta,
+				$data->es_institucion ? $data->institucion : $data->nombre.' '.$data->apellido, array('width'=>'150px', 'height'=>'110px', 'align'=>'right'));
 	}else {
-		echo CHtml::image('/directorio/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'15%', 'align'=>'right'));
+		echo CHtml::image('/directorio/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'100px', 'align'=>'right'));
 	}
 	?>
 

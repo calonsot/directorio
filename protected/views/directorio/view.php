@@ -17,17 +17,32 @@ $this->menu=array(
 ?>
 
 <h1>
-	<?php 
-	echo $model->es_institucion ? $model->institucion : $model->nombre.' '.$model->apellido;
-	?>
+	<table border="1" style="display: table-row;">
+		<tr>
+			<td width="80%"><?php 
+			echo $model->es_institucion ? $model->institucion : $model->nombre.' '.$model->apellido;
+			?>
+			</td>
+			<td><?php 
+			$foto=Fotos::model()->findByPk($model->fotos_id);
+			if ($foto != null) {
+			?> <?php echo CHtml::image($foto->ruta,
+				$model->es_institucion ? $model->institucion : $model->nombre.' '.$model->apellido, array('width'=>'150px', 'height'=>'110px', 'align'=>'right')); ?>
+				<?php } else {
+					echo CHtml::image('/directorio/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'100px', 'align'=>'right'));
+				}?></td>
+		</tr>
+	</table>
 </h1>
+
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 		'data'=>$model,
 		'attributes'=>array(
 				array(
 						'label'=>'',
-						'value'=>'--------------------------------------------DATOS PRINCIPALES------------------------------------------------------',
+						'value'=>'<b><font style="color:#FFA500">--------------------------------------------DATOS PRINCIPALES------------------------------------------------------</style></b>',
+						'type'=>'raw',
 				),
 				'id',
 				array(
@@ -42,8 +57,10 @@ $this->menu=array(
 						'name'=>'tipo_id',
 						'value'=>Tipo::model()->findByPk($model->tipo_id)->nombre,
 				),
-				'institucion_id',
-				'sector_id',
+				'institucion',
+				'nombre',
+				'apellido',
+				//'sector_id',
 				'correo',
 				'correo_alternativo',
 				'correos',
@@ -56,7 +73,9 @@ $this->menu=array(
 				'observaciones',
 				array(
 						'label'=>'',
-						'value'=>'---------------------------------------------------DOMICILIO------------------------------------------------------------',
+						'type'=>'raw',
+						'value'=>'<b><font style="color:#FFA500">---------------------------------------------------DOMICILIO------------------------------------------------------------</style></b>',
+						'type'=>'raw',
 				),
 				'direccion',
 				'asentamiento',
@@ -74,7 +93,8 @@ $this->menu=array(
 				'paises_id',
 				array(
 						'label'=>'',
-						'value'=>'------------------------------------------DOMICILIO ALTERNATIVO------------------------------------------------',
+						'value'=>'<b><font style="color:#FFA500">------------------------------------------DOMICILIO ALTERNATIVO------------------------------------------------</style></b>',
+						'type'=>'raw',
 				),
 				'direccion_alternativa',
 				'asentamiento_alternativo',
@@ -86,13 +106,15 @@ $this->menu=array(
 				'paises_id1',
 				array(
 						'label'=>'',
-						'value'=>'-----------------------------------------------DATOS ASISTENTE-------------------------------------------------------',
+						'value'=>'<b><font style="color:#FFA500">-----------------------------------------------DATOS ASISTENTE-------------------------------------------------------</style></b>',
+						'type'=>'raw',
 				),
 				'nombre_asistente',
 				'apellido_asistente',
 				array(
 						'label'=>'',
-				'value'=>'---------------------------------------------DATOS ADICIONALES-----------------------------------------------------',
+						'value'=>'<b><font style="color:#FFA500">---------------------------------------------DATOS ADICIONALES-----------------------------------------------------</style></b>',
+						'type'=>'raw',
 				),
 				'veces_consulta',
 				'fec_alta',
@@ -101,12 +123,13 @@ $this->menu=array(
 						'name'=>'usuarios_id',
 						'type'=>'raw',
 						'value'=>CHtml::link(CHtml::encode(Usuarios::model()->findByPk($model->usuarios_id)->usuario),
-						array('usuarios/view', 'id'=>$model->usuarios_id)),
+								array('usuarios/view', 'id'=>$model->usuarios_id)),
 				),
-				'fotos_id',
+				//'fotos_id',
 				array(
-				'label'=>'',
-				'value'=>'-------------------------------------------------DATOS MEDIOS---------------------------------------------------------',
+						'label'=>'',
+						'value'=>'<b><font style="color:#FFA500">-------------------------------------------------DATOS MEDIOS---------------------------------------------------------</style></b>',
+						'type'=>'raw',
 				),
 				array(
 						'name'=>'grupo',
@@ -142,7 +165,8 @@ $this->menu=array(
 				),
 				array(
 				'label'=>'',
-				'value'=>'--------------------------------------DATOS CENTRO DOCUMENTAL---------------------------------------------',
+				'value'=>'<b><font style="color:#FFA500">--------------------------------------DATOS CENTRO DOCUMENTAL---------------------------------------------</style></b>',
+				'type'=>'raw',
 				),
 				array(
 				'name'=>'grado_academico',
