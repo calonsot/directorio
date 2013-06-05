@@ -40,6 +40,11 @@ function reloadGrid(data) {
     $.fn.yiiGridView.update('directorio-grid');
     alert('Los contactos se exportarón');
 }
+
+function reloadGridBorro(data) {
+    $.fn.yiiGridView.update('directorio-grid');
+    alert('Los contactos han sido eliminados');
+}
 </script>
 
 <h1>Busca y administra tus contactos</h1>
@@ -153,7 +158,7 @@ or <b>=</b>).
 
 
 <?php echo CHtml::ajaxSubmitButton('Eliminar',array('directorio/ajaxupdate','act'=>'doDelete'), 
-		array('beforeSend'=>'function() { if(confirm("¿Estás seguro de querer eliminar permanentemente estos elementos?")) return true; return false; }', 'success'=>'reloadGrid')); ?>
+		array('beforeSend'=>'function() { if(confirm("¿Estás seguro de querer eliminar permanentemente estos elementos?")) return true; return false; }', 'success'=>'reloadGridBorro')); ?>
 <?php echo CHtml::ajaxSubmitButton('Exporta a tu lista',array('directorio/exporta'), 
 		array('success'=>'reloadGrid')); ?>
 <?php $this->endWidget(); ?>

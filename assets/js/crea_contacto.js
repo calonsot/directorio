@@ -24,7 +24,7 @@ $(document).ready(
 
 			/**
 			 * Pone los datos para poner la institucion
-			 */
+			 
 			$('#Directorio_es_institucion').click(function() {
 
 				var isChecked = $('#Directorio_es_institucion').attr(
@@ -45,8 +45,33 @@ $(document).ready(
 					$('#datos_institucion').slideUp();
 					$('#datos_personas').slideDown();
 				}
-			});
+			});*/
 
+			/**
+			 * Pone los datos para poner la institucion
+			 */
+			$('#Directorio_es_institucion').click(function() {
+
+				var isChecked = $('#Directorio_es_institucion').attr(
+				'checked') ? true : false;
+				
+				//$('#datos_institucion').slideToggle();
+				//$('#datos_persona').slideToggle();
+
+				if (isChecked) {
+					//$('#nombre, #apellido')
+					//.val('').removeAttr('checked').removeAttr('selected');
+					$('#datos_nombre, #datos_apellido').slideUp();
+					$('#datos_institucion').slideDown();
+					
+				} else {
+					//$('#institucion')
+					//.val('').removeAttr('checked').removeAttr('selected');
+					$('#datos_institucion').slideUp();
+					$('#datos_nombre, #datos_apellido').slideDown();
+				}
+			});
+			
 			
 			/**
 			 * Pone los datos para poner si es internacional

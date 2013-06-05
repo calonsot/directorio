@@ -18,6 +18,7 @@
  * @property string $telefono_casa
  * @property string $telefonos
  * @property string $puesto
+ * @property string $adscripcion
  * @property string $nombre_asistente
  * @property string $apellido_asistente
  * @property string $pagina
@@ -102,7 +103,7 @@ class Directorio extends CActiveRecord
 		return array(
 				//array('usuarios_id', 'required'),
 				array('id, es_internacional, es_institucion, cp, cp_alternativo, tipo_id, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1', 'numerical', 'integerOnly'=>true),
-				array('nombre, apellido, institucion, correo, correo_alternativo, telefono_particular, telefono_oficina, telefono_casa, puesto, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo', 'length', 'max'=>255),
+				array('nombre, apellido, institucion, correo, correo_alternativo, telefono_particular, telefono_oficina, telefono_casa, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo', 'length', 'max'=>255),
 				array('veces_consulta', 'length', 'max'=>20),
 				array('correos, telefonos, observaciones', 'safe'),
 				//valida el campo para mail
@@ -111,7 +112,7 @@ class Directorio extends CActiveRecord
 		array('nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, observaciones', 'default', 'setOnEmpty'=>true, 'value'=>null),
 		// The following rule is used by search().
 		// Please remove those attributes that should not be searched.
-		array('id, es_internacional, es_institucion, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, fec_alta, fec_act, tipo_id, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1', 'safe', 'on'=>'search'),
+		array('id, es_internacional, es_institucion, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, fec_alta, fec_act, tipo_id, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -170,10 +171,22 @@ class Directorio extends CActiveRecord
 		} else {
 			return false;
 		}
-
-
 	}
 
+	/**
+	 * (non-PHPdoc)
+	 * @see CActiveRecord::beforeDelete()
+	 */
+	public function beforeDelete(){
+
+		$medios=Medios::model()->findByPk($this->id);
+		$documental=Documental::model()->findByPk($this->id);
+
+		if ($medios->delete() && $documental->delete())
+			return parent::beforeDelete();
+		else
+			return false;
+	}
 
 	/**
 	 * @return array relational rules.
@@ -221,6 +234,7 @@ class Directorio extends CActiveRecord
 				'telefono_casa' => 'Telefóno casa',
 				'telefonos' => 'Muchos telefónos',
 				'puesto' => 'Puesto del contacto',
+				'adscripcion' => 'Adscripción',
 				'nombre_asistente' => 'Nombre(s) del asistente',
 				'apellido_asistente' => 'Apellido(s) del asistente',
 				'pagina' => 'Pagina web',
@@ -294,6 +308,7 @@ class Directorio extends CActiveRecord
 		$criteria->compare('telefono_casa',$this->telefono_casa,true);
 		//$criteria->compare('telefonos',$this->telefonos,true);
 		$criteria->compare('puesto',$this->puesto,true);
+		$criteria->compare('adscripcion',$this->adscripcion,true);
 		$criteria->compare('nombre_asistente',$this->nombre_asistente,true);
 		$criteria->compare('apellido_asistente',$this->apellido_asistente,true);
 		$criteria->compare('pagina',$this->pagina,true);

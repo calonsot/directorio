@@ -69,6 +69,7 @@ $this->menu=array(
 				'telefono_casa',
 				'telefonos',
 				'puesto',
+				'adscripcion',
 				'pagina',
 				'observaciones',
 				array(

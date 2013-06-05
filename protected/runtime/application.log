@@ -9141,3 +9141,113 @@ Stack trace:
 REQUEST_URI=/directorio/index.php/listas/index
 HTTP_REFERER=http://172.16.229.128/directorio/index.php/directorio/index
 ---
+2013/06/05 14:26:52 [warning] [application] Error al definir unsafe el atributo "nombre" de "Fotos".
+in /var/www/directorio/protected/controllers/DirectorioController.php (154)
+in /var/www/directorio/index.php (14)
+2013/06/05 15:04:51 [warning] [application] Error al definir unsafe el atributo "nombre" de "Fotos".
+in /var/www/directorio/protected/controllers/DirectorioController.php (85)
+in /var/www/directorio/index.php (14)
+2013/06/05 15:05:10 [error] [system.db.CDbCommand] CDbCommand::execute() falló: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`directorio`.`documental`, CONSTRAINT `fk_documental_directorio1` FOREIGN KEY (`id`) REFERENCES `directorio` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION). La sentencia SQL ejecutada fue: DELETE FROM `directorio` WHERE `directorio`.`id`=44724.
+in /var/www/directorio/protected/controllers/DirectorioController.php (198)
+in /var/www/directorio/index.php (14)
+2013/06/05 15:05:10 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand falló al ejecutar la sentencia SQL: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`directorio`.`documental`, CONSTRAINT `fk_documental_directorio1` FOREIGN KEY (`id`) REFERENCES `directorio` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION). The SQL statement executed was: DELETE FROM `directorio` WHERE `directorio`.`id`=44724' in /var/www/yii-1.1.13.e9e4a0/framework/db/CDbCommand.php:357
+Stack trace:
+#0 /var/www/yii-1.1.13.e9e4a0/framework/db/ar/CActiveRecord.php(1745): CDbCommand->execute()
+#1 /var/www/yii-1.1.13.e9e4a0/framework/db/ar/CActiveRecord.php(1168): CActiveRecord->deleteByPk('44724')
+#2 /var/www/directorio/protected/controllers/DirectorioController.php(198): CActiveRecord->delete()
+#3 [internal function]: DirectorioController->actionDelete('44724')
+#4 /var/www/yii-1.1.13.e9e4a0/framework/web/actions/CAction.php(108): ReflectionMethod->invokeArgs(Object(DirectorioController), Array)
+#5 /var/www/yii-1.1.13.e9e4a0/framework/web/actions/CInlineAction.php(47): CAction->runWithParamsInternal(Object(DirectorioController), Object(ReflectionMethod), Array)
+#6 /var/www/yii-1.1.13.e9e4a0/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#7 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#8 /var/www/yii-1.1.13.e9e4a0/framework/web/CController.php(1116): CFilterChain->run()
+#9 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CInlineFilter.php(58): CController->filterPostOnly(Object(CFilterChain))
+#10 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#11 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CFilter.php(40): CFilterChain->run()
+#12 /var/www/yii-1.1.13.e9e4a0/framework/web/CController.php(1145): CFilter->filter(Object(CFilterChain))
+#13 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#14 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#15 /var/www/yii-1.1.13.e9e4a0/framework/web/CController.php(291): CFilterChain->run()
+#16 /var/www/yii-1.1.13.e9e4a0/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 /var/www/yii-1.1.13.e9e4a0/framework/web/CWebApplication.php(282): CController->run('delete')
+#18 /var/www/yii-1.1.13.e9e4a0/framework/web/CWebApplication.php(141): CWebApplication->runController('directorio/dele...')
+#19 /var/www/yii-1.1.13.e9e4a0/framework/base/CApplication.php(169): CWebApplication->processRequest()
+#20 /var/www/directorio/index.php(14): CApplication->run()
+#21 {main}
+REQUEST_URI=/directorio/index.php/directorio/delete/44724?ajax=directorio-grid
+HTTP_REFERER=http://172.16.229.128/directorio/index.php/directorio/admin
+---
+2013/06/05 15:19:55 [warning] [application] Error al definir unsafe el atributo "nombre" de "Fotos".
+in /var/www/directorio/protected/controllers/DirectorioController.php (85)
+in /var/www/directorio/index.php (14)
+2013/06/05 15:20:04 [warning] [application] Error al definir unsafe el atributo "nombre" de "Fotos".
+in /var/www/directorio/protected/controllers/DirectorioController.php (85)
+in /var/www/directorio/index.php (14)
+2013/06/05 15:34:52 [warning] [application] Error al definir unsafe el atributo "nombre" de "Fotos".
+in /var/www/directorio/protected/controllers/DirectorioController.php (85)
+in /var/www/directorio/index.php (14)
+2013/06/05 15:35:07 [warning] [application] Error al definir unsafe el atributo "nombre" de "Fotos".
+in /var/www/directorio/protected/controllers/DirectorioController.php (85)
+in /var/www/directorio/index.php (14)
+2013/06/05 15:35:17 [warning] [application] Error al definir unsafe el atributo "nombre" de "Fotos".
+in /var/www/directorio/protected/controllers/DirectorioController.php (85)
+in /var/www/directorio/index.php (14)
+2013/06/05 15:35:26 [warning] [application] Error al definir unsafe el atributo "nombre" de "Fotos".
+in /var/www/directorio/protected/controllers/DirectorioController.php (85)
+in /var/www/directorio/index.php (14)
+2013/06/05 16:02:40 [warning] [application] Error al definir unsafe el atributo "nombre" de "Fotos".
+in /var/www/directorio/protected/controllers/DirectorioController.php (85)
+in /var/www/directorio/index.php (14)
+2013/06/05 16:07:50 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'La pagina que solicitaste no existe.' in /var/www/directorio/protected/controllers/DirectorioController.php:557
+Stack trace:
+#0 /var/www/directorio/protected/controllers/DirectorioController.php(48): DirectorioController->loadModel('1625')
+#1 [internal function]: DirectorioController->actionView('1625')
+#2 /var/www/yii-1.1.13.e9e4a0/framework/web/actions/CAction.php(108): ReflectionMethod->invokeArgs(Object(DirectorioController), Array)
+#3 /var/www/yii-1.1.13.e9e4a0/framework/web/actions/CInlineAction.php(47): CAction->runWithParamsInternal(Object(DirectorioController), Object(ReflectionMethod), Array)
+#4 /var/www/yii-1.1.13.e9e4a0/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#5 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#6 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CFilter.php(40): CFilterChain->run()
+#7 /var/www/yii-1.1.13.e9e4a0/framework/web/CController.php(1145): CFilter->filter(Object(CFilterChain))
+#8 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#9 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#10 /var/www/yii-1.1.13.e9e4a0/framework/web/CController.php(291): CFilterChain->run()
+#11 /var/www/yii-1.1.13.e9e4a0/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /var/www/yii-1.1.13.e9e4a0/framework/web/CWebApplication.php(282): CController->run('view')
+#13 /var/www/yii-1.1.13.e9e4a0/framework/web/CWebApplication.php(141): CWebApplication->runController('directorio/view')
+#14 /var/www/yii-1.1.13.e9e4a0/framework/base/CApplication.php(169): CWebApplication->processRequest()
+#15 /var/www/directorio/index.php(14): CApplication->run()
+#16 {main}
+REQUEST_URI=/directorio/index.php/directorio/1625
+HTTP_REFERER=http://172.16.229.128/directorio/index.php/directorio/create
+---
+2013/06/05 16:08:16 [error] [exception.Exception] exception 'Exception' in /var/www/directorio/protected/controllers/DirectorioController.php:447
+Stack trace:
+#0 /var/www/yii-1.1.13.e9e4a0/framework/web/actions/CInlineAction.php(49): DirectorioController->actionAjaxupdate()
+#1 /var/www/yii-1.1.13.e9e4a0/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#2 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#3 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CFilter.php(40): CFilterChain->run()
+#4 /var/www/yii-1.1.13.e9e4a0/framework/web/CController.php(1145): CFilter->filter(Object(CFilterChain))
+#5 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#6 /var/www/yii-1.1.13.e9e4a0/framework/web/filters/CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#7 /var/www/yii-1.1.13.e9e4a0/framework/web/CController.php(291): CFilterChain->run()
+#8 /var/www/yii-1.1.13.e9e4a0/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#9 /var/www/yii-1.1.13.e9e4a0/framework/web/CWebApplication.php(282): CController->run('ajaxupdate')
+#10 /var/www/yii-1.1.13.e9e4a0/framework/web/CWebApplication.php(141): CWebApplication->runController('directorio/ajax...')
+#11 /var/www/yii-1.1.13.e9e4a0/framework/base/CApplication.php(169): CWebApplication->processRequest()
+#12 /var/www/directorio/index.php(14): CApplication->run()
+#13 {main}
+REQUEST_URI=/directorio/index.php/directorio/ajaxupdate?act=doDelete
+HTTP_REFERER=http://172.16.229.128/directorio/index.php/directorio/admin
+---
+2013/06/05 16:46:31 [warning] [application] Error al definir unsafe el atributo "nombre" de "Fotos".
+in /var/www/directorio/protected/controllers/DirectorioController.php (154)
+in /var/www/directorio/index.php (14)
+2013/06/05 16:46:37 [warning] [application] Error al definir unsafe el atributo "nombre" de "Fotos".
+in /var/www/directorio/protected/controllers/DirectorioController.php (154)
+in /var/www/directorio/index.php (14)
+2013/06/05 16:53:44 [warning] [application] Error al definir unsafe el atributo "nombre" de "Fotos".
+in /var/www/directorio/protected/controllers/DirectorioController.php (154)
+in /var/www/directorio/index.php (14)
+2013/06/05 16:55:28 [warning] [application] Error al definir unsafe el atributo "nombre" de "Fotos".
+in /var/www/directorio/protected/controllers/DirectorioController.php (154)
+in /var/www/directorio/index.php (14)

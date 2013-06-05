@@ -45,9 +45,6 @@
 					<input type="checkbox" name="caja_otro_domicilio"
 					id="caja_otro_domicilio">
 				</td>
-				<td width="20%"><label id="etiqueta">¿Tiene fotografía?</label> <input
-					type="checkbox" name="caja_foto" id="caja_foto">
-				</td>
 				<td width="20%"><label id="etiqueta">¿Tiene asistente?</label> <input
 					type="checkbox" name="caja_asistente" id="caja_asistente">
 				</td>
@@ -93,29 +90,25 @@
 		<?php echo $form->error($model_f,'nombre'); ?>
 	</div>
 
-	<div id="datos_persona">
-		<div class="row">
-			<?php echo $form->labelEx($model,'nombre', array('id'=>'etiqueta')); ?>
-			<span class="required">*</span><br>
-			<?php echo $form->textField($model,'nombre',array('size'=>60,'maxlength'=>255, 'id'=>'nombre')); ?>
-			<?php echo $form->error($model,'nombre'); ?>
-		</div>
-
-		<div class="row">
-			<?php echo $form->labelEx($model,'apellido', array('id'=>'etiqueta')); ?>
-			<span class="required">*</span><br>
-			<?php echo $form->textField($model,'apellido',array('size'=>60,'maxlength'=>255, 'id'=>'apellido')); ?>
-			<?php echo $form->error($model,'apellido'); ?>
-		</div>
+	<div class="row">
+		<?php echo $form->labelEx($model,'nombre', array('id'=>'etiqueta')); ?>
+		<span class="required" id="datos_nombre">*</span><br>
+		<?php echo $form->textField($model,'nombre',array('size'=>60,'maxlength'=>255, 'id'=>'nombre')); ?>
+		<?php echo $form->error($model,'nombre'); ?>
 	</div>
 
-	<div id="datos_institucion" style="display: none">
-		<div class="row">
-			<?php echo $form->labelEx($model,'institucion', array('id'=>'etiqueta')); ?>
-			<span class="required">*</span><br>
-			<?php echo $form->textField($model,'institucion',array('size'=>60,'maxlength'=>255, 'id'=>'institucion')); ?>
-			<?php echo $form->error($model,'institucion'); ?>
-		</div>
+	<div class="row">
+		<?php echo $form->labelEx($model,'apellido', array('id'=>'etiqueta')); ?>
+		<span class="required" id="datos_apellido">*</span><br>
+		<?php echo $form->textField($model,'apellido',array('size'=>60,'maxlength'=>255, 'id'=>'apellido')); ?>
+		<?php echo $form->error($model,'apellido'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'institucion', array('id'=>'etiqueta')); ?>
+		<span class="required" id="datos_institucion" style="display: none;">*</span><br>
+		<?php echo $form->textField($model,'institucion',array('size'=>60,'maxlength'=>255, 'id'=>'institucion')); ?>
+		<?php echo $form->error($model,'institucion'); ?>
 	</div>
 
 	<div class="row">
@@ -205,6 +198,12 @@
 			<?php echo $form->labelEx($model,'puesto'); ?>
 			<?php echo $form->textField($model,'puesto',array('size'=>60,'maxlength'=>255)); ?>
 			<?php echo $form->error($model,'puesto'); ?>
+		</div>
+
+		<div class="row">
+			<?php echo $form->labelEx($model,'adscripcion'); ?>
+			<?php echo $form->textField($model,'adscripcion',array('size'=>60,'maxlength'=>255)); ?>
+			<?php echo $form->error($model,'adscripcion'); ?>
 		</div>
 
 		<div class="row">
