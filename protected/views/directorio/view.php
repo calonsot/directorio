@@ -91,7 +91,10 @@ $this->menu=array(
 						'value'=>DirectorioController::validaEstado($model->estado),
 				),
 				'cp',
-				'paises_id',
+				array(
+						'name'=>'paises_id',
+						'value'=>DirectorioController::validaPais($model->paises_id),
+				),
 				array(
 						'label'=>'',
 						'value'=>'<b><font style="color:#FFA500">------------------------------------------DOMICILIO ALTERNATIVO------------------------------------------------</style></b>',

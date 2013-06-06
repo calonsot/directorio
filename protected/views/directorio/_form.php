@@ -357,12 +357,6 @@
 			<?php echo $form->textField($model,'direccion',array('size'=>60,'maxlength'=>255, 'id'=>'direccion')); ?>
 			<?php echo $form->error($model,'direccion'); ?>
 		</div>
-
-		<div class="row" style="display: none;">
-			<?php //echo $form->labelEx($model,'estado'); ?>
-			<?php //echo $form->textField($model,'estado',array('size'=>60,'maxlength'=>255)); ?>
-			<?php //echo $form->error($model,'estado'); ?>
-		</div>
 	</div>
 
 	<div id="datos_otro_domicilio" style="display: none">
@@ -493,99 +487,9 @@
 	</div>
 
 	<div class="row">
-		<?php //echo $form->labelEx($model,'veces_consulta'); ?>
-		<?php //echo $form->textField($model,'veces_consulta',array('size'=>20,'maxlength'=>20)); ?>
-		<?php //echo $form->error($model,'veces_consulta'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'fec_alta'); ?>
-		<?php //echo $form->textField($model,'fec_alta'); ?>
-		<?php //echo $form->error($model,'fec_alta'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'fec_act'); ?>
-		<?php //echo $form->textField($model,'fec_act'); ?>
-		<?php //echo $form->error($model,'fec_act'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'tipo_id'); ?>
-		<?php //echo $form->textField($model,'tipo_id'); ?>
-		<?php //echo $form->error($model,'tipo_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'usuarios_id'); ?>
-		<?php //echo $form->textField($model,'usuarios_id'); ?>
-		<?php //echo $form->error($model,'usuarios_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'institucion_id'); ?>
-		<?php //echo $form->textField($model,'institucion_id'); ?>
-		<?php //echo $form->error($model,'institucion_id'); ?>
-	</div>
-
-	<div class="row">
 		<?php //echo $form->labelEx($model,'sector_id'); ?>
 		<?php //echo $form->textField($model,'sector_id'); ?>
 		<?php //echo $form->error($model,'sector_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'paises_id'); ?>
-		<?php //echo $form->textField($model,'paises_id'); ?>
-		<?php //echo $form->error($model,'paises_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'paises_id1'); ?>
-		<?php //echo $form->textField($model,'paises_id1'); ?>
-		<?php //echo $form->error($model,'paises_id1'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'ciudad_id'); ?>
-		<?php //echo $form->textField($model,'ciudad_id'); ?>
-		<?php //echo $form->error($model,'ciudad_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'ciudad_id1'); ?>
-		<?php //echo $form->textField($model,'ciudad_id1'); ?>
-		<?php //echo $form->error($model,'ciudad_id1'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'fotos_id'); ?>
-		<?php //echo $form->textField($model,'fotos_id'); ?>
-		<?php //echo $form->error($model,'fotos_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'codigo_postal_id'); ?>
-		<?php //echo $form->textField($model,'codigo_postal_id'); ?>
-		<?php //echo $form->error($model,'codigo_postal_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'codigo_postal_id1'); ?>
-		<?php //echo $form->textField($model,'codigo_postal_id1'); ?>
-		<?php //echo $form->error($model,'codigo_postal_id1'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'tipo_asentamiento_id'); ?>
-		<?php //echo $form->textField($model,'tipo_asentamiento_id'); ?>
-		<?php //echo $form->error($model,'tipo_asentamiento_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php //echo $form->labelEx($model,'tipo_asentamiento_id1'); ?>
-		<?php //echo $form->textField($model,'tipo_asentamiento_id1'); ?>
-		<?php //echo $form->error($model,'tipo_asentamiento_id1'); ?>
 	</div>
 
 	<div class="row buttons">

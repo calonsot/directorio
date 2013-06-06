@@ -85,18 +85,30 @@ class DirectorioController extends Controller
 			$model_f->attributes=$_POST['Fotos'];
 			$archivo=CUploadedFile::getInstance($model_f, 'nombre');
 
-			if ($archivo != null) {
-				$model_f->fec_alta=self::fechaAlta();
-				$model_f->nombre=$archivo->getName();
-				$model_f->formato=$archivo->getType();
-				$model_f->peso=$archivo->getSize();
-				$ruta=dirname(__FILE__).'/../../imagenes/contactos/'.$archivo;
-				$model_f->ruta='../../imagenes/contactos/'.$archivo;
-					
-				if ($model_f->save())
+			if ($archivo != null)
+			{
+				if (!file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
 				{
-					$archivo->saveAs($ruta);
-					$model->fotos_id=$model_f->id;
+					mkdir(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id);
+				}
+
+				if (file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
+				{
+					$fecha=date("Y-m-d_H-i-s");
+					$identificador=$fecha.'_';
+					$model_f->fec_alta=self::fechaAlta();
+					$model_f->nombre=$archivo->getName();
+					$model_f->formato=$archivo->getType();
+					$model_f->peso=$archivo->getSize();
+					$model_f->cadena=$identificador;
+					$ruta=dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
+					$model_f->ruta='../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
+
+					if ($model_f->save())
+					{
+						$archivo->saveAs($ruta);
+						$model->fotos_id=$model_f->id;
+					}
 				}
 			}
 
@@ -154,18 +166,30 @@ class DirectorioController extends Controller
 			$model_f->attributes=$_POST['Fotos'];
 			$archivo=CUploadedFile::getInstance($model_f, 'nombre');
 
-			if ($archivo != null) {
-				$model_f->fec_alta=self::fechaAlta();
-				$model_f->nombre=$archivo->getName();
-				$model_f->formato=$archivo->getType();
-				$model_f->peso=$archivo->getSize();
-				$ruta=dirname(__FILE__).'/../../imagenes/contactos/'.$archivo;
-				$model_f->ruta='../../imagenes/contactos/'.$archivo;
-				
-				if ($model_f->save())
+			if ($archivo != null)
+			{
+				if (!file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
 				{
-					$archivo->saveAs($ruta);
-					$model->fotos_id=$model_f->id;
+					mkdir(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id);
+				}
+
+				if (file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
+				{
+					$fecha=date("Y-m-d_H-i-s");
+					$identificador=$fecha.'_';
+					$model_f->fec_alta=self::fechaAlta();
+					$model_f->nombre=$archivo->getName();
+					$model_f->formato=$archivo->getType();
+					$model_f->peso=$archivo->getSize();
+					$model_f->cadena=$identificador;
+					$ruta=dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
+					$model_f->ruta='../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
+
+					if ($model_f->save())
+					{
+						$archivo->saveAs($ruta);
+						$model->fotos_id=$model_f->id;
+					}
 				}
 			}
 
@@ -542,6 +566,23 @@ class DirectorioController extends Controller
 		}
 	}
 
+	/**
+	 *
+	 * @param String $pais el id del pais
+	 * @return el nombre del pais o null
+	 */
+	public static function validaPais ($pais)
+	{
+		$model=Paises::model()->findByPk($pais);
+
+		if ($model!=null)
+		{
+			return $model->nombre;
+
+		} else {
+			return 'México';
+		}
+	}
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.

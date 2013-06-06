@@ -9,6 +9,7 @@
  * @property string $ruta
  * @property string $formato
  * @property string $peso
+ * @property string $cadena
  * @property string $fec_alta
  * @property string $fec_act
  *
@@ -45,11 +46,11 @@ class Fotos extends CActiveRecord
 		return array(
 			//array('nombre, ruta, formato, peso, fec_alta, fec_act', 'required'),
 			//array('ruta', 'required'),
-			array('nombre, ruta, formato, peso', 'length', 'max'=>255),
+			array('nombre, ruta, formato, peso, cadena', 'length', 'max'=>255),
 			array('nombre', 'file', 'types'=>'jpg, gif, png, jpeg'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, nombre, ruta, formato, peso, fec_alta, fec_act', 'safe', 'on'=>'search'),
+			array('id, nombre, ruta, formato, peso, cadena, fec_alta, fec_act', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,6 +77,7 @@ class Fotos extends CActiveRecord
 			'ruta' => 'Ruta',
 			'formato' => 'Formato',
 			'peso' => 'Peso',
+			'cadena' => 'Cadena',
 			'fec_alta' => 'Fecha de subida',
 			'fec_act' => 'Fecha de ultima actualización',
 		);
@@ -97,6 +99,7 @@ class Fotos extends CActiveRecord
 		$criteria->compare('ruta',$this->ruta,true);
 		$criteria->compare('formato',$this->formato,true);
 		$criteria->compare('peso',$this->peso,true);
+		$criteria->compare('cadena',$this->cadena,true);
 		$criteria->compare('fec_alta',$this->fec_alta,true);
 		$criteria->compare('fec_act',$this->fec_act,true);
 
