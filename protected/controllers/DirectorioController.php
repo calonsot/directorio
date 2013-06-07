@@ -249,6 +249,7 @@ class DirectorioController extends Controller
 	{
 		$model=new Directorio('search');
 		$model->unsetAttributes();  // clear any default values
+		
 		if(isset($_GET['Directorio']))
 			$model->attributes=$_GET['Directorio'];
 
@@ -256,7 +257,6 @@ class DirectorioController extends Controller
 				'model'=>$model,
 		));
 	}
-
 
 	/**
 	 * Imprime los municipios de la base con ajax
@@ -443,9 +443,7 @@ class DirectorioController extends Controller
 	 */
 	public function actionDameCodigosPostales($asentamiento_id)
 	{
-		//$asentamiento_id = (int) $_POST['Directorio']['asentamiento_lista'];
 		$model = CodigoPostal::model()->findByAttributes(array('asentamiento_id'=>$asentamiento_id));
-
 		echo CHtml::encode($model->codigo);
 	}
 
@@ -582,6 +580,170 @@ class DirectorioController extends Controller
 		} else {
 			return 'México';
 		}
+	}
+
+	/**
+	 *
+	 * @param integer $foto el idebtificador de la foto
+	 * @return string la foto a desplegar
+	 */
+	public static function validaFoto ($foto)
+	{
+		$model=Fotos::model()->findByPk($foto);
+
+		if ($model!=null)
+		{
+			return CHtml::image($model->ruta, $model->nombre, array('width'=>'70px', 'height'=>'70px'));
+
+		} else {
+			return CHtml::image('../../imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'70px', 'height'=>'70px'));
+		}
+	}
+
+	/**
+	 *
+	 * @throws CHttpException
+	 * @return Ambigous <multitype:multitype:string, multitype:multitype:string  multitype:string multitype:string   unknown string multitype:string multitype:  multitype:string Ambigous <multitype:, multitype:unknown mixed , mixed, multitype:unknown , string, unknown>  >
+	 */
+	public function despliegaColumnas ()
+	{
+		$roles_id=Usuarios::model()->findByPk(Yii::app()->user->id_usuario)->roles_id;
+		$rol=Roles::model()->findByPk($roles_id);
+
+		if($rol != null)
+		{
+			$columnas=$this::atributosBase($rol->atributos_base);
+			return $columnas;
+
+		} else {
+			throw new CHttpException(404,'La acción que solicitaste no existe.');
+		}
+	}
+
+	/**
+	 *
+	 * @param Object $atr los atributos base del usuario
+	 * @return multitype:multitype:string  multitype:string multitype:string   unknown string multitype:string multitype:  multitype:string Ambigous <multitype:, multitype:unknown mixed , mixed, multitype:unknown , string, unknown>
+	 */
+	public static function atributosBase ($atr)
+	{
+		$atributo=explode(',', $atr);
+		$atributos=array();
+		$contador=1;
+		$atributos[0]=array(
+				'id'=>'casillas',
+				'class'=>'CCheckBoxColumn',
+				'selectableRows' => '50',
+		);
+
+		foreach ($atributo as $at)
+		{
+			$a=trim($at);
+
+			switch ($a)
+			{
+				case 'fotos_id':
+
+					$atributos[$contador]=array(
+					'header'=>'Foto',
+					'type'=>'raw',
+					'value'=>'DirectorioController::validaFoto($data->fotos_id)',
+					);
+					break;
+
+				case 'es_internacional':
+
+					$atributos[$contador]=array(
+					'name'=>'es_internacional',
+					'header'=>'¿Int?',
+					'filter'=>array('1'=>'Sí','0'=>'No'),
+					'value'=>'($data->es_internacional=="1")?("Sí"):("No")',
+					);
+					break;
+
+				case 'es_institucion':
+
+					$atributos[$contador]=array(
+					'name'=>'es_institucion',
+					'header'=>'¿Int?',
+					'filter'=>array('1'=>'Sí','0'=>'No'),
+					'value'=>'($data->es_internacional=="1")?("Sí"):("No")',
+					);
+					break;
+
+				case 'nombre':
+					$atributos[$contador]=$a;
+					break;
+
+				case 'apellido':
+					$atributos[$contador]=$a;
+					break;
+
+				case 'institucion':
+					$atributos[$contador]=$a;
+					break;
+
+				case 'correo':
+					$atributos[$contador]=$a;
+					break;
+
+				case 'correo_alternativo':
+					$atributos[$contador]=$a;
+					break;
+
+				case 'correos':
+					$atributos[$contador]=$a;
+					break;
+
+				case 'telefono_particular':
+					$atributos[$contador]=$a;
+					break;
+
+				case 'telefono_oficina':
+					$atributos[$contador]=$a;
+					break;
+
+				case 'telefono_casa':
+					$atributos[$contador]=$a;
+					break;
+
+				case 'telefonos':
+					$atributos[$contador]=$a;
+					break;
+
+				case 'estado':
+					$atributos[$contador]=array(
+					'name'=>"estado",
+					'filter'=>CHtml::listData(Estado::model()->findAll(), 'id', 'nombre'),
+					'value'=>'DirectorioController::validaEstado($data->estado)',
+					);
+					break;
+
+				case 'tipo_id':
+					$atributos[$contador]=array(
+					'name'=>"tipo_id",
+					'filter'=>CHtml::listData(Tipo::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'),
+					'value'=>'Tipo::model()->findByPk($data->tipo_id)->nombre',
+					);
+					break;
+
+				case 'usuarios_id':
+					$atributos[$contador]=array(
+					'name'=>"usuarios_id",
+					'filter'=>CHtml::listData(Usuarios::model()->findAll(), 'id', 'usuario'),
+					'value'=>'Usuarios::model()->findByPk($data->usuarios_id)->usuario',
+					);
+					break;
+			}
+
+			$contador++;
+		}
+
+		$atributos[$contador]=array(
+				'class'=>'CButtonColumn',
+		);
+
+		return $atributos;
 	}
 
 	/**

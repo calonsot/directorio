@@ -20,5 +20,3 @@ $this->pageTitle=Yii::app()->name;
 	</li>
 </ul>
 
-<iframe src="<?php //echo $this->createUrl('directorio/admin');?>" height="3750px" width="910px"></iframe>
-

@@ -6,9 +6,9 @@
 
 <div class="wide form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'action'=>Yii::app()->createUrl($this->route),
-	'method'=>'get',
+	<?php $form=$this->beginWidget('CActiveForm', array(
+			'action'=>Yii::app()->createUrl($this->route),
+			'method'=>'get',
 )); ?>
 
 	<div class="row">
@@ -42,8 +42,13 @@
 	</div>
 
 	<div class="row">
-		<?php echo CHtml::label('Busca en todos los correos','correo'); ?>
-		<?php echo $form->textField($model,'correos',array('size'=>60,'maxlength'=>255, 'id'=>'correo')); ?>
+		<?php echo CHtml::label('Busca por nombre, apellido o empresa','alias'); ?>
+		<?php echo $form->textField($model,'alias',array('size'=>60,'maxlength'=>255, 'id'=>'alias')); ?>
+	</div>
+
+	<div class="row">
+		<?php echo CHtml::label('Busca en todos los correos','correos_totales'); ?>
+		<?php echo $form->textField($model,'correos_totales',array('size'=>60,'maxlength'=>255, 'id'=>'correo')); ?>
 	</div>
 
 	<div class="row">
@@ -57,8 +62,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo CHtml::label('Busca en todos los telefónos','telefono'); ?>
-		<?php echo $form->textField($model,'telefonos',array('size'=>60,'maxlength'=>255,'id'=>'telefono')); ?>
+		<?php echo CHtml::label('Busca en todos los telefónos','telefonos_totales'); ?>
+		<?php echo $form->textField($model,'telefonos_totales',array('size'=>60,'maxlength'=>255,'id'=>'telefono')); ?>
 	</div>
 
 	<div class="row">
@@ -155,7 +160,7 @@
 		<?php //echo $form->label($model,'cp_alternativo'); ?>
 		<?php //echo $form->textField($model,'cp_alternativo'); ?>
 	</div>
-	
+
 	<div class="row">
 		<?php //echo $form->label($model,'observaciones'); ?>
 		<?php //echo $form->textArea($model,'observaciones',array('rows'=>6, 'cols'=>50)); ?>
@@ -206,7 +211,7 @@
 		<?php //echo $form->label($model,'paises_id1'); ?>
 		<?php //echo $form->textField($model,'paises_id1'); ?>
 	</div>
-	
+
 	<div class="row">
 		<?php //echo $form->label($model,'ciudad_id'); ?>
 		<?php //echo $form->textField($model,'ciudad_id'); ?>
@@ -246,6 +251,7 @@
 		<?php echo CHtml::submitButton('Search'); ?>
 	</div>
 
-<?php $this->endWidget(); ?>
+	<?php $this->endWidget(); ?>
 
-</div><!-- search-form -->
+</div>
+<!-- search-form -->

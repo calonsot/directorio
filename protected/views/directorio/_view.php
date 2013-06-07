@@ -10,8 +10,9 @@
 		echo CHtml::image(Fotos::model()->findByPk($data->fotos_id)->ruta,
 				$data->es_institucion ? $data->institucion : $data->nombre.' '.$data->apellido, array('width'=>'150px', 'height'=>'110px', 'align'=>'right'));
 	}else {
-		echo CHtml::image('/directorio/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'100px', 'align'=>'right'));
+		echo CHtml::image('../../imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'100px', 'align'=>'right'));
 	}
+
 	?>
 
 	<?php 

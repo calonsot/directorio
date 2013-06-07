@@ -73,6 +73,30 @@
 class Directorio extends CActiveRecord
 {
 	/**
+	 * 
+	 * @var string es el grupo de la clase medios
+	 */
+	public $grupo;
+	
+	/**
+	 * 
+	 * @var string es el alias del contacto(nombre o institucion)
+	 */
+	public $alias;
+	
+	/**
+	 *
+	 * @var string saca todos los correos
+	 */
+	public $correos_totales;
+	
+	/**
+	 * 
+	 * @var string saca todos los telefonos
+	 */
+	public $telefonos_totales;
+	
+	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
 	 * @return Directorio the static model class
@@ -112,7 +136,7 @@ class Directorio extends CActiveRecord
 		array('nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, observaciones', 'default', 'setOnEmpty'=>true, 'value'=>null),
 		// The following rule is used by search().
 		// Please remove those attributes that should not be searched.
-		array('id, es_internacional, es_institucion, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, fec_alta, fec_act, tipo_id, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1', 'safe', 'on'=>'search'),
+		array('id, es_internacional, es_institucion, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, fec_alta, fec_act, tipo_id, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1, grupo, alias, telefonos_totales, correos_totales', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -281,21 +305,22 @@ class Directorio extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->with= array('medios', 'usuarios', 'tipo');
-		//$criteria->join(LEFT JOIN ON);
-		//$criteria->together = true;
-		//$criteria->alias='u';
-		$criteria->addSearchCondition('telefono_particular',$this->telefonos,true,'OR')
-		->addSearchCondition('telefono_oficina',$this->telefonos,true,'OR')
-		->addSearchCondition('telefono_casa',$this->telefonos,true,'OR')
-		->addSearchCondition('telefonos',$this->telefonos,true,'OR');
+		$criteria->with= array('medios');
+		$criteria->together = true;
+		
+		$criteria->addSearchCondition('nombre',$this->alias,true,'OR')
+		->addSearchCondition('apellido',$this->alias,true,'OR')
+		->addSearchCondition('institucion',$this->alias,true,'OR');
+		
+		$criteria->addSearchCondition('telefono_particular',$this->telefonos_totales,true,'OR')
+		->addSearchCondition('telefono_oficina',$this->telefonos_totales,true,'OR')
+		->addSearchCondition('telefono_casa',$this->telefonos_totales,true,'OR')
+		->addSearchCondition('telefonos',$this->telefonos_totales,true,'OR');
 
-		$criteria->addSearchCondition('correo_alternativo',$this->correos,true,'OR')
-		->addSearchCondition('correos',$this->correos,true,'OR')
-		->addSearchCondition('correo',$this->correos,true,'OR');
+		$criteria->addSearchCondition('correo_alternativo',$this->correos_totales,true,'OR')
+		->addSearchCondition('correos',$this->correos_totales,true,'OR')
+		->addSearchCondition('correo',$this->correos_totales,true,'OR');
 
-		//$criteria->addSearchCondition('telefono_oficina',$this->telefono_oficina,true,'OR');
-		//$criteria->addSearchCondition('telefono_oficina',$this->telefono_particular,true,'OR')->compare('telefono_particular',$this->telefono_particular,true);
 		$criteria->compare('id',$this->id);
 		$criteria->compare('es_internacional',$this->es_internacional);
 		$criteria->compare('es_institucion',$this->es_institucion);
@@ -304,11 +329,11 @@ class Directorio extends CActiveRecord
 		$criteria->compare('institucion',$this->institucion,true);
 		$criteria->compare('correo',$this->correo,true);
 		$criteria->compare('correo_alternativo',$this->correo_alternativo,true);
-		//$criteria->compare('correos',$this->correos,true);
+		$criteria->compare('correos',$this->correos,true);
 		$criteria->compare('telefono_particular',$this->telefono_particular,true);
 		$criteria->compare('telefono_oficina',$this->telefono_oficina,true);
 		$criteria->compare('telefono_casa',$this->telefono_casa,true);
-		//$criteria->compare('telefonos',$this->telefonos,true);
+		$criteria->compare('telefonos',$this->telefonos,true);
 		$criteria->compare('puesto',$this->puesto,true);
 		$criteria->compare('adscripcion',$this->adscripcion,true);
 		$criteria->compare('nombre_asistente',$this->nombre_asistente,true);
@@ -338,17 +363,14 @@ class Directorio extends CActiveRecord
 		$criteria->compare('paises_id1',$this->paises_id1);
 		$criteria->compare('ciudad_id',$this->ciudad_id);
 		$criteria->compare('ciudad_id1',$this->ciudad_id1);
-		$criteria->compare('fotos_id',$this->fotos_id);
 		$criteria->compare('codigo_postal_id',$this->codigo_postal_id);
 		$criteria->compare('codigo_postal_id1',$this->codigo_postal_id1);
 		$criteria->compare('tipo_asentamiento_id',$this->tipo_asentamiento_id);
 		$criteria->compare('tipo_asentamiento_id1',$this->tipo_asentamiento_id1);
-		$criteria->compare('medios.grupo', $this->id, true);
-		//$criteria->select = array('usuarios_id');
-		//$criteria->alias='u';
-		//$criteria->
+		$criteria->compare('medios.grupo', $this->grupo, true);
+		
 		return new CActiveDataProvider($this, array(
-				'criteria'=>$criteria, 'pagination'=>array('pageSize'=>50),
+				'criteria'=>$criteria, 'pagination'=>array('pageSize'=>10),
 		));
 	}
 }

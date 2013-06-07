@@ -24,7 +24,7 @@ body
 
 #content
 {
-    padding: 20px;
+    padding: 10px;
 }
 
 #sidebar
@@ -226,4 +226,9 @@ div.search-form
 .operations li a:hover
 {
 	background: #80CFFF;
+}
+
+.CGridViewContainer 
+{ 
+	width: 930px; overflow: auto;
 }
