@@ -629,11 +629,15 @@ class DirectorioController extends Controller
 	{
 		$atributo=explode(',', $atr);
 		$atributos=array();
-		$contador=1;
+		$contador=2;
 		$atributos[0]=array(
 				'id'=>'casillas',
 				'class'=>'CCheckBoxColumn',
 				'selectableRows' => '50',
+		);
+		
+		$atributos[1]=array(
+				'class'=>'CButtonColumn',
 		);
 
 		foreach ($atributo as $at)
@@ -738,10 +742,6 @@ class DirectorioController extends Controller
 
 			$contador++;
 		}
-
-		$atributos[$contador]=array(
-				'class'=>'CButtonColumn',
-		);
 
 		return $atributos;
 	}
