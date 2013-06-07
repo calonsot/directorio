@@ -281,8 +281,10 @@ class Directorio extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		//$criteria->with= array('tipo');
+		$criteria->with= array('medios', 'usuarios', 'tipo');
+		//$criteria->join(LEFT JOIN ON);
 		//$criteria->together = true;
+		//$criteria->alias='u';
 		$criteria->addSearchCondition('telefono_particular',$this->telefonos,true,'OR')
 		->addSearchCondition('telefono_oficina',$this->telefonos,true,'OR')
 		->addSearchCondition('telefono_casa',$this->telefonos,true,'OR')
@@ -329,7 +331,7 @@ class Directorio extends CActiveRecord
 		$criteria->compare('fec_alta',$this->fec_alta,true);
 		$criteria->compare('fec_act',$this->fec_act,true);
 		$criteria->compare('tipo_id',$this->tipo_id);
-		$criteria->compare('usuarios_id',$this->usuarios_id);
+		$criteria->compare('t.usuarios_id',$this->usuarios_id);
 		$criteria->compare('institucion_id',$this->institucion_id);
 		$criteria->compare('sector_id',$this->sector_id);
 		$criteria->compare('paises_id',$this->paises_id);
@@ -341,7 +343,10 @@ class Directorio extends CActiveRecord
 		$criteria->compare('codigo_postal_id1',$this->codigo_postal_id1);
 		$criteria->compare('tipo_asentamiento_id',$this->tipo_asentamiento_id);
 		$criteria->compare('tipo_asentamiento_id1',$this->tipo_asentamiento_id1);
-
+		$criteria->compare('medios.grupo', $this->id, true);
+		//$criteria->select = array('usuarios_id');
+		//$criteria->alias='u';
+		//$criteria->
 		return new CActiveDataProvider($this, array(
 				'criteria'=>$criteria, 'pagination'=>array('pageSize'=>50),
 		));

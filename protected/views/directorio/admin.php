@@ -139,6 +139,12 @@ or <b>=</b>).
 						'filter'=>CHtml::listData(Usuarios::model()->findAll(), 'id', 'usuario'),
 						'value'=>'Usuarios::model()->findByPk($data->usuarios_id)->usuario',
 				),
+				//array(
+				//'name'=>"usuarios_id",
+				//'filter'=>CHtml::listData(Usuarios::model()->findAll(), 'id', 'usuario'),
+				//'value'=>'Usuarios::model()->findByPk($data->usuarios_id)->usuario',
+				//),
+				'medios.grupo',
 		//'institucion_id',
 		//'sector_idsector',
 		//'paises_id',

@@ -110,14 +110,14 @@ $this->menu=array(
 				'paises_id1',
 				array(
 						'label'=>'',
-						'value'=>'<b><font style="color:#FFA500">-----------------------------------------------DATOS ASISTENTE-------------------------------------------------------</style></b>',
+						'value'=>'<b><font style="color:#FFA500">---------------------------------------------DATOS ASISTENTE-----------------------------------------------------</style></b>',
 						'type'=>'raw',
 				),
 				'nombre_asistente',
 				'apellido_asistente',
 				array(
 						'label'=>'',
-						'value'=>'<b><font style="color:#FFA500">---------------------------------------------DATOS ADICIONALES-----------------------------------------------------</style></b>',
+						'value'=>'<b><font style="color:#FFA500">-------------------------------------------DATOS ADICIONALES----------------------------------------------------</style></b>',
 						'type'=>'raw',
 				),
 				'veces_consulta',
