@@ -29,7 +29,7 @@ class ListasController extends Controller
 		return array(
 
 				array('allow', // allow authenticated user to perform 'create' and 'update' actions
-						'actions'=>array('index','view','create','update','admin','delete', 'imprimelista', 'activa'),
+						'actions'=>array('index','view','create','update','admin','delete', 'imprimelista', 'activa', 'exportaword'),
 						'users'=>array('@','admin'),
 				),
 				array('deny',  // deny all users
@@ -173,6 +173,15 @@ class ListasController extends Controller
 		} else {
 			throw new CHttpException(404,'Esa pagina no existe.');
 		}
+	}
+
+	public function actionExportaWord ()
+	{
+		header("Content-type: application/vnd.ms-word");
+		header("Content-Disposition: attachment;Filename=document_name.docx");
+
+		echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-1252\">";
+		echo "<b>My first document</b>";
 	}
 
 	/**

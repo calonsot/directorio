@@ -249,7 +249,7 @@ class DirectorioController extends Controller
 	{
 		$model=new Directorio('search');
 		$model->unsetAttributes();  // clear any default values
-		
+
 		if(isset($_GET['Directorio']))
 			$model->attributes=$_GET['Directorio'];
 
@@ -635,7 +635,7 @@ class DirectorioController extends Controller
 				'class'=>'CCheckBoxColumn',
 				'selectableRows' => '50',
 		);
-		
+
 		$atributos[1]=array(
 				'class'=>'CButtonColumn',
 		);
@@ -658,7 +658,7 @@ class DirectorioController extends Controller
 				case 'es_internacional':
 
 					$atributos[$contador]=array(
-					'name'=>'es_internacional',
+					'name'=>$a,
 					'header'=>'¿Int?',
 					'filter'=>array('1'=>'Sí','0'=>'No'),
 					'value'=>'($data->es_internacional=="1")?("Sí"):("No")',
@@ -668,7 +668,7 @@ class DirectorioController extends Controller
 				case 'es_institucion':
 
 					$atributos[$contador]=array(
-					'name'=>'es_institucion',
+					'name'=>$a,
 					'header'=>'¿Int?',
 					'filter'=>array('1'=>'Sí','0'=>'No'),
 					'value'=>'($data->es_internacional=="1")?("Sí"):("No")',
@@ -715,9 +715,107 @@ class DirectorioController extends Controller
 					$atributos[$contador]=$a;
 					break;
 
+				case 'grupo':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->medios->'.$a,
+					);
+					break;
+
+				case 'medio':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->medios->'.$a,
+					);
+					break;
+
+				case 'tipo_medio':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->medios->'.$a,
+					);
+					break;
+
+				case 'perfil_medio':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->medios->'.$a,
+					);
+					break;
+
+				case 'programa':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->medios->'.$a,
+					);
+					break;
+
+				case 'seccion':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->medios->'.$a,
+					);
+					break;
+
+				case 'suplemento':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->medios->'.$a,
+					);
+					break;
+
+				case 'columna':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->medios->'.$a,
+					);
+					break;
+
+				case 'grado_academico':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->documental->'.$a,
+					);
+					break;
+						
+				case 'sigla_institucion':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->documental->'.$a,
+					);
+					break;
+
+				case 'sigla_dependencia':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->documental->'.$a,
+					);
+					break;
+						
+				case 'dependencia':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->documental->'.$a,
+					);
+					break;
+
+				case 'subdependencia':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->documental->'.$a,
+					);
+					break;
+						
+				case 'actividad':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->documental->'.$a,
+					);
+					break;
+
 				case 'estado':
 					$atributos[$contador]=array(
-					'name'=>"estado",
+					'name'=>$a,
 					'filter'=>CHtml::listData(Estado::model()->findAll(), 'id', 'nombre'),
 					'value'=>'DirectorioController::validaEstado($data->estado)',
 					);
@@ -725,7 +823,7 @@ class DirectorioController extends Controller
 
 				case 'tipo_id':
 					$atributos[$contador]=array(
-					'name'=>"tipo_id",
+					'name'=>$a,
 					'filter'=>CHtml::listData(Tipo::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'),
 					'value'=>'Tipo::model()->findByPk($data->tipo_id)->nombre',
 					);
@@ -733,7 +831,7 @@ class DirectorioController extends Controller
 
 				case 'usuarios_id':
 					$atributos[$contador]=array(
-					'name'=>"usuarios_id",
+					'name'=>$a,
 					'filter'=>CHtml::listData(Usuarios::model()->findAll(), 'id', 'usuario'),
 					'value'=>'Usuarios::model()->findByPk($data->usuarios_id)->usuario',
 					);

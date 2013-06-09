@@ -73,29 +73,48 @@
 class Directorio extends CActiveRecord
 {
 	/**
-	 * 
-	 * @var string es el grupo de la clase medios
-	 */
-	public $grupo;
-	
-	/**
-	 * 
+	 *
 	 * @var string es el alias del contacto(nombre o institucion)
 	 */
 	public $alias;
-	
+
 	/**
 	 *
 	 * @var string saca todos los correos
 	 */
 	public $correos_totales;
-	
+
 	/**
-	 * 
+	 *
 	 * @var string saca todos los telefonos
 	 */
 	public $telefonos_totales;
-	
+
+	/**
+	 *
+	 * @var string (PARTE DE MEDIOS)
+	 */
+	public $grupo;
+	public $medio;
+	public $tipo_medio;
+	public $perfil_medio;
+	public $programa;
+	public $seccion;
+	public $suplemento;
+	public $columna;
+
+	/**
+	 *
+	 * @var string (PARTE DE CENTRO DUCUMENTAL)
+	 */
+	public $grado_academico;
+	public $sigla_institucion;
+	public $sigla_dependencia;
+	public $dependencia;
+	public $subdependencia;
+	public $actividad;
+
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -136,7 +155,11 @@ class Directorio extends CActiveRecord
 		array('nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, observaciones', 'default', 'setOnEmpty'=>true, 'value'=>null),
 		// The following rule is used by search().
 		// Please remove those attributes that should not be searched.
-		array('id, es_internacional, es_institucion, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, fec_alta, fec_act, tipo_id, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1, grupo, alias, telefonos_totales, correos_totales', 'safe', 'on'=>'search'),
+		array('id, es_internacional, es_institucion, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, fec_alta, fec_act, tipo_id, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1,
+				alias, telefonos_totales, correos_totales,
+				grupo, medio, tipo_medio, perfil_medio, programa, seccion, suplemento, columna,
+				grado_academico, sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad',
+				'safe', 'on'=>'search'),
 		);
 	}
 
@@ -291,6 +314,22 @@ class Directorio extends CActiveRecord
 				'codigo_postal_id1' => 'Código Postal Id1',
 				'tipo_asentamiento_id' => 'Tipo de colonia',
 				'tipo_asentamiento_id1' => 'Tipo de colonia alternativa',
+				//parte de medios
+				'grupo' => 'Grupo',
+				'medio' => 'Medio',
+				'tipo_medio' => 'Tipo de medio',
+				'perfil_medio' => 'Perfil del medio',
+				'programa' => 'Programa',
+				'seccion' => 'Sección',
+				'suplemento' => 'Suplemento',
+				'columna' => 'Columna',
+				//parte de documental
+				'grado_academico' => 'Grado académico',
+				'sigla_institucion' => 'Sigla institución',
+				'sigla_dependencia' => 'Sigla dependencia',
+				'dependencia' => 'Dependencia',
+				'subdependencia' => 'Subdependencia',
+				'actividad' => 'Actividad',
 		);
 	}
 
@@ -305,13 +344,13 @@ class Directorio extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->with= array('medios');
+		$criteria->with= array('medios', 'documental');
 		$criteria->together = true;
-		
+
 		$criteria->addSearchCondition('nombre',$this->alias,true,'OR')
 		->addSearchCondition('apellido',$this->alias,true,'OR')
 		->addSearchCondition('institucion',$this->alias,true,'OR');
-		
+
 		$criteria->addSearchCondition('telefono_particular',$this->telefonos_totales,true,'OR')
 		->addSearchCondition('telefono_oficina',$this->telefonos_totales,true,'OR')
 		->addSearchCondition('telefono_casa',$this->telefonos_totales,true,'OR')
@@ -367,8 +406,23 @@ class Directorio extends CActiveRecord
 		$criteria->compare('codigo_postal_id1',$this->codigo_postal_id1);
 		$criteria->compare('tipo_asentamiento_id',$this->tipo_asentamiento_id);
 		$criteria->compare('tipo_asentamiento_id1',$this->tipo_asentamiento_id1);
+		//parte de medios
 		$criteria->compare('medios.grupo', $this->grupo, true);
-		
+		$criteria->compare('medios.medio', $this->medio, true);
+		$criteria->compare('medios.tipo_medio', $this->tipo_medio, true);
+		$criteria->compare('medios.perfil_medio', $this->perfil_medio, true);
+		$criteria->compare('medios.programa', $this->programa, true);
+		$criteria->compare('medios.seccion', $this->seccion, true);
+		$criteria->compare('medios.suplemento', $this->suplemento, true);
+		$criteria->compare('medios.columna', $this->columna, true);
+		//parte de documental
+		$criteria->compare('documental.grado_academico', $this->grado_academico, true);
+		$criteria->compare('documental.sigla_institucion', $this->sigla_institucion, true);
+		$criteria->compare('documental.sigla_dependencia', $this->sigla_dependencia, true);
+		$criteria->compare('documental.dependencia', $this->dependencia, true);
+		$criteria->compare('documental.subdependencia', $this->subdependencia, true);
+		$criteria->compare('documental.actividad', $this->actividad, true);
+
 		return new CActiveDataProvider($this, array(
 				'criteria'=>$criteria, 'pagination'=>array('pageSize'=>10),
 		));
