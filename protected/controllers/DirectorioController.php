@@ -30,7 +30,7 @@ class DirectorioController extends Controller
 
 				array('allow', // allow admin user to perform 'admin' and 'delete' actions
 						'actions'=>array('index','view','create','update', 'admin','delete','damemunicipios', 'dameasentamientos', 'damecodigospostales', 'dameciudades',
-								'dameubicacion', 'dametipoasentamientos', 'dameciudad', 'ajaxupdate', 'exporta', 'validacorreos'),
+								'dameubicacion', 'dametipoasentamientos', 'dameciudad', 'ajaxupdate', 'exporta', 'validacorreos, importacontactos'),
 						'users'=>array('@'),
 				),
 				array('deny',  // deny all users
@@ -500,6 +500,11 @@ class DirectorioController extends Controller
 				}
 			}
 		}
+	}
+	
+	public function actionImportaContactos () 
+	{
+		
 	}
 
 	/**

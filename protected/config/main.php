@@ -45,6 +45,7 @@ return array(
 		'user'=>array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
+			'authTimeout' => 60*60*24*365*10,
 		),
 		
 		'email'=>array(

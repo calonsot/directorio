@@ -430,21 +430,21 @@
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx($model_m,'seccion'); ?>
-			<?php echo $form->textField($model_m,'seccion',array('size'=>60,'maxlength'=>255,'id'=>'seccion')); ?>
-			<?php echo $form->error($model_m,'seccion'); ?>
+			<?php //echo $form->labelEx($model_m,'seccion'); ?>
+			<?php //echo $form->textField($model_m,'seccion',array('size'=>60,'maxlength'=>255,'id'=>'seccion')); ?>
+			<?php //echo $form->error($model_m,'seccion'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx($model_m,'suplemento'); ?>
-			<?php echo $form->textField($model_m,'suplemento',array('size'=>60,'maxlength'=>255,'id'=>'suplemento')); ?>
-			<?php echo $form->error($model_m,'suplemento'); ?>
+			<?php //echo $form->labelEx($model_m,'suplemento'); ?>
+			<?php //echo $form->textField($model_m,'suplemento',array('size'=>60,'maxlength'=>255,'id'=>'suplemento')); ?>
+			<?php //echo $form->error($model_m,'suplemento'); ?>
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx($model_m,'columna'); ?>
-			<?php echo $form->textField($model_m,'columna',array('size'=>60,'maxlength'=>255,'id'=>'columna')); ?>
-			<?php echo $form->error($model_m,'columna'); ?>
+			<?php //echo $form->labelEx($model_m,'columna'); ?>
+			<?php //echo $form->textField($model_m,'columna',array('size'=>60,'maxlength'=>255,'id'=>'columna')); ?>
+			<?php //echo $form->error($model_m,'columna'); ?>
 		</div>
 	</div>
 

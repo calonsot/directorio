@@ -27,7 +27,7 @@ $this->menu=array(
 			$foto=Fotos::model()->findByPk($model->fotos_id);
 			if ($foto != null) {
 			?> <?php echo CHtml::image($foto->ruta,
-				$model->es_institucion ? $model->institucion : $model->nombre.' '.$model->apellido, array('width'=>'150px', 'height'=>'110px', 'align'=>'right')); ?>
+				$model->es_institucion ? $model->institucion : $model->nombre.' '.$model->apellido, array('height'=>'110px', 'align'=>'right')); ?>
 				<?php } else {
 					echo CHtml::image('/directorio/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'100px', 'align'=>'right'));
 				}?></td>
@@ -155,6 +155,7 @@ $this->menu=array(
 						'name'=>'programa',
 						'value'=>$model_m->programa,
 				),
+/*
 				array(
 						'name'=>'seccion',
 						'value'=>$model_m->seccion,
@@ -166,7 +167,7 @@ $this->menu=array(
 				array(
 						'name'=>'columna',
 						'value'=>$model_m->columna,
-				),
+				),*/
 				array(
 				'label'=>'',
 				'value'=>'<b><font style="color:#FFA500">--------------------------------------DATOS CENTRO DOCUMENTAL---------------------------------------------</style></b>',

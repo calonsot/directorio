@@ -22,6 +22,7 @@
  * @property string $nombre_asistente
  * @property string $apellido_asistente
  * @property string $pagina
+ * @property string $red_social
  * @property string $direccion
  * @property string $direccion_alternativa
  * @property string $asentamiento
@@ -146,16 +147,16 @@ class Directorio extends CActiveRecord
 		return array(
 				//array('usuarios_id', 'required'),
 				array('id, es_internacional, es_institucion, cp, cp_alternativo, tipo_id, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1', 'numerical', 'integerOnly'=>true),
-				array('nombre, apellido, institucion, correo, correo_alternativo, telefono_particular, telefono_oficina, telefono_casa, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo', 'length', 'max'=>255),
+				array('nombre, apellido, institucion, correo, correo_alternativo, telefono_particular, telefono_oficina, telefono_casa, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo', 'length', 'max'=>255),
 				array('veces_consulta', 'length', 'max'=>20),
 				array('correos, telefonos, observaciones', 'safe'),
 				//valida el campo para mail
 		//array('correo, correo_alternativo', 'email'),
 		//set empty values to null
-		array('nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, observaciones', 'default', 'setOnEmpty'=>true, 'value'=>null),
+		array('nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, observaciones', 'default', 'setOnEmpty'=>true, 'value'=>null),
 		// The following rule is used by search().
 		// Please remove those attributes that should not be searched.
-		array('id, es_internacional, es_institucion, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, fec_alta, fec_act, tipo_id, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1,
+		array('id, es_internacional, es_institucion, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, fec_alta, fec_act, tipo_id, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1,
 				alias, telefonos_totales, correos_totales,
 				grupo, medio, tipo_medio, perfil_medio, programa, seccion, suplemento, columna,
 				grado_academico, sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad',
@@ -285,6 +286,7 @@ class Directorio extends CActiveRecord
 				'nombre_asistente' => 'Nombre(s) del asistente',
 				'apellido_asistente' => 'Apellido(s) del asistente',
 				'pagina' => 'Pagina web',
+				'red_social' => 'Redes sociales',
 				'direccion' => 'Dirección',
 				'direccion_alternativa' => 'Dirección alternativa',
 				'asentamiento' => 'Colonia',
@@ -378,6 +380,7 @@ class Directorio extends CActiveRecord
 		$criteria->compare('nombre_asistente',$this->nombre_asistente,true);
 		$criteria->compare('apellido_asistente',$this->apellido_asistente,true);
 		$criteria->compare('pagina',$this->pagina,true);
+		$criteria->compare('red_social',$this->red_social,true);
 		$criteria->compare('direccion',$this->direccion,true);
 		$criteria->compare('direccion_alternativa',$this->direccion_alternativa,true);
 		$criteria->compare('asentamiento',$this->asentamiento,true);
