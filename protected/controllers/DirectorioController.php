@@ -30,7 +30,7 @@ class DirectorioController extends Controller
 
 				array('allow', // allow admin user to perform 'admin' and 'delete' actions
 						'actions'=>array('index','view','create','update', 'admin','delete','damemunicipios', 'dameasentamientos', 'damecodigospostales', 'dameciudades',
-								'dameubicacion', 'dametipoasentamientos', 'dameciudad', 'ajaxupdate', 'exporta', 'validacorreos, importacontactos'),
+								'dameubicacion', 'dametipoasentamientos', 'dameciudad', 'ajaxupdate', 'exporta', 'validacorreos', 'importacontactos'),
 						'users'=>array('@'),
 				),
 				array('deny',  // deny all users
@@ -501,10 +501,10 @@ class DirectorioController extends Controller
 			}
 		}
 	}
-	
-	public function actionImportaContactos () 
+
+	public function actionImportaContactos ()
 	{
-		
+
 	}
 
 	/**
@@ -664,7 +664,7 @@ class DirectorioController extends Controller
 
 					$atributos[$contador]=array(
 					'name'=>$a,
-					'header'=>'¿Int?',
+					'header'=>'¿Inter?',
 					'filter'=>array('1'=>'Sí','0'=>'No'),
 					'value'=>'($data->es_internacional=="1")?("Sí"):("No")',
 					);
@@ -674,9 +674,18 @@ class DirectorioController extends Controller
 
 					$atributos[$contador]=array(
 					'name'=>$a,
-					'header'=>'¿Int?',
+					'header'=>'¿Inst?',
 					'filter'=>array('1'=>'Sí','0'=>'No'),
 					'value'=>'($data->es_internacional=="1")?("Sí"):("No")',
+					);
+					break;
+
+				case 'sector_id':
+
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'filter'=>CHtml::listData(Sector::model()->findAll(), 'id', 'nombre'),
+					'value'=>'Sector::model()->findByPk($data->sector_id)->nombre',
 					);
 					break;
 
@@ -754,35 +763,35 @@ class DirectorioController extends Controller
 					'value'=>'$data->medios->'.$a,
 					);
 					break;
-
-				case 'seccion':
+					/*
+					 case 'seccion':
 					$atributos[$contador]=array(
-					'name'=>$a,
-					'value'=>'$data->medios->'.$a,
+							'name'=>$a,
+							'value'=>'$data->medios->'.$a,
 					);
 					break;
 
-				case 'suplemento':
+					case 'suplemento':
 					$atributos[$contador]=array(
-					'name'=>$a,
-					'value'=>'$data->medios->'.$a,
+							'name'=>$a,
+							'value'=>'$data->medios->'.$a,
 					);
 					break;
 
-				case 'columna':
+					case 'columna':
 					$atributos[$contador]=array(
-					'name'=>$a,
-					'value'=>'$data->medios->'.$a,
+							'name'=>$a,
+							'value'=>'$data->medios->'.$a,
 					);
 					break;
-
+					*/
 				case 'grado_academico':
 					$atributos[$contador]=array(
 					'name'=>$a,
 					'value'=>'$data->documental->'.$a,
 					);
 					break;
-						
+
 				case 'sigla_institucion':
 					$atributos[$contador]=array(
 					'name'=>$a,
@@ -796,7 +805,7 @@ class DirectorioController extends Controller
 					'value'=>'$data->documental->'.$a,
 					);
 					break;
-						
+
 				case 'dependencia':
 					$atributos[$contador]=array(
 					'name'=>$a,
@@ -810,7 +819,7 @@ class DirectorioController extends Controller
 					'value'=>'$data->documental->'.$a,
 					);
 					break;
-						
+
 				case 'actividad':
 					$atributos[$contador]=array(
 					'name'=>$a,

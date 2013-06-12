@@ -57,10 +57,13 @@ $this->menu=array(
 						'name'=>'tipo_id',
 						'value'=>Tipo::model()->findByPk($model->tipo_id)->nombre,
 				),
+				array(
+						'name'=>'sector_id',
+						'value'=>Sector::model()->findByPk($model->sector_id)->nombre,
+				),
 				'institucion',
 				'nombre',
 				'apellido',
-				//'sector_id',
 				'correo',
 				'correo_alternativo',
 				'correos',
@@ -71,6 +74,7 @@ $this->menu=array(
 				'puesto',
 				'adscripcion',
 				'pagina',
+				'red_social',
 				'observaciones',
 				array(
 						'label'=>'',

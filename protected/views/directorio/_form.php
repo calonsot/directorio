@@ -120,6 +120,14 @@
 		<?php echo $form->error($model,'tipo_id'); ?>
 	</div>
 
+	<div class="row">
+		<?php echo $form->labelEx($model,'sector_id'); ?>
+		<?php echo $form->dropDownList($model, 'sector_id',  CHtml::listData(Sector::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'), 
+				array('empty'=>'---Selecciona el tipo de sector---', 'id'=>'sector'
+				)); ?>
+		<?php echo $form->error($model,'sector_id'); ?>
+	</div>
+
 	<div id="datos_principal">
 		<div class="row">
 			<?php echo $form->labelEx($model,'correo', array('id'=>'etiqueta')); ?>
@@ -210,6 +218,12 @@
 			<?php echo $form->labelEx($model,'pagina'); ?>
 			<?php echo $form->textField($model,'pagina',array('size'=>60,'maxlength'=>255)); ?>
 			<?php echo $form->error($model,'pagina'); ?>
+		</div>
+
+		<div class="row">
+			<?php echo $form->labelEx($model,'red_social'); ?>
+			<?php echo $form->textField($model,'red_social',array('size'=>60,'maxlength'=>255)); ?>
+			<?php echo $form->error($model,'red_social'); ?>
 		</div>
 
 		<div class="row">
