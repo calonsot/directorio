@@ -676,7 +676,7 @@ class DirectorioController extends Controller
 					'name'=>$a,
 					'header'=>'¿Inst?',
 					'filter'=>array('1'=>'Sí','0'=>'No'),
-					'value'=>'($data->es_internacional=="1")?("Sí"):("No")',
+					'value'=>'($data->es_institucion=="1")?("Sí"):("No")',
 					);
 					break;
 

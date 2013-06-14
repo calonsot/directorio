@@ -317,7 +317,7 @@ class ListasController extends Controller
 		$id=$_GET['id'];
 		$lista=Listas::model()->findByPk($id);
 		$lista->esta_activa=1;
-		$activas=Listas::model()->findAllByAttributes(array('esta_activa'=>1));
+		$activas=Listas::model()->findAllByAttributes(array('esta_activa'=>1, 'usuarios_id'=>Yii::app()->user->id_usuario));
 
 		foreach ($activas as $act)
 		{

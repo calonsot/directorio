@@ -52,7 +52,7 @@
 				//array('label'=>Listas::model()->findByAttributes(array('esta_activa'=>1))->nombre.'(lista activa)', 'url'=>Yii::app()->createUrl('usuarios/view',array(
 				//'id'=>$this->verificaLogin())), 'visible'=>!Yii::app()->user->isGuest),
 				//array('label'=>'Dudas y sugerencias', 'url'=>array('/site/contact')),
-				array('label'=>'Importa contactos desde archivo', 'url'=>array('/directorio/importacontactos'), 'visible'=>!Yii::app()->user->isGuest),
+				//array('label'=>'Importa contactos desde archivo', 'url'=>array('/directorio/importacontactos'), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'Iniciar sesión', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
 				array('label'=>'Cerrar sesión ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
 			),
