@@ -13,12 +13,13 @@ $(document).ready(
 			
 			function reseteaDomicilio () 
 			{
-				$('#ciudad, #ciudad_id, #municipio, #municipio_lista, #asentamiento, #asentamiento_lista, #tipo_asentamiento_id').val('').empty();
+				$('#codigo_postal, #ciudad, #ciudad_id, #municipio, #municipio_lista, #asentamiento, #asentamiento_lista, #tipo_asentamiento_id').val('').empty();
 				$('#estado').val('').removeAttr('checked').removeAttr('selected');
 				$('#ciudad_id').append("<option value=''>---Selecciona una ciudad---</option>").attr("disabled","disabled");
 				$('#municipio_lista').append("<option value=''>---Selecciona una municipio---</option>").attr("disabled","disabled");
 				$('#asentamiento_lista').append("<option value=''>---Selecciona una colonia---</option>").attr("disabled","disabled");
 				$('#tipo_asentamiento_id').append("<option value=''>---Selecciona un tipo de colonia---</option>").attr("disabled","disabled");
+				$('#con_ciudad, #sin_ciudad, #con_municipio, #sin_municipio, #con_asentamiento, #sin_asentamiento').slideUp();
 			}
 			//-----------------------PARTE DE LAS CAJAS-------------------------//
 
@@ -484,7 +485,10 @@ $(document).ready(
 				municipio_lista = $(this).val();
 		
 				$.post("/directorio/index.php/directorio/dameasentamientos", { 'municipio_lista': municipio_lista }, function(data){
-					$('#asentamiento_lista').empty().append(data);
+					
+					tags=data.split('-|-');
+					$('#asentamiento_lista').empty().append(tags[0]);
+					$('#municipio').val(tags[1]);
 			    });	
 				
 			    $.post("/directorio/index.php/directorio/dameciudad", { 'municipio': municipio_lista }, function(data){
@@ -492,6 +496,10 @@ $(document).ready(
 			    	if (data != '0') 
 			    	{
 				        $('#ciudad_id option[value="' + data + '"]').attr("selected", "selected");
+			    	
+			    	} else {
+			    		$('#ciudad_id').empty().append("<option value=''>---No se encuentra en ciudad---</option>").attr("disabled","disabled");
+			    		$('#con_ciudad').slideUp();
 			    	}
 			    	
 			    	$('#con_asentamiento').slideDown();
@@ -530,9 +538,12 @@ $(document).ready(
 				asentamiento_lista = $(this).val();
 				
 			    $.post("/directorio/index.php/directorio/dametipoasentamientos", { 'asentamiento_lista': asentamiento_lista }, function(data){
+			    	
 			    	datos = data.split("-|-");
 			    	$('#tipo_asentamiento_id').empty().append(datos[0]);
 			    	$('#cp').val(datos[1]);
+			    	$('#asentamiento').val(datos[2]);
+			    	$('#codigo_postal').val(datos[3]);
 			    });	
 			});
 			
@@ -606,33 +617,31 @@ $(document).ready(
 	    			$('#datos_ciudad, #datos_municipio, #datos_asentamiento').slideUp();
 	    			$('.datos_ciudad_id, #datos_municipio_lista, #datos_asentamiento_lista').slideDown();
 
-						$('#estado option[value="' + tags[0] + '"]').attr("selected", "selected");
+					$('#estado option[value="' + tags[0] + '"]').attr("selected", "selected");
 
-						//para poner el municipio en la lista y como valor
-						tag_municipio=tags[1].split("#-#");
-						$('#municipio_lista').empty().append(tags[1]);
-						$('#municipio').val(tag_municipio[1]);
+					//para poner el municipio en la lista y como valor
+					tag_municipio=tags[1].split("#-#");
+					$('#municipio_lista').empty().append(tag_municipio[0]);
+					$('#municipio').val(tag_municipio[1]);
 						
-						//pone el asentamiento de la lista y el valor
+					if (tags[4] != '0') 
+		    		{
+		    			tag_ciudad=tags[4].split("#-#");
+		    			$('#ciudad_id').empty().append(tag_ciudad[0]).removeAttr("disabled");
+		    			$('#ciudad').val(tag_ciudad[1]);
+		    		}
+						
+					if (tags[6] == '1') 
+		    		{
 						tag_asentamiento=tags[2].split("#-#");
 						$('#asentamiento_lista').empty().append(tag_asentamiento[0]);
-						
-						if (tag_asentamiento[1] == '1') 
-						{
-							$('#asentamiento').val(tag_asentamiento[2]);
-						}
-								    			
-		    			if (tags[4] != '0') 
-		    			{
-		    				tag_ciudad=tags[4].split("#-#");
-		    				$('#ciudad_id').empty().append(tag_ciudad[0]).removeAttr("disabled");
-		    				$('#ciudad').val(tag_ciudad[1]);
-		    			}
-		    			
-		    			if (tags[5] == '1') 
-		    			{
-		    				$('#tipo_asentamiento_id').empty().append(tags[3]).removeAttr("disabled");
-		    			} 
+						$('#asentamiento').val(tag_asentamiento[1]);
+						$('#tipo_asentamiento_id').empty().append(tags[3]).removeAttr("disabled");
+						$('#codigo_postal').val(tags[5]);
+								    					    					    			
+		    		} else {
+		    			$('#asentamiento_lista').empty().append(tags[2]);
+		    		} 
 			
 				} else 
 		    	{

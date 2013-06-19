@@ -412,7 +412,7 @@
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="row" style="display: none;">
 		<?php echo $form->labelEx($model,'codigo_postal_id'); ?>
 		<?php echo $form->textField($model,'codigo_postal_id',array('size'=>5,'maxlength'=>5,'id'=>'codigo_postal')); ?>
 		<?php echo $form->error($model,'codigo_postal_id'); ?>
