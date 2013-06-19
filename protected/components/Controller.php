@@ -71,7 +71,7 @@ class Controller extends CController
 	public function ubicacion($cp)
 	{
 		$results = Yii::app()->db->createCommand()
-		->select('a.id AS id_a, a.nombre AS nombre_a, asen.id AS id_asen, asen.nombre AS nombre_asen,
+		->select('c.id AS cp_id, a.id AS id_a, a.nombre AS nombre_a, asen.id AS id_asen, asen.nombre AS nombre_asen,
 				m.id AS id_m, m.nombre AS nombre_m, cd.id AS id_cd, cd.nombre AS nombre_cd, e.id AS id_e, e.nombre AS nombre_e')
 				->from('codigo_postal c')
 				->leftJoin('asentamiento a', 'c.asentamiento_id=a.id')

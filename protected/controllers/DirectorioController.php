@@ -283,12 +283,12 @@ class DirectorioController extends Controller
 			if(count($results) === 1)
 			{
 				$asentamiento = CHtml::tag('option',
-						array('value'=>$results[0]['id_e']),CHtml::encode($results[0]['nombre_a']),true)."#-#1#-#".$results[0]['nombre_a'];
+						array('value'=>$results[0]['id_e']),CHtml::encode($results[0]['nombre_a']),true)."#-#".$results[0]['nombre_a'];
 
 				$tipo_asentamiento = CHtml::tag('option',
 						array('value'=>$results[0]['id_asen']),CHtml::encode($results[0]['nombre_asen']),true);
 
-				echo $estado."-|-".$municipio."-|-".$asentamiento."-|-".$tipo_asentamiento."-|-".$ciudad."-|-1";
+				echo $estado."-|-".$municipio."-|-".$asentamiento."-|-".$tipo_asentamiento."-|-".$ciudad."-|-".$results[0]['cp_id']."-|-1";
 
 			} else {
 
@@ -311,7 +311,7 @@ class DirectorioController extends Controller
 					}
 				}
 
-				echo $estado."-|-".$municipio."-|-".$asentamiento."#-#0-|-".$tipo_asentamiento."-|-".$ciudad."-|-n";
+				echo $estado."-|-".$municipio."-|-".$asentamiento."-|-".$tipo_asentamiento."-|-".$ciudad;
 			}
 
 		} else {
@@ -383,16 +383,19 @@ class DirectorioController extends Controller
 	public function actionDameAsentamientos()
 	{
 		$municipio_id = (int) $_POST['municipio_lista'];
+		$municipio=Municipio::model()->findByPk($municipio_id);
 		$data=Asentamiento::model()->findAll(array('condition'=>'municipio_id='.$municipio_id, 'order'=>'nombre ASC'));
 		$data=CHtml::listData($data,'id','nombre');
 
-		echo CHtml::tag('option',
+		$cadena=CHtml::tag('option',
 				array('value'=>""),CHtml::encode('---Selecciona una colonia---'),true);
 
 		foreach($data as $value=>$subcategory)  {
-			echo CHtml::tag('option',
+			$cadena.=CHtml::tag('option',
 					array('value'=>$value),CHtml::encode($subcategory),true);
 		}
+		
+		echo $cadena.='-|-'.$municipio->nombre;
 	}
 
 	/**
@@ -402,34 +405,30 @@ class DirectorioController extends Controller
 	{
 		$data=TipoAsentamiento::model()->findAll(array('order'=>'nombre ASC'));
 		$data=CHtml::listData($data,'id','nombre');
-
-		$cadena= CHtml::tag('option',
-				array('value'=>""),CHtml::encode('---Selecciona una colonia---'),true);
+		$cadena='';
 
 		if ($_POST['asentamiento_lista'] != 'simple')
 		{
 			$asentamiento = (int) $_POST['asentamiento_lista'];
-			$datos_asentamiento=Asentamiento::model()->findByPk($asentamiento);
-			$cp = CodigoPostal::model()->findByAttributes(array('asentamiento_id'=>$asentamiento));
-			$tipo_asentamiento_id=$datos_asentamiento->tipo_asentamiento_id;
 
-			foreach($data as $value=>$subcategory)  {
+			$results = Yii::app()->db->createCommand()
+			->select('c.codigo AS codigo, c.id AS cp_id, a.id AS id_a, a.nombre AS nombre_a, asen.id AS id_asen, asen.nombre AS nombre_asen')
+			->from('codigo_postal c')
+			->leftJoin('asentamiento a', 'c.asentamiento_id=a.id')
+			->leftJoin('tipo_asentamiento asen', 'a.tipo_asentamiento_id=asen.id')
+			->where('c.asentamiento_id='.$asentamiento)
+			->queryRow();
 
-				if ($value == $tipo_asentamiento_id) {
+			$cadena.= CHtml::tag('option',
+					array('value'=>$results['id_asen']),CHtml::encode($results['nombre_asen']),true);
 
-					$cadena.= CHtml::tag('option',
-							array('value'=>$value, 'selected'=>'selected'),CHtml::encode($subcategory),true);
-				} else {
-
-					$cadena.= CHtml::tag('option',
-							array('value'=>$value),CHtml::encode($subcategory),true);
-				}
-			}
-
-			$cadena.="-|-".$cp->codigo;
+			$cadena.="-|-".$results['codigo']."-|-".$results['nombre_a']."-|-".$results['cp_id'];
 
 		} else {
-			foreach($data as $value=>$subcategory)  {
+			$cadena.= CHtml::tag('option',
+					array('value'=>""),CHtml::encode('---Selecciona una colonia---'),true);
+				
+			foreach ($data as $value=>$subcategory) {
 				$cadena.= CHtml::tag('option',
 						array('value'=>$value),CHtml::encode($subcategory),true);
 			}
@@ -684,7 +683,7 @@ class DirectorioController extends Controller
 
 					$atributos[$contador]=array(
 					'name'=>$a,
-					'filter'=>CHtml::listData(Sector::model()->findAll(), 'id', 'nombre'),
+					'filter'=>CHtml::listData(Sector::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'),
 					'value'=>'Sector::model()->findByPk($data->sector_id)->nombre',
 					);
 					break;
@@ -830,7 +829,7 @@ class DirectorioController extends Controller
 				case 'estado':
 					$atributos[$contador]=array(
 					'name'=>$a,
-					'filter'=>CHtml::listData(Estado::model()->findAll(), 'id', 'nombre'),
+					'filter'=>CHtml::listData(Estado::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'),
 					'value'=>'DirectorioController::validaEstado($data->estado)',
 					);
 					break;
@@ -846,7 +845,7 @@ class DirectorioController extends Controller
 				case 'usuarios_id':
 					$atributos[$contador]=array(
 					'name'=>$a,
-					'filter'=>CHtml::listData(Usuarios::model()->findAll(), 'id', 'usuario'),
+					'filter'=>CHtml::listData(Usuarios::model()->findAll(array('order'=>'nombre ASC')), 'id', 'usuario'),
 					'value'=>'Usuarios::model()->findByPk($data->usuarios_id)->usuario',
 					);
 					break;

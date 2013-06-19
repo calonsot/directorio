@@ -412,6 +412,12 @@
 		</div>
 	</div>
 
+	<div class="row">
+		<?php echo $form->labelEx($model,'codigo_postal_id'); ?>
+		<?php echo $form->textField($model,'codigo_postal_id',array('size'=>5,'maxlength'=>5,'id'=>'codigo_postal')); ?>
+		<?php echo $form->error($model,'codigo_postal_id'); ?>
+	</div>
+
 	<div id="datos_medios" style="display: none;">
 		<div class="row">
 			<?php echo $form->labelEx($model_m,'grupo'); ?>
