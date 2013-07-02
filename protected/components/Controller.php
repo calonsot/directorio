@@ -32,10 +32,14 @@ class Controller extends CController
 
 	public function dameInfoUsuario()
 	{
-		$usuario = Usuarios::model()->findByPk($this->IdUsuario);
-		//echo $usuario->id;
-		//$usuario = Usuarios::model()->findByPk(1);
-		return $usuario;
+		$results = Yii::app()->db->createCommand()
+		->select('r.*')
+		->from('usuarios u')
+		->leftJoin('roles r', 'u.roles_id=r.id')
+		->where('u.id='.Yii::app()->user->id_usuario)
+		->queryRow();
+
+		return $results;
 	}
 
 	/**
@@ -47,7 +51,7 @@ class Controller extends CController
 		$model = Usuarios::model()->findByAttributes(array('usuario'=>$usuario));
 		Yii::app()->user->setState('id_usuario', $model->id);
 	}
-	
+
 	/**
 	 *
 	 * @return string retorna el id si esta activo, vacio de lo contrario
@@ -86,6 +90,28 @@ class Controller extends CController
 	}
 
 	/**
+	 * Da la ubicacion completa con el id del CP dado
+	 * @param int $cp_id el codigo postal
+	 * @return el array con la ubicacion completa
+	 */
+	public function ubicacionInicio($cp_id)
+	{
+		$results = Yii::app()->db->createCommand()
+		->select('c.id AS cp_id, a.id AS id_a, a.nombre AS nombre_a, asen.id AS id_asen, asen.nombre AS nombre_asen,
+				m.id AS id_m, m.nombre AS nombre_m, cd.id AS id_cd, cd.nombre AS nombre_cd, e.id AS id_e, e.nombre AS nombre_e')
+				->from('codigo_postal c')
+				->leftJoin('asentamiento a', 'c.asentamiento_id=a.id')
+				->leftJoin('tipo_asentamiento asen', 'a.tipo_asentamiento_id=asen.id')
+				->leftJoin('municipio m', 'a.municipio_id=m.id')
+				->leftJoin('ciudad cd', 'm.ciudad_id=cd.id')
+				->leftJoin('estado e', 'm.estado_id=e.id')
+				->where('c.id='.$cp_id)
+				->queryRow();
+
+		return $results;
+	}
+
+	/**
 	 * Verifica si el registro tiene estado o no
 	 * @param object clase Estado $data
 	 * @return string el valor del estaod si es que existe o vacio
@@ -110,16 +136,16 @@ class Controller extends CController
 		$columnas=array('Columnas de directorio'=>array(), 'Columnas de medios'=>array(), 'Columnas de centro documental'=>array());
 
 		$columnas['Columnas de directorio']=Directorio::model()->attributeLabels();
-		unset($columnas['Columnas de directorio']['id'],$columnas['Columnas de directorio']['fec_alta'], $columnas['Columnas de directorio']['fec_act'], $columnas['Columnas de directorio']['usuarios_id'], 
-				$columnas['Columnas de directorio']['institucion_id'], $columnas['Columnas de directorio']['ciudad_id'], $columnas['Columnas de directorio']['ciudad_id1'], 
+		unset($columnas['Columnas de directorio']['id'],$columnas['Columnas de directorio']['fec_alta'], $columnas['Columnas de directorio']['fec_act'], $columnas['Columnas de directorio']['usuarios_id'],
+				$columnas['Columnas de directorio']['institucion_id'], $columnas['Columnas de directorio']['ciudad_id'], $columnas['Columnas de directorio']['ciudad_id1'],
 				$columnas['Columnas de directorio']['fotos_id'], $columnas['Columnas de directorio']['codigo_postal_id'], $columnas['Columnas de directorio']['codigo_postal_id1']);
-		
+
 		$columnas['Columnas de medios']=Medios::model()->attributeLabels();
 		unset($columnas['Columnas de medios']['id'],$columnas['Columnas de medios']['fec_alta'], $columnas['Columnas de medios']['fec_act'], $columnas['Columnas de medios']['usuarios_id']);
-		
+
 		$columnas['Columnas de centro documental']=Documental::model()->attributeLabels();
 		unset($columnas['Columnas de centro documental']['id'],$columnas['Columnas de centro documental']['fec_alta'], $columnas['Columnas de centro documental']['fec_act'], $columnas['Columnas de centro documental']['usuarios_id']);
-		
+
 		return $columnas;
 	}
 

@@ -30,7 +30,7 @@ class DirectorioController extends Controller
 
 				array('allow', // allow admin user to perform 'admin' and 'delete' actions
 						'actions'=>array('index','view','create','update', 'admin','delete','damemunicipios', 'dameasentamientos', 'damecodigospostales', 'dameciudades',
-								'dameubicacion', 'dametipoasentamientos', 'dameciudad', 'ajaxupdate', 'exporta', 'validacorreos', 'importacontactos'),
+								'dameubicacion', 'dameubicacioninicio', 'dametipoasentamientos', 'dameciudad', 'dameestado', 'dameestadoalternativo', 'ajaxupdate', 'exporta', 'validacorreos', 'importacontactos'),
 						'users'=>array('@'),
 				),
 				array('deny',  // deny all users
@@ -45,19 +45,29 @@ class DirectorioController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$model=$this->loadModel($id);
-		$model->veces_consulta++;
+		$datos=$this->dameInfoUsuario();
 
-		$model_m=Medios::model()->findByPk($id);
-		$model_c=Documental::model()->findByPk($id);
+		if ($datos['super_usuario']==1 || $datos['admin']==1)
+		{
+			$model=$this->loadModel($id);
+			$model->veces_consulta++;
 
-		if($model->saveAttributes(array('veces_consulta'))) {
-			$this->render('view',array(
-					'model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c,
-			));
+			$model_m=Medios::model()->findByPk($id);
+			$model_c=Documental::model()->findByPk($id);
+
+			$tipos=DirectorioController::dameTipos($id);
+
+			if($model->save()) {
+				$this->render('view',array(
+						'model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 'tipos'=>$tipos,
+				));
+
+			} else {
+				throw new Exception("Lo sentimos no se pudo hacer la opracion",500);
+			}
 
 		} else {
-			throw new Exception("Lo sentimos no se pudo hacer la opracion",500);
+			throw new CHttpException(NULL,'Aun no has sido dado de alta en el sistema para consultar, porfavor intentalo más tarde en lo que el sistema te valida.');
 		}
 	}
 
@@ -67,74 +77,93 @@ class DirectorioController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Directorio;
-		$model_m=new Medios();
-		$model_c=new Documental();
-		$model_f=new Fotos();
+		$datos=$this->dameInfoUsuario();
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Directorio']))
+		if ($datos['super_usuario']==1 || $datos['admin']==1)
 		{
-			$model->attributes=$_POST['Directorio'];
-			$model->fec_alta=self::fechaAlta();
-			$model->usuarios_id=Yii::app()->user->id_usuario;
+			$model=new Directorio;
+			$model_m=new Medios();
+			$model_c=new Documental();
+			$model_f=new Fotos();
+			$model_nuevo_td=new TiposDirectorio();
 
-			//parte de la foto
-			$model_f->attributes=$_POST['Fotos'];
-			$archivo=CUploadedFile::getInstance($model_f, 'nombre');
-
-			if ($archivo != null)
+			// Uncomment the following line if AJAX validation is needed
+			// $this->performAjaxValidation($model);
+			
+			if(isset($_POST['Directorio']))
 			{
-				if (!file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
+				$model->attributes=$_POST['Directorio'];
+				$model->fec_alta=self::fechaAlta();
+				$model->usuarios_id=Yii::app()->user->id_usuario;
+
+				//parte de la foto
+				$model_f->attributes=$_POST['Fotos'];
+				$archivo=CUploadedFile::getInstance($model_f, 'nombre');
+
+				if ($archivo != null)
 				{
-					mkdir(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id);
+					if (!file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
+					{
+						mkdir(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id);
+					}
+
+					if (file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
+					{
+						$fecha=date("Y-m-d_H-i-s");
+						$identificador=$fecha.'_';
+						$model_f->fec_alta=self::fechaAlta();
+						$model_f->nombre=$archivo->getName();
+						$model_f->formato=$archivo->getType();
+						$model_f->peso=$archivo->getSize();
+						$model_f->cadena=$identificador;
+						$ruta=dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
+						$model_f->ruta='../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
+
+						if ($model_f->save())
+						{
+							$archivo->saveAs($ruta);
+							$model->fotos_id=$model_f->id;
+						}
+					}
 				}
 
-				if (file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
+				if($model->save())
 				{
-					$fecha=date("Y-m-d_H-i-s");
-					$identificador=$fecha.'_';
-					$model_f->fec_alta=self::fechaAlta();
-					$model_f->nombre=$archivo->getName();
-					$model_f->formato=$archivo->getType();
-					$model_f->peso=$archivo->getSize();
-					$model_f->cadena=$identificador;
-					$ruta=dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
-					$model_f->ruta='../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
-
-					if ($model_f->save())
+					//parte de medios
+					$model_m->attributes=$_POST['Medios'];
+					$model_m->fec_alta=self::fechaAlta();
+					$model_m->usuarios_id=Yii::app()->user->id_usuario;
+					$model_m->id=$model->id;
+					
+					if($model_m->save())
 					{
-						$archivo->saveAs($ruta);
-						$model->fotos_id=$model_f->id;
+						//parte de centro documental
+						$model_c->attributes=$_POST['Documental'];
+						$model_c->fec_alta=self::fechaAlta();
+						$model_c->usuarios_id=Yii::app()->user->id_usuario;
+						$model_c->id=$model->id;
+
+						if($model_c->save())
+						{
+							//parte de tipos_directorio
+							$model_nuevo_td->attributes=$_POST['TiposDirectorio'];
+							$model_nuevo_td->fec_alta=self::fechaAlta();
+							$model_nuevo_td->directorio_id=$model->id;
+								
+							if($model_nuevo_td->save())
+								$this->redirect(array('view','id'=>$model->id));
+						}
 					}
 				}
 			}
 
-			if($model->save()) {
-				//parte de medios
-				$model_m->attributes=$_POST['Medios'];
-				$model_m->fec_alta=self::fechaAlta();
-				$model_m->usuarios_id=Yii::app()->user->id_usuario;
-				$model_m->id=$model->id;
+			$this->render('create',array(
+					'model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 'model_f'=>$model_f, 'model_nuevo_td'=>$model_nuevo_td,
+			));
 
-				if($model_m->save()) {
-					//parte de centro documental
-					$model_c->attributes=$_POST['Documental'];
-					$model_c->fec_alta=self::fechaAlta();
-					$model_c->usuarios_id=Yii::app()->user->id_usuario;
-					$model_c->id=$model->id;
-
-					if($model_c->save())
-						$this->redirect(array('view','id'=>$model->id));
-				}
-			}
+		} else {
+			throw new CHttpException(NULL,'Aun no has sido dado de alta en el sistema para consultar, porfavor intentalo más tarde en lo que el sistema te valida.');
 		}
-
-		$this->render('create',array(
-				'model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 'model_f'=>$model_f,
-		));
 	}
 
 	/**
@@ -144,72 +173,158 @@ class DirectorioController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
-		$model_m=Medios::model()->findByPk($id);
-		$model_c=Documental::model()->findByPk($id);
-		$model_foto=Fotos::model()->findByPk($model->fotos_id);
+		$datos=$this->dameInfoUsuario();
 
-		if ($model_foto == null)
+		if ($datos['super_usuario']==1 || $datos['admin']==1)
 		{
-			$model_f=new Fotos();
-		} else {
-			$model_f=Fotos::model()->findByPk($model->fotos_id);
-		}
+			$model=$this->loadModel($id);
+			$model_m=Medios::model()->findByPk($id);
+			$model_c=Documental::model()->findByPk($id);
+			$model_foto=Fotos::model()->findByPk($model->fotos_id);
+			$model_td=TiposDirectorio::model()->findAllByAttributes(array('directorio_id'=>$id)); //contiene arreglo de tipos
+			$model_nuevo_td=new TiposDirectorio();
+			$guardar=0;
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+			$tipos=count($model_td);
 
-		if(isset($_POST['Directorio']))
-		{
-			$model->attributes=$_POST['Directorio'];
-
-			$model_f->attributes=$_POST['Fotos'];
-			$archivo=CUploadedFile::getInstance($model_f, 'nombre');
-
-			if ($archivo != null)
+			if ($model_foto == null)
 			{
-				if (!file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
+				$model_f=new Fotos();
+			} else {
+				$model_f=Fotos::model()->findByPk($model->fotos_id);
+			}
+
+			// Uncomment the following line if AJAX validation is needed
+			// $this->performAjaxValidation($model);
+
+			if (isset($_POST['Directorio']))
+			{
+				$model->attributes=$_POST['Directorio'];
+				$model->fec_act=self::fechaAlta();
+
+				$model_f->attributes=$_POST['Fotos'];
+				$archivo=CUploadedFile::getInstance($model_f, 'nombre');
+
+				if ($archivo != null)
 				{
-					mkdir(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id);
+					if (!file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
+					{
+						mkdir(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id);
+					}
+
+					if (file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
+					{
+						$fecha=date("Y-m-d_H-i-s");
+						$identificador=$fecha.'_';
+						$model_f->fec_alta=self::fechaAlta();
+						$model_f->nombre=$archivo->getName();
+						$model_f->formato=$archivo->getType();
+						$model_f->peso=$archivo->getSize();
+						$model_f->cadena=$identificador;
+						$ruta=dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
+						$model_f->ruta='../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
+
+						if ($model_f->save())
+						{
+							$archivo->saveAs($ruta);
+							$model->fotos_id=$model_f->id;
+						}
+					}
 				}
 
-				if (file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
+				if (isset($_POST['estado_manual']) && $_POST['estado_manual'] != '')
 				{
-					$fecha=date("Y-m-d_H-i-s");
-					$identificador=$fecha.'_';
-					$model_f->fec_alta=self::fechaAlta();
-					$model_f->nombre=$archivo->getName();
-					$model_f->formato=$archivo->getType();
-					$model_f->peso=$archivo->getSize();
-					$model_f->cadena=$identificador;
-					$ruta=dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
-					$model_f->ruta='../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
+					$model->estado=$_POST['estado_manual'];
+				}
 
-					if ($model_f->save())
+				if (isset($_POST['estado_manual_alternativo']) && $_POST['estado_manual_alternativo'] != '')
+				{
+					$model->estado_alternativo=$_POST['estado_manual_alternativo'];
+				}
+
+				if ($model->save()) //salve el directorio
+				{
+					$model_m->attributes=$_POST['Medios'];
+
+					if ($model_m->save()) //salva la parte de medios
 					{
-						$archivo->saveAs($ruta);
-						$model->fotos_id=$model_f->id;
+						$model_c->attributes=$_POST['Documental'];
+
+						if ($model_c->save()) //salva la parte de centro documental
+						{
+							if ($tipos > 1) //parte de tipos (muchos)
+							{
+								for ($i=0;$i<$tipos;$i++)
+								{
+									$model_td[$i]->attributes=$_POST['TiposDirectorio'][$i+1];
+
+									if ($model_td[$i]->save())
+										$guardar+=1;
+								}
+
+								if ($guardar==$tipos)
+								{
+									$model_nuevo_td->attributes=$_POST['TiposDirectorio'];
+
+									if ($model_nuevo_td->tipo_id != 1)
+									{
+										$model_nuevo_td->directorio_id=$model->id;
+										$model_nuevo_td->fec_alta=self::fechaAlta();
+
+										if ($model_nuevo_td->save())
+											$this->redirect(array('view','id'=>$model->id));
+
+									} else {
+										$this->redirect(array('view','id'=>$model->id));
+									}
+								}
+
+							} else {   //una sola clasificacion
+
+								$model_td[0]->attributes=$_POST['TiposDirectorio'][1];
+
+								if ($model_td[0]->tipo_id != 1)    //si es diferente del default
+								{
+									$model_nuevo_td->attributes=$_POST['TiposDirectorio'];
+
+									if (isset($model_nuevo_td->tipo_id))
+									{
+										if ($model_nuevo_td->tipo_id != 1)
+										{
+											$model_nuevo_td->directorio_id=$model->id;
+											$model_nuevo_td->fec_alta=self::fechaAlta();
+
+											if ($model_nuevo_td->save() && $model_td[0]->save())
+												$this->redirect(array('view','id'=>$model->id));
+
+										} else {           //no salva nada
+											$this->redirect(array('view','id'=>$model->id));
+										}
+
+									} else {              //salva solo el primero
+
+										if ($model_td[0]->saveAttributes(array('tipo_id')))
+											$this->redirect(array('view','id'=>$model->id));
+									}
+
+								} else {                  //si es el default
+									if ($model_td[0]->save())
+										$this->redirect(array('view','id'=>$model->id));
+								}
+							}
+						}
 					}
 				}
 			}
 
-			if($model->save())
-			{
-				$model_m->attributes=$_POST['Medios'];
+			$this->render('update',array(
+					'model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 'model_f'=>$model_f,
+					'model_td'=>$model_td, 'model_nuevo_td'=>$model_nuevo_td,
+			));
 
-				if($model_m->save())
-				{
-					$model_c->attributes=$_POST['Documental'];
-
-					if($model_c->save())
-						$this->redirect(array('view','id'=>$model->id));
-				}
-			}
+		} else {
+			throw new CHttpException(NULL,'Aun no has sido dado de alta en el sistema para consultar, porfavor intentalo más tarde en lo que el sistema te valida.');
 		}
-
-		$this->render('update',array(
-				'model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 'model_f'=>$model_f,
-		));
 	}
 
 	/**
@@ -219,11 +334,19 @@ class DirectorioController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		$datos=$this->dameInfoUsuario();
 
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		if ($datos['super_usuario']==1 || $datos['admin']==1)
+		{
+			$this->loadModel($id)->delete();
+
+			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+			if(!isset($_GET['ajax']))
+				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+
+		} else {
+			throw new CHttpException(NULL,'Aun no has sido dado de alta en el sistema para consultar, porfavor intentalo más tarde en lo que el sistema te valida.');
+		}
 	}
 
 	/**
@@ -231,15 +354,20 @@ class DirectorioController extends Controller
 	 */
 	public function actionIndex()
 	{
-		//$this->setIdUsuario(Yii::app()->user->id);
-		//$dataProvider=new CActiveDataProvider('Directorio',array (
-		//'criteria' => array ('condition' => 'usuarios_id='.Yii::app()->user->id_usuario, 'order'=>'veces_consulta DESC')));
-		$dataProvider=new CActiveDataProvider('Directorio', array(
-				'criteria' => array ('order'=>'veces_consulta DESC'),
-		));
-		$this->render('index',array(
-				'dataProvider'=>$dataProvider,
-		));
+		$datos=$this->dameInfoUsuario();
+
+		if ($datos['super_usuario']==1 || $datos['admin']==1)
+		{
+			$dataProvider=new CActiveDataProvider('Directorio', array(
+					'criteria' => array ('order'=>'veces_consulta DESC'),
+			));
+			$this->render('index',array(
+					'dataProvider'=>$dataProvider,
+			));
+
+		} else {
+			throw new CHttpException(NULL,'Aun no has sido dado de alta en el sistema para consultar, porfavor intentalo más tarde en lo que el sistema te valida.');
+		}
 	}
 
 	/**
@@ -247,19 +375,27 @@ class DirectorioController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Directorio('search');
-		$model->unsetAttributes();  // clear any default values
+		$datos=$this->dameInfoUsuario();
 
-		if(isset($_GET['Directorio']))
-			$model->attributes=$_GET['Directorio'];
+		if ($datos['super_usuario']==1 || $datos['admin']==1)
+		{
+			$model=new Directorio('search');
+			$model->unsetAttributes();  // clear any default values
 
-		$this->render('admin',array(
-				'model'=>$model,
-		));
+			if(isset($_GET['Directorio']))
+				$model->attributes=$_GET['Directorio'];
+
+			$this->render('admin',array(
+					'model'=>$model,
+			));
+
+		} else {
+			throw new CHttpException(NULL,'Aun no has sido dado de alta en el sistema para consultar, porfavor intentalo más tarde en lo que el sistema te valida.');
+		}
 	}
 
 	/**
-	 * Imprime los municipios de la base con ajax
+	 * Imprime toda la ubicacion dado un CP
 	 */
 	public function actionDameUbicacion()
 	{
@@ -283,7 +419,7 @@ class DirectorioController extends Controller
 			if(count($results) === 1)
 			{
 				$asentamiento = CHtml::tag('option',
-						array('value'=>$results[0]['id_e']),CHtml::encode($results[0]['nombre_a']),true)."#-#".$results[0]['nombre_a'];
+						array('value'=>$results[0]['id_a']),CHtml::encode($results[0]['nombre_a']),true)."#-#".$results[0]['nombre_a'];
 
 				$tipo_asentamiento = CHtml::tag('option',
 						array('value'=>$results[0]['id_asen']),CHtml::encode($results[0]['nombre_asen']),true);
@@ -319,7 +455,67 @@ class DirectorioController extends Controller
 		}
 	}
 
+	/**
+	 * Imprime toda la informacion dado el id del CP
+	 */
+	public function actionDameUbicacionInicio()
+	{
+		$cp_id = (int) $_POST['cp_id'];
+		$results = $this->ubicacionInicio($cp_id);
 
+		if($results != null)
+		{
+			$ciudad = '0';
+			$estado = $results['id_e'];
+			$municipio = CHtml::tag('option',
+					array('value'=>$results['id_m']),CHtml::encode($results['nombre_m']),true);
+
+			if ($results['id_cd'] != null)
+			{
+				$ciudad = CHtml::tag('option',
+						array('value'=>$results['id_cd']),CHtml::encode($results['nombre_cd']),true);
+			}
+
+			$asentamiento = CHtml::tag('option',
+					array('value'=>$results['id_a']),CHtml::encode($results['nombre_a']),true);
+
+			$tipo_asentamiento = CHtml::tag('option',
+					array('value'=>$results['id_asen']),CHtml::encode($results['nombre_asen']),true);
+
+			echo $estado."-|-".$municipio."-|-".$asentamiento."-|-".$tipo_asentamiento."-|-".$ciudad;
+
+		} else {
+			echo "0";
+		}
+	}
+
+	/**
+	 * Da el nombre del estado
+	 */
+	public function actionDameEstado ()
+	{
+		$id = (int) $_POST['id'];
+		$estado=Directorio::model()->findByPk($id)->estado;
+
+		if ($estado != '' && $estado != null)
+			echo $estado;
+		else
+			echo '0';
+	}
+
+	/**
+	 * Da el nombre del estado alternativo
+	 */
+	public function actionDameEstadoAlternativo ()
+	{
+		$id = (int) $_POST['id'];
+		$estado=Directorio::model()->findByPk($id)->estado_alternativo;
+
+		if ($estado != '' && $estado != null)
+			echo $estado;
+		else
+			echo '0';
+	}
 
 	/**
 	 * Imprime los municipios de la base con ajax
@@ -347,7 +543,8 @@ class DirectorioController extends Controller
 	 */
 	public function actionDameMunicipios()
 	{
-		$estado_id = (int) $_POST['Directorio']['estado'];
+		$estado_id = (int) $_POST['estado'];
+
 		$data=Municipio::model()->findAll(array('condition'=>'estado_id='.$estado_id, 'order'=>'nombre ASC'));
 		$data=CHtml::listData($data,'id','nombre');
 
@@ -366,11 +563,18 @@ class DirectorioController extends Controller
 	public function actionDameCiudad()
 	{
 		$municipio = (int) $_POST['municipio'];
-		$datos_municipio=Municipio::model()->findByPk($municipio);
 
-		if ($datos_municipio->ciudad_id != null && $datos_municipio->ciudad_id != '')
+		$results = Yii::app()->db->createCommand()
+		->select('c.id, c.nombre')
+		->from('municipio m')
+		->leftJoin('ciudad c', 'm.ciudad_id=c.id')
+		->where('m.id='.$municipio)
+		->queryRow();
+
+		if ($results['id'] != null && $results['id'] != '')
 		{
-			echo $datos_municipio->ciudad_id;
+			echo CHtml::tag('option',
+					array('value'=>$results['id']),CHtml::encode($results['nombre']),true)."-|-".$results['nombre'];
 
 		} else {
 			echo '0';
@@ -394,7 +598,7 @@ class DirectorioController extends Controller
 			$cadena.=CHtml::tag('option',
 					array('value'=>$value),CHtml::encode($subcategory),true);
 		}
-		
+
 		echo $cadena.='-|-'.$municipio->nombre;
 	}
 
@@ -427,7 +631,7 @@ class DirectorioController extends Controller
 		} else {
 			$cadena.= CHtml::tag('option',
 					array('value'=>""),CHtml::encode('---Selecciona una colonia---'),true);
-				
+
 			foreach ($data as $value=>$subcategory) {
 				$cadena.= CHtml::tag('option',
 						array('value'=>$value),CHtml::encode($subcategory),true);
@@ -501,11 +705,6 @@ class DirectorioController extends Controller
 		}
 	}
 
-	public function actionImportaContactos ()
-	{
-
-	}
-
 	/**
 	 * Valida los correos para no meter repetidos
 	 */
@@ -513,12 +712,12 @@ class DirectorioController extends Controller
 	{
 		if (isset($_POST['correo']))
 		{
-			$correo="correo='".$_POST['correo']."' OR correo_alternativo='".$_POST['correo']."'";
+			$correo="(correo='".$_POST['correo']."' OR correo_alternativo='".$_POST['correo']."') AND id != ".$_POST['id'];
 		}
 
 		if (isset($_POST['correo_alternativo']))
 		{
-			$correo="correo='".$_POST['correo_alternativo']."' OR correo_alternativo='".$_POST['correo_alternativo']."'";
+			$correo="(correo='".$_POST['correo_alternativo']."' OR correo_alternativo='".$_POST['correo_alternativo']."') AND id != ".$_POST['id'];
 		}
 
 		$criteria = new CDbCriteria;
@@ -616,7 +815,7 @@ class DirectorioController extends Controller
 
 		if($rol != null)
 		{
-			$columnas=$this::atributosBase($rol->atributos_base);
+			$columnas=$this->atributosBase($rol->atributos_base);
 			return $columnas;
 
 		} else {
@@ -629,7 +828,7 @@ class DirectorioController extends Controller
 	 * @param Object $atr los atributos base del usuario
 	 * @return multitype:multitype:string  multitype:string multitype:string   unknown string multitype:string multitype:  multitype:string Ambigous <multitype:, multitype:unknown mixed , mixed, multitype:unknown , string, unknown>
 	 */
-	public static function atributosBase ($atr)
+	private function atributosBase ($atr)
 	{
 		$atributo=explode(',', $atr);
 		$atributos=array();
@@ -637,7 +836,7 @@ class DirectorioController extends Controller
 		$atributos[0]=array(
 				'id'=>'casillas',
 				'class'=>'CCheckBoxColumn',
-				'selectableRows' => '50',
+				'selectableRows' => '8000',
 		);
 
 		$atributos[1]=array(
@@ -834,11 +1033,12 @@ class DirectorioController extends Controller
 					);
 					break;
 
-				case 'tipo_id':
+				case 'tipo':
 					$atributos[$contador]=array(
 					'name'=>$a,
+					'type'=>'raw',
 					'filter'=>CHtml::listData(Tipo::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'),
-					'value'=>'Tipo::model()->findByPk($data->tipo_id)->nombre',
+					'value'=>'DirectorioController::dameTipos($data->id)',
 					);
 					break;
 
@@ -855,6 +1055,25 @@ class DirectorioController extends Controller
 		}
 
 		return $atributos;
+	}
+
+	public static function dameTipos ($id)
+	{
+		$cadena="<ul>";
+
+		$results = Yii::app()->db->createCommand()
+		->select('t.nombre')
+		->from('tipos_directorio td')
+		->leftJoin('tipo t', 'td.tipo_id=t.id')
+		->where('td.directorio_id='.$id)
+		->order('t.nombre')
+		->queryAll();
+
+		foreach ($results as $r) {
+			$cadena.="<li>".$r['nombre']."</li>";
+		}
+
+		return $cadena.="</ul>";
 	}
 
 	/**

@@ -33,16 +33,18 @@
 
 		<div id="header">
 			<div id="logo">
-				<?php echo CHtml::image('/directorio/imagenes/aplicacion/directorio_banner.png', 'directorio CONABIO', array('width'=>'80%')) ?>
-				<?php echo CHtml::image('/directorio/imagenes/aplicacion/conabio.png', 'CONABIO', array('width'=>'15%')) ?>
+				<?php echo CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/directorio_banner.png', 'directorio CONABIO', array('width'=>'80%')) ?>
+				<?php echo CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/conabio.png', 'CONABIO', array('width'=>'15%')) ?>
 			</div>
 		</div>
 		<!-- header -->
 
 		<div id="mainmenu">
 			<?php $this->widget('zii.widgets.CMenu',array(
+					//'encodeLabel'=>false,
 					'items'=>array(
 				array('label'=>'Inicio', 'url'=>array('/site/index')),
+				//array('label'=>'<img src="'.Yii::app()->request->baseUrl.'/imagenes/aplicacion/inicio.png" width="30px" /> Inicio', 'url'=>array('/site/index')),
 				array('label'=>'Directorio', 'url'=>array('/directorio/index'), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'Mis listas', 'url'=>array('/listas/index'), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'Mi cuenta', 'url'=>Yii::app()->createUrl('usuarios/view',array(

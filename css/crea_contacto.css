@@ -1,10 +1,12 @@
-.color_enlace 
+.color_enlace, #datos_manual, #datos_listas, 
+#datos_manual_alternativo, #datos_listas_alternativas 
 {
 	font: italic;
 	color: #0000FF;
 }
 
-#con_ciudad, #sin_ciudad, #con_municipio, #sin_municipio, #con_asentamiento, #sin_asentamiento
+#con_ciudad, #sin_ciudad, #con_municipio, #sin_municipio, #con_asentamiento, #sin_asentamiento, 
+#con_ciudad_alternativa, #sin_ciudad_alternativa, #con_municipio_alternativo, #sin_municipio_alternativo, #con_asentamiento_alternativo, #sin_asentamiento_alternativo
 {
 	display: inline;
 }
@@ -29,3 +31,4 @@
 	display: inline;
 	color: #FF0000;	
 }
+

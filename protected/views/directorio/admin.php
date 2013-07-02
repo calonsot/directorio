@@ -67,18 +67,20 @@ or <b>=</b>).
 		'enableAjaxValidation'=>true,
 )); ?>
 
+<br>
 <div class="CGridViewContainer">
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 		'id'=>'directorio-grid',
 		'dataProvider'=>$model->search(),
 		'filter'=>$model,
 		'columns'=>$this->despliegaColumnas(),
+		
 		)
 ); ?>
 </div>
 
-<?php echo CHtml::ajaxSubmitButton('Eliminar',array('directorio/ajaxupdate','act'=>'doDelete'), 
-		array('beforeSend'=>'function() { if(confirm("¿Estás seguro de querer eliminar permanentemente estos elementos?")) return true; return false; }', 'success'=>'reloadGridBorro')); ?>
+<?php echo CHtml::ajaxSubmitButton('Eliminar',array('directorio/ajaxupdate2','act'=>'doDelete'), 
+		array('success'=>'reloadGridBorro')); ?>
 <?php echo CHtml::ajaxSubmitButton('Exporta a tu lista',array('directorio/exporta'), 
 		array('success'=>'reloadGrid')); ?>
 <?php $this->endWidget(); ?>

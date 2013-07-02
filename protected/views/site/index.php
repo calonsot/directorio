@@ -19,4 +19,3 @@ $this->pageTitle=Yii::app()->name;
 	<li>Buscar una <?php echo CHtml::link(CHtml::encode('lista.'), array('listas/admin')) ?>
 	</li>
 </ul>
-

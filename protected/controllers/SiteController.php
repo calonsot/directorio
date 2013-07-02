@@ -27,7 +27,6 @@ class SiteController extends Controller
 	 */
 	public function actionIndex()
 	{
-		//$csv = CsvExport::export($this->Listas::model()->findByPk(2), '/var/www/directorio/formato.csv');
 		// renders the view file 'protected/views/site/index.php'
 		// using the default layout 'protected/views/layouts/main.php'
 		$this->render('index');
@@ -110,5 +109,13 @@ class SiteController extends Controller
 	{
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
+	}
+	
+	/**
+	 * Pone la ventana de mantenimiento
+	 */
+	public function actionMaintenance()
+	{
+		$this->render('maintenance');
 	}
 }

@@ -29,7 +29,7 @@ $this->menu=array(
 			?> <?php echo CHtml::image($foto->ruta,
 				$model->es_institucion ? $model->institucion : $model->nombre.' '.$model->apellido, array('height'=>'110px', 'align'=>'right')); ?>
 				<?php } else {
-					echo CHtml::image('/directorio/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'100px', 'align'=>'right'));
+					echo CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'100px', 'align'=>'right'));
 				}?></td>
 		</tr>
 	</table>
@@ -54,8 +54,9 @@ $this->menu=array(
 						'value'=>$model->es_institucion==1 ? ("Sí"):("No"),
 				),
 				array(
-						'name'=>'tipo_id',
-						'value'=>Tipo::model()->findByPk($model->tipo_id)->nombre,
+						'name'=>'tipos.tipo_id',
+						'type'=>'raw',
+						'value'=>$tipos,
 				),
 				array(
 						'name'=>'sector_id',
@@ -106,12 +107,21 @@ $this->menu=array(
 				),
 				'direccion_alternativa',
 				'asentamiento_alternativo',
-				'tipo_asentamiento_id1',
+				array(
+						'name'=>'tipo_asentamiento_id1',
+						'value'=>DirectorioController::validaTipoAsentamiento($model->tipo_asentamiento_id1),
+				),
 				'municipio_alternativo',
 				'ciudad_alternativa',
-				'estado_alternativo',
+				array(
+						'name'=>'estado_alternativo',
+						'value'=>DirectorioController::validaEstado($model->estado_alternativo),
+				),
 				'cp_alternativo',
-				'paises_id1',
+				array(
+						'name'=>'paises_id1',
+						'value'=>DirectorioController::validaPais($model->paises_id1),
+				),
 				array(
 						'label'=>'',
 						'value'=>'<b><font style="color:#FFA500">---------------------------------------------DATOS ASISTENTE-----------------------------------------------------</style></b>',
@@ -133,7 +143,6 @@ $this->menu=array(
 						'value'=>CHtml::link(CHtml::encode(Usuarios::model()->findByPk($model->usuarios_id)->usuario),
 								array('usuarios/view', 'id'=>$model->usuarios_id)),
 				),
-				//'fotos_id',
 				array(
 						'label'=>'',
 						'value'=>'<b><font style="color:#FFA500">-------------------------------------------------DATOS MEDIOS---------------------------------------------------------</style></b>',

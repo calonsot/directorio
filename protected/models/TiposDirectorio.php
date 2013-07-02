@@ -1,23 +1,20 @@
 <?php
 
 /**
- * This is the model class for table "tipo".
+ * This is the model class for table "tipos_directorio".
  *
- * The followings are the available columns in table 'tipo':
- * @property integer $id
- * @property string $nombre
+ * The followings are the available columns in table 'tipos_directorio':
+ * @property integer $tipo_id
+ * @property integer $directorio_id
  * @property string $fec_alta
  * @property string $fec_act
- *
- * The followings are the available model relations:
- * @property Directorio[] $directorios
  */
-class Tipo extends CActiveRecord
+class TiposDirectorio extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Tipo the static model class
+	 * @return TiposDirectorio the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -29,7 +26,7 @@ class Tipo extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'tipo';
+		return 'tipos_directorio';
 	}
 
 	/**
@@ -40,11 +37,11 @@ class Tipo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombre, fec_alta, fec_act', 'required'),
-			array('nombre', 'length', 'max'=>255),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, nombre, fec_alta, fec_act', 'safe', 'on'=>'search'),
+				array('directorio_id, fec_alta', 'required'),
+				array('tipo_id, directorio_id', 'numerical', 'integerOnly'=>true),
+				// The following rule is used by search().
+				// Please remove those attributes that should not be searched.
+				array('tipo_id, directorio_id, fec_alta, fec_act', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,7 +53,8 @@ class Tipo extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'directorios' => array(self::HAS_MANY, 'TiposDirectorio', 'tipo_id'),
+				'directorio_id' => array(self::BELONGS_TO, 'Directorio', 'directorio_id'),
+				'tipo_id' => array(self::BELONGS_TO, 'Tipo', 'tipo_id'),
 		);
 	}
 
@@ -66,10 +64,10 @@ class Tipo extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'nombre' => 'Nombre',
-			'fec_alta' => 'Fec Alta',
-			'fec_act' => 'Fec Act',
+				'tipo_id' => 'Tipo(s) de clasificación',
+				'directorio_id' => 'Directorio',
+				'fec_alta' => 'Fec Alta',
+				'fec_act' => 'Fec Act',
 		);
 	}
 
@@ -84,13 +82,13 @@ class Tipo extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('nombre',$this->nombre,true);
+		$criteria->compare('tipo_id',$this->tipo_id);
+		$criteria->compare('directorio_id',$this->directorio_id);
 		$criteria->compare('fec_alta',$this->fec_alta,true);
 		$criteria->compare('fec_act',$this->fec_act,true);
 
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+				'criteria'=>$criteria,
 		));
 	}
 }

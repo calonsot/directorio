@@ -44,16 +44,24 @@ class ListasController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$model=$this->loadModel($id);
-		$model->veces_consulta++;
+		$datos=$this->dameInfoUsuario();
 
-		if($model->saveAttributes(array('veces_consulta'))) {
-			$this->render('view',array(
-					'model'=>$model,
-			));
+		if ($datos['super_usuario']==1 || $datos['admin']==1)
+		{
+			$model=$this->loadModel($id);
+			$model->veces_consulta++;
+
+			if($model->save()) {
+				$this->render('view',array(
+						'model'=>$model,
+				));
+
+			} else {
+				throw new Exception("Lo sentimos no se pudo hacer la opracion",500);
+			}
 
 		} else {
-			throw new Exception("Lo sentimos no se pudo hacer la opracion",500);
+			throw new CHttpException(NULL,'Aun no has sido dado de alta en el sistema para consultar, porfavor intentalo más tarde en lo que el sistema te valida.');
 		}
 	}
 
@@ -63,25 +71,33 @@ class ListasController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Listas;
-		$model->fec_alta=self::fechaAlta();
-		$model->usuarios_id=Yii::app()->user->id_usuario;
+		$datos=$this->dameInfoUsuario();
 
-		$columnas=$this->columnasTablas();
-			
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Listas']))
+		if ($datos['super_usuario']==1 || $datos['admin']==1)
 		{
-			$model->attributes=$_POST['Listas'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
+			$model=new Listas;
+			$model->fec_alta=self::fechaAlta();
+			$model->usuarios_id=Yii::app()->user->id_usuario;
 
-		$this->render('create',array(
-				'model'=>$model, 'columnas'=>$columnas,
-		));
+			$columnas=$this->columnasTablas();
+
+			// Uncomment the following line if AJAX validation is needed
+			// $this->performAjaxValidation($model);
+
+			if(isset($_POST['Listas']))
+			{
+				$model->attributes=$_POST['Listas'];
+				if($model->save())
+					$this->redirect(array('view','id'=>$model->id));
+			}
+
+			$this->render('create',array(
+					'model'=>$model, 'columnas'=>$columnas,
+			));
+
+		} else {
+			throw new CHttpException(NULL,'Aun no has sido dado de alta en el sistema para consultar, porfavor intentalo más tarde en lo que el sistema te valida.');
+		}
 	}
 
 	/**
@@ -91,21 +107,31 @@ class ListasController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
+		$datos=$this->dameInfoUsuario();
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Listas']))
+		if ($datos['super_usuario']==1 || $datos['admin']==1)
 		{
-			$model->attributes=$_POST['Listas'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
+			$model=$this->loadModel($id);
 
-		$this->render('update',array(
-				'model'=>$model,
-		));
+			// Uncomment the following line if AJAX validation is needed
+			// $this->performAjaxValidation($model);
+
+			if(isset($_POST['Listas']))
+			{
+				$model->attributes=$_POST['Listas'];
+				$model->fec_act=self::fechaAlta();
+
+				if($model->save())
+					$this->redirect(array('view','id'=>$model->id));
+			}
+
+			$this->render('update',array(
+					'model'=>$model,
+			));
+
+		} else {
+			throw new CHttpException(NULL,'Aun no has sido dado de alta en el sistema para consultar, porfavor intentalo más tarde en lo que el sistema te valida.');
+		}
 	}
 
 	/**
@@ -115,11 +141,19 @@ class ListasController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		$datos=$this->dameInfoUsuario();
 
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		if ($datos['super_usuario']==1 || $datos['admin']==1)
+		{
+			$this->loadModel($id)->delete();
+
+			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+			if(!isset($_GET['ajax']))
+				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+
+		} else {
+			throw new CHttpException(NULL,'Aun no has sido dado de alta en el sistema para consultar, porfavor intentalo más tarde en lo que el sistema te valida.');
+		}
 	}
 
 	/**
@@ -127,11 +161,19 @@ class ListasController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Listas',array (
-				'criteria' => array ('condition' => 'usuarios_id='.Yii::app()->user->id_usuario, 'order'=>'veces_consulta DESC')));
-		$this->render('index',array(
-				'dataProvider'=>$dataProvider,
-		));
+		$datos=$this->dameInfoUsuario();
+
+		if ($datos['super_usuario']==1 || $datos['admin']==1)
+		{
+			$dataProvider=new CActiveDataProvider('Listas',array (
+					'criteria' => array ('condition' => 'usuarios_id='.Yii::app()->user->id_usuario, 'order'=>'veces_consulta DESC')));
+			$this->render('index',array(
+					'dataProvider'=>$dataProvider,
+			));
+
+		} else {
+			throw new CHttpException(NULL,'Aun no has sido dado de alta en el sistema para consultar, porfavor intentalo más tarde en lo que el sistema te valida.');
+		}
 	}
 
 	/**
@@ -139,14 +181,22 @@ class ListasController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Listas('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Listas']))
-			$model->attributes=$_GET['Listas'];
+		$datos=$this->dameInfoUsuario();
 
-		$this->render('admin',array(
-				'model'=>$model,
-		));
+		if ($datos['super_usuario']==1 || $datos['admin']==1)
+		{
+			$model=new Listas('search');
+			$model->unsetAttributes();  // clear any default values
+			if(isset($_GET['Listas']))
+				$model->attributes=$_GET['Listas'];
+
+			$this->render('admin',array(
+					'model'=>$model,
+			));
+
+		} else {
+			throw new CHttpException(NULL,'Aun no has sido dado de alta en el sistema para consultar, porfavor intentalo más tarde en lo que el sistema te valida.');
+		}
 	}
 
 	/**
@@ -205,7 +255,7 @@ class ListasController extends Controller
 
 			if ($model_cont != null)
 			{
-				$correos=$this::dameLosCorreos($model_cont->correo, $model_cont->correo_alternativo, $model_cont->correos);
+				$correos=$this->dameLosCorreos($model_cont->correo, $model_cont->correo_alternativo, $model_cont->correos);
 
 				if ($model->formatos_id == 3 || $model->formatos_id == 4)
 				{
@@ -273,7 +323,7 @@ class ListasController extends Controller
 	 * @param $string $correos
 	 * @return multitype: array de los correos totales o null si no encontro nada
 	 */
-	private static function dameLosCorreos ($correo, $correo_alt, $correos)
+	private function dameLosCorreos ($correo, $correo_alt, $correos)
 	{
 		$correos_totales='';
 

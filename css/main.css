@@ -230,5 +230,7 @@ div.search-form
 
 .CGridViewContainer 
 { 
-	width: 930px; overflow: auto;
+	width: 930px; 
+	overflow: auto;
+	height: 700px;
 }

@@ -39,7 +39,6 @@
  * @property string $veces_consulta
  * @property string $fec_alta
  * @property string $fec_act
- * @property integer $tipo_id
  * @property integer $usuarios_id
  * @property integer $institucion_id
  * @property integer $sector_id
@@ -90,6 +89,12 @@ class Directorio extends CActiveRecord
 	 * @var string saca todos los telefonos
 	 */
 	public $telefonos_totales;
+	
+	/**
+	 * 
+	 * @var integer el tipo de clasificacion
+	 */
+	public $tipo;
 
 	/**
 	 *
@@ -146,7 +151,7 @@ class Directorio extends CActiveRecord
 
 		return array(
 				//array('usuarios_id', 'required'),
-				array('id, es_internacional, es_institucion, cp, cp_alternativo, tipo_id, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1', 'numerical', 'integerOnly'=>true),
+				array('id, es_internacional, es_institucion, cp, cp_alternativo, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1', 'numerical', 'integerOnly'=>true),
 				array('nombre, apellido, institucion, correo, correo_alternativo, telefono_particular, telefono_oficina, telefono_casa, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo', 'length', 'max'=>255),
 				array('veces_consulta', 'length', 'max'=>20),
 				array('correos, telefonos, observaciones', 'safe'),
@@ -156,8 +161,8 @@ class Directorio extends CActiveRecord
 		array('nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, observaciones', 'default', 'setOnEmpty'=>true, 'value'=>null),
 		// The following rule is used by search().
 		// Please remove those attributes that should not be searched.
-		array('id, es_internacional, es_institucion, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, fec_alta, fec_act, tipo_id, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1,
-				alias, telefonos_totales, correos_totales,
+		array('id, es_internacional, es_institucion, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, fec_alta, fec_act, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1,
+				alias, telefonos_totales, correos_totales, tipo,
 				grupo, medio, tipo_medio, perfil_medio, programa, seccion, suplemento, columna,
 				grado_academico, sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad',
 				'safe', 'on'=>'search'),
@@ -169,7 +174,7 @@ class Directorio extends CActiveRecord
 	 * @see CActiveRecord::beforeSave()
 	 */
 	public function beforeSave()
-	{
+	{	
 		if(($this->es_institucion==1 && trim($this->institucion) != '')
 		|| ($this->es_institucion==0 && trim($this->nombre != '') && trim($this->apellido != '')))
 		{
@@ -230,8 +235,13 @@ class Directorio extends CActiveRecord
 		$medios=Medios::model()->findByPk($this->id);
 		$documental=Documental::model()->findByPk($this->id);
 
-		if ($medios->delete() && $documental->delete())
+		$tipos=TiposDirectorio::model()->findAllByAttributes(array('directorio_id'=>$this->id));
+		$num_tipos=count($tipos);
+		$tipos_borrados=TiposDirectorio::model()->deleteAllByAttributes(array('directorio_id'=>$this->id));
+		
+		if ($medios->delete() && $documental->delete() && $num_tipos==$tipos_borrados)
 			return parent::beforeDelete();
+		
 		else
 			return false;
 	}
@@ -245,11 +255,11 @@ class Directorio extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 				'fotos' => array(self::BELONGS_TO, 'Fotos', 'fotos_id'),
-				'tipo' => array(self::BELONGS_TO, 'Tipo', 'tipo_id'),
 				'usuarios' => array(self::BELONGS_TO, 'Usuarios', 'usuarios_id'),
 				'paises' => array(self::BELONGS_TO, 'Paises', 'paises_id'),
 				'ciudad' => array(self::BELONGS_TO, 'Ciudad', 'ciudad_id'),
 				'codigoPostal' => array(self::BELONGS_TO, 'CodigoPostal', 'codigo_postal_id'),
+				'tipos' => array(self::HAS_MANY, 'TiposDirectorio', 'directorio_id'),
 				'sectorId' => array(self::BELONGS_TO, 'Sector', 'sector_id'),
 				'codigoPostalId1' => array(self::BELONGS_TO, 'CodigoPostal', 'codigo_postal_id1'),
 				'tipoAsentamiento' => array(self::BELONGS_TO, 'TipoAsentamiento', 'tipo_asentamiento_id'),
@@ -303,17 +313,17 @@ class Directorio extends CActiveRecord
 				'veces_consulta' => 'Número de veces consultado',
 				'fec_alta' => 'Fecha de creación',
 				'fec_act' => 'Fecha de la ultima actualización',
-				'tipo_id' => 'Tipo de clasificación',
+				'tipo' => 'Tipo de clasificación',
 				'usuarios_id' => 'Dueño',
 				'institucion_id' => 'Institución',
 				'sector_id' => 'Sector',
 				'paises_id' => 'País',
 				'paises_id1' => 'País alternativo',
 				'ciudad_id' => 'Ciudad',
-				'ciudad_id1' => 'CiudadId1',
+				'ciudad_id1' => 'Ciudad alternativa',
 				'fotos_id' => 'Fotos',
 				'codigo_postal_id' => 'Código postal',
-				'codigo_postal_id1' => 'Código Postal Id1',
+				'codigo_postal_id1' => 'Código postal alternativo',
 				'tipo_asentamiento_id' => 'Tipo de colonia',
 				'tipo_asentamiento_id1' => 'Tipo de colonia alternativa',
 				//parte de medios
@@ -346,7 +356,7 @@ class Directorio extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->with= array('medios', 'documental');
+		$criteria->with= array('medios', 'documental', 'tipos');
 		$criteria->together = true;
 
 		$criteria->addSearchCondition('nombre',$this->alias,true,'OR')
@@ -397,7 +407,6 @@ class Directorio extends CActiveRecord
 		$criteria->compare('veces_consulta',$this->veces_consulta,true);
 		$criteria->compare('fec_alta',$this->fec_alta,true);
 		$criteria->compare('fec_act',$this->fec_act,true);
-		$criteria->compare('tipo_id',$this->tipo_id);
 		$criteria->compare('t.usuarios_id',$this->usuarios_id);
 		$criteria->compare('institucion_id',$this->institucion_id);
 		$criteria->compare('sector_id',$this->sector_id);
@@ -409,6 +418,7 @@ class Directorio extends CActiveRecord
 		$criteria->compare('codigo_postal_id1',$this->codigo_postal_id1);
 		$criteria->compare('tipo_asentamiento_id',$this->tipo_asentamiento_id);
 		$criteria->compare('tipo_asentamiento_id1',$this->tipo_asentamiento_id1);
+		$criteria->compare('tipos.tipo_id', $this->tipo);
 		//parte de medios
 		$criteria->compare('medios.grupo', $this->grupo, true);
 		$criteria->compare('medios.medio', $this->medio, true);
@@ -427,7 +437,7 @@ class Directorio extends CActiveRecord
 		$criteria->compare('documental.actividad', $this->actividad, true);
 
 		return new CActiveDataProvider($this, array(
-				'criteria'=>$criteria, 'pagination'=>array('pageSize'=>10),
+				'criteria'=>$criteria, 'pagination'=>array('pageSize'=>200),
 		));
 	}
 }
