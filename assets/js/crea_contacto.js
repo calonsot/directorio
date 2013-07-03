@@ -382,6 +382,23 @@ $(document).ready(
 			$('#Directorio_correo').focusout(function() {
 				
 				correo=$(this).val();
+				if ($('#Directorio_id').length == 0) 
+				{
+					$.post("/directorio/index.php/directorio/validacorreos", { 'correo': correo }, function(data){
+						
+						if (data!='0') {
+							$('#datos_correo_repetido').slideDown();
+							$('#enlace_correo_repetido').attr('href','/directorio/index.php/directorio/'+data);
+						
+						} else {
+							$('#datos_correo_repetido').slideUp();
+						}
+					
+							
+				    });
+					
+				} else {
+								
 				id=$('#Directorio_id').val();
 				
 				$.post("/directorio/index.php/directorio/validacorreos", { 'correo': correo, 'id': id }, function(data){
@@ -396,6 +413,7 @@ $(document).ready(
 				
 						
 			    });
+				}
 			});
 			
 			
@@ -406,6 +424,21 @@ $(document).ready(
 			$('#Directorio_correo_alternativo').focusout(function() {
 				
 				correo_alternativo=$(this).val();
+				if ($('#Directorio_alternativo_id').length == 0) 
+				{
+					$.post("/directorio/index.php/directorio/validacorreos", { 'correo_alternativo': correo_alternativo }, function(data){
+						
+						if (data!='0') {
+							$('#datos_correo_alternativo_repetido').slideDown();
+							$('#enlace_correo_alternativo_repetido').attr('href','/directorio/index.php/directorio/'+data);
+						
+						} else {
+							$('#datos_correo_alternativo_repetido').slideUp();
+						}
+					});
+				
+				} else {
+				
 				id=$('#Directorio_id').val();
 				
 				$.post("/directorio/index.php/directorio/validacorreos", { 'correo_alternativo': correo_alternativo, 'id': id }, function(data){
@@ -416,10 +449,9 @@ $(document).ready(
 					
 					} else {
 						$('#datos_correo_alternativo_repetido').slideUp();
-					}
-				
-						
+					}	
 			    });
+				}
 			});
 									
 			

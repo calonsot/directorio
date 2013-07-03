@@ -710,14 +710,24 @@ class DirectorioController extends Controller
 	 */
 	public function actionValidaCorreos ()
 	{
-		if (isset($_POST['correo']))
+		if (isset($_POST['correo']) && isset($_POST['id']))
 		{
 			$correo="(correo='".$_POST['correo']."' OR correo_alternativo='".$_POST['correo']."') AND id != ".$_POST['id'];
 		}
 
-		if (isset($_POST['correo_alternativo']))
+		if (isset($_POST['correo_alternativo']) && isset($_POST['id']))
 		{
 			$correo="(correo='".$_POST['correo_alternativo']."' OR correo_alternativo='".$_POST['correo_alternativo']."') AND id != ".$_POST['id'];
+		}
+		
+		if (isset($_POST['correo']) && !isset($_POST['id']))
+		{
+			$correo="(correo='".$_POST['correo']."' OR correo_alternativo='".$_POST['correo']."')";
+		}
+		
+		if (isset($_POST['correo_alternativo']) && !isset($_POST['id']))
+		{
+			$correo="(correo='".$_POST['correo_alternativo']."' OR correo_alternativo='".$_POST['correo_alternativo']."')";
 		}
 
 		$criteria = new CDbCriteria;

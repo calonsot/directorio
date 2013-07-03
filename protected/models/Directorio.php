@@ -176,7 +176,7 @@ class Directorio extends CActiveRecord
 	public function beforeSave()
 	{	
 		if(($this->es_institucion==1 && trim($this->institucion) != '')
-		|| ($this->es_institucion==0 && trim($this->nombre != '') && trim($this->apellido != '')))
+		|| ($this->es_institucion==0 && (trim($this->nombre != '') || trim($this->apellido != ''))))
 		{
 
 			if ($this->correo != '' || $this->correo_alternativo != '' || trim($this->correos) != ''
@@ -437,7 +437,7 @@ class Directorio extends CActiveRecord
 		$criteria->compare('documental.actividad', $this->actividad, true);
 
 		return new CActiveDataProvider($this, array(
-				'criteria'=>$criteria, 'pagination'=>array('pageSize'=>200),
+				'criteria'=>$criteria, 'pagination'=>array('pageSize'=>50),
 		));
 	}
 }
