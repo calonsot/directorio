@@ -140,7 +140,7 @@ $this->menu=array(
 				array(
 						'name'=>'usuarios_id',
 						'type'=>'raw',
-						'value'=>CHtml::link(CHtml::encode(Usuarios::model()->findByPk($model->usuarios_id)->usuario),
+						'value'=>CHtml::link(CHtml::encode(Usuarios::model()->findByPk($model->usuarios_id)->nombre.' '.Usuarios::model()->findByPk($model->usuarios_id)->apellido),
 								array('usuarios/view', 'id'=>$model->usuarios_id)),
 				),
 				array(
@@ -149,16 +149,16 @@ $this->menu=array(
 						'type'=>'raw',
 				),
 				array(
-						'name'=>'grupo',
-						'value'=>$model_m->grupo,
+						'name'=>'grupos_id',
+						'value'=>Grupos::model()->findByPk($model_m->grupos_id)->nombre,
 				),
 				array(
 						'name'=>'medio',
 						'value'=>$model_m->medio,
 				),
 				array(
-						'name'=>'tipo_medio',
-						'value'=>$model_m->tipo_medio,
+						'name'=>'tipo_medios_id',
+						'value'=>TipoMedios::model()->findByPk($model_m->tipo_medios_id)->nombre,
 				),
 				array(
 						'name'=>'perfil_medio',
@@ -168,23 +168,14 @@ $this->menu=array(
 						'name'=>'programa',
 						'value'=>$model_m->programa,
 				),
-/*
-				array(
-						'name'=>'seccion',
-						'value'=>$model_m->seccion,
-				),
-				array(
-						'name'=>'suplemento',
-						'value'=>$model_m->suplemento,
-				),
-				array(
-						'name'=>'columna',
-						'value'=>$model_m->columna,
-				),*/
 				array(
 				'label'=>'',
 				'value'=>'<b><font style="color:#FFA500">--------------------------------------DATOS CENTRO DOCUMENTAL---------------------------------------------</style></b>',
 				'type'=>'raw',
+				),
+				array(
+				'name'=>'es_valido',
+				'value'=>$model_c->es_valido==1 ? ("Sí"):("No"),
 				),
 				array(
 				'name'=>'grado_academico',
@@ -209,6 +200,10 @@ $this->menu=array(
 				array(
 				'name'=>'actividad',
 				'value'=>$model_c->actividad,
+				),
+				array(
+				'name'=>'domicilio_alt_principal',
+				'value'=>$model->domicilio_alt_principal==1 ? ("Sí"):("No"),
 				),
 		),
 )); ?>

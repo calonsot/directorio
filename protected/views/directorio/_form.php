@@ -48,6 +48,9 @@
 				<td width="20%"><label id="etiqueta">¿Tiene asistente?</label> <input
 					type="checkbox" name="caja_asistente" id="caja_asistente">
 				</td>
+				<td width="20%"><?php echo $form->labelEx($model,'domicilio_alt_principal', array('id'=>'etiqueta')); ?>
+					<?php echo $form->checkBox($model,'domicilio_alt_principal'); ?> <?php echo $form->error($model,'domicilio_alt_principal'); ?>
+				</td>
 			</tr>
 		</table>
 	</div>
@@ -85,13 +88,13 @@
 	</table>
 
 	<?php if (!$model->isNewRecord) { ?>
-	
+
 	<div class="row" style="display: none;">
 		<?php echo $form->labelEx($model,'id'); ?>
 		<?php echo $form->textField($model,'id',array('size'=>60,'maxlength'=>255)); ?>
 		<?php echo $form->error($model,'id'); ?>
 	</div>
-	
+
 	<?php } ?>
 
 	<div class="row" align="justify">
@@ -177,7 +180,7 @@
 
 	<?php				
 					}
-	?>
+					?>
 
 	<div class="row">
 		<?php echo CHtml::label('¿Deseas añadir otro tipo de clasificación?',''); ?>
@@ -597,9 +600,10 @@
 
 	<div id="datos_medios" style="display: none;">
 		<div class="row">
-			<?php echo $form->labelEx($model_m,'grupo'); ?>
-			<?php echo $form->textField($model_m,'grupo',array('size'=>60,'maxlength'=>255,'id'=>'grupo')); ?>
-			<?php echo $form->error($model_m,'grupo'); ?>
+			<?php echo $form->labelEx($model_m,'grupos_id'); ?>
+			<?php echo $form->dropDownList($model_m, 'grupos_id',  CHtml::listData(Grupos::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'), 
+						array('id'=>'grupos_id')); ?>
+			<?php echo $form->error($model_m,'grupos_id'); ?>
 		</div>
 
 		<div class="row">
@@ -609,9 +613,10 @@
 		</div>
 
 		<div class="row">
-			<?php echo $form->labelEx($model_m,'tipo_medio'); ?>
-			<?php echo $form->textField($model_m,'tipo_medio',array('size'=>60,'maxlength'=>255,'id'=>'tipo_medio')); ?>
-			<?php echo $form->error($model_m,'tipo_medio'); ?>
+			<?php echo $form->labelEx($model_m,'tipo_medios_id'); ?>
+			<?php echo $form->dropDownList($model_m, 'tipo_medios_id',  CHtml::listData(TipoMedios::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'), 
+						array('id'=>'tipo_medios_id')); ?>
+			<?php echo $form->error($model_m,'tipo_medios_id'); ?>
 		</div>
 
 		<div class="row">
@@ -624,24 +629,6 @@
 			<?php echo $form->labelEx($model_m,'programa'); ?>
 			<?php echo $form->textField($model_m,'programa',array('size'=>60,'maxlength'=>255,'id'=>'programa')); ?>
 			<?php echo $form->error($model_m,'programa'); ?>
-		</div>
-
-		<div class="row">
-			<?php //echo $form->labelEx($model_m,'seccion'); ?>
-			<?php //echo $form->textField($model_m,'seccion',array('size'=>60,'maxlength'=>255,'id'=>'seccion')); ?>
-			<?php //echo $form->error($model_m,'seccion'); ?>
-		</div>
-
-		<div class="row">
-			<?php //echo $form->labelEx($model_m,'suplemento'); ?>
-			<?php //echo $form->textField($model_m,'suplemento',array('size'=>60,'maxlength'=>255,'id'=>'suplemento')); ?>
-			<?php //echo $form->error($model_m,'suplemento'); ?>
-		</div>
-
-		<div class="row">
-			<?php //echo $form->labelEx($model_m,'columna'); ?>
-			<?php //echo $form->textField($model_m,'columna',array('size'=>60,'maxlength'=>255,'id'=>'columna')); ?>
-			<?php //echo $form->error($model_m,'columna'); ?>
 		</div>
 	</div>
 

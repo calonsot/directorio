@@ -89,7 +89,7 @@ class DirectorioController extends Controller
 
 			// Uncomment the following line if AJAX validation is needed
 			// $this->performAjaxValidation($model);
-			
+
 			if(isset($_POST['Directorio']))
 			{
 				$model->attributes=$_POST['Directorio'];
@@ -134,7 +134,7 @@ class DirectorioController extends Controller
 					$model_m->fec_alta=self::fechaAlta();
 					$model_m->usuarios_id=Yii::app()->user->id_usuario;
 					$model_m->id=$model->id;
-					
+
 					if($model_m->save())
 					{
 						//parte de centro documental
@@ -149,7 +149,7 @@ class DirectorioController extends Controller
 							$model_nuevo_td->attributes=$_POST['TiposDirectorio'];
 							$model_nuevo_td->fec_alta=self::fechaAlta();
 							$model_nuevo_td->directorio_id=$model->id;
-								
+
 							if($model_nuevo_td->save())
 								$this->redirect(array('view','id'=>$model->id));
 						}
@@ -719,12 +719,12 @@ class DirectorioController extends Controller
 		{
 			$correo="(correo='".$_POST['correo_alternativo']."' OR correo_alternativo='".$_POST['correo_alternativo']."') AND id != ".$_POST['id'];
 		}
-		
+
 		if (isset($_POST['correo']) && !isset($_POST['id']))
 		{
 			$correo="(correo='".$_POST['correo']."' OR correo_alternativo='".$_POST['correo']."')";
 		}
-		
+
 		if (isset($_POST['correo_alternativo']) && !isset($_POST['id']))
 		{
 			$correo="(correo='".$_POST['correo_alternativo']."' OR correo_alternativo='".$_POST['correo_alternativo']."')";
@@ -859,6 +859,14 @@ class DirectorioController extends Controller
 
 			switch ($a)
 			{
+				case 'id':
+
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'header'=>'ID',
+					);
+					break;
+
 				case 'fotos_id':
 
 					$atributos[$contador]=array(
@@ -937,10 +945,19 @@ class DirectorioController extends Controller
 					$atributos[$contador]=$a;
 					break;
 
-				case 'grupo':
+				case 'fec_act':
+					$atributos[$contador]=$a;
+					break;
+
+				case 'fec_alta':
+					$atributos[$contador]=$a;
+					break;
+						
+				case 'grupos_id':
 					$atributos[$contador]=array(
 					'name'=>$a,
-					'value'=>'$data->medios->'.$a,
+					'filter'=>CHtml::listData(Grupos::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'),
+					'value'=>'Grupos::model()->findByPk($data->medios->'.$a.')->nombre',
 					);
 					break;
 
@@ -951,10 +968,11 @@ class DirectorioController extends Controller
 					);
 					break;
 
-				case 'tipo_medio':
+				case 'tipo_medios_id':
 					$atributos[$contador]=array(
 					'name'=>$a,
-					'value'=>'$data->medios->'.$a,
+					'filter'=>CHtml::listData(TipoMedios::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'),
+					'value'=>'TipoMedios::model()->findByPk($data->medios->'.$a.')->nombre',
 					);
 					break;
 
@@ -971,28 +989,15 @@ class DirectorioController extends Controller
 					'value'=>'$data->medios->'.$a,
 					);
 					break;
-					/*
-					 case 'seccion':
+
+				case 'es_valido':
 					$atributos[$contador]=array(
-							'name'=>$a,
-							'value'=>'$data->medios->'.$a,
+					'name'=>$a,
+					'filter'=>array('1'=>'Sí','0'=>'No'),
+					'value'=>'($data->documental->es_valido=="1")?("Sí"):("No")',
 					);
 					break;
 
-					case 'suplemento':
-					$atributos[$contador]=array(
-							'name'=>$a,
-							'value'=>'$data->medios->'.$a,
-					);
-					break;
-
-					case 'columna':
-					$atributos[$contador]=array(
-							'name'=>$a,
-							'value'=>'$data->medios->'.$a,
-					);
-					break;
-					*/
 				case 'grado_academico':
 					$atributos[$contador]=array(
 					'name'=>$a,
@@ -1049,6 +1054,14 @@ class DirectorioController extends Controller
 					'type'=>'raw',
 					'filter'=>CHtml::listData(Tipo::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'),
 					'value'=>'DirectorioController::dameTipos($data->id)',
+					);
+					break;
+
+				case 'paises_id':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'filter'=>CHtml::listData(Paises::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'),
+					'value'=>'DirectorioController::validaPais($data->paises_id)',
 					);
 					break;
 

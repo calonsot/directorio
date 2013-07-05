@@ -37,6 +37,7 @@
  * @property integer $cp_alternativo
  * @property string $observaciones
  * @property string $veces_consulta
+ * @property integer $domicilio_alt_principal;
  * @property string $fec_alta
  * @property string $fec_act
  * @property integer $usuarios_id
@@ -100,19 +101,17 @@ class Directorio extends CActiveRecord
 	 *
 	 * @var string (PARTE DE MEDIOS)
 	 */
-	public $grupo;
+	public $grupos_id;
 	public $medio;
-	public $tipo_medio;
+	public $tipo_medios_id;
 	public $perfil_medio;
 	public $programa;
-	public $seccion;
-	public $suplemento;
-	public $columna;
 
 	/**
 	 *
 	 * @var string (PARTE DE CENTRO DUCUMENTAL)
 	 */
+	public $es_valido;
 	public $grado_academico;
 	public $sigla_institucion;
 	public $sigla_dependencia;
@@ -151,7 +150,7 @@ class Directorio extends CActiveRecord
 
 		return array(
 				//array('usuarios_id', 'required'),
-				array('id, es_internacional, es_institucion, cp, cp_alternativo, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1', 'numerical', 'integerOnly'=>true),
+				array('id, es_internacional, es_institucion, cp, cp_alternativo, domicilio_alt_principal, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1', 'numerical', 'integerOnly'=>true),
 				array('nombre, apellido, institucion, correo, correo_alternativo, telefono_particular, telefono_oficina, telefono_casa, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo', 'length', 'max'=>255),
 				array('veces_consulta', 'length', 'max'=>20),
 				array('correos, telefonos, observaciones', 'safe'),
@@ -161,10 +160,10 @@ class Directorio extends CActiveRecord
 		array('nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, observaciones', 'default', 'setOnEmpty'=>true, 'value'=>null),
 		// The following rule is used by search().
 		// Please remove those attributes that should not be searched.
-		array('id, es_internacional, es_institucion, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, fec_alta, fec_act, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1,
+		array('id, es_internacional, es_institucion, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, domicilio_alt_principal, fec_alta, fec_act, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1,
 				alias, telefonos_totales, correos_totales, tipo,
-				grupo, medio, tipo_medio, perfil_medio, programa, seccion, suplemento, columna,
-				grado_academico, sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad',
+				grupos_id, medio, tipo_medios_id, perfil_medio, programa,
+				es_valido, grado_academico, sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad',
 				'safe', 'on'=>'search'),
 		);
 	}
@@ -311,6 +310,7 @@ class Directorio extends CActiveRecord
 				'cp_alternativo' => 'Código postal alternativo',
 				'observaciones' => 'Observaciones',
 				'veces_consulta' => 'Número de veces consultado',
+				'domicilio_alt_principal' => '¿Es el domiclio alternativo para Biodiversitas?',
 				'fec_alta' => 'Fecha de creación',
 				'fec_act' => 'Fecha de la ultima actualización',
 				'tipo' => 'Tipo de clasificación',
@@ -327,15 +327,13 @@ class Directorio extends CActiveRecord
 				'tipo_asentamiento_id' => 'Tipo de colonia',
 				'tipo_asentamiento_id1' => 'Tipo de colonia alternativa',
 				//parte de medios
-				'grupo' => 'Grupo',
+				'grupos_id' => 'Grupo especifico',
 				'medio' => 'Medio',
-				'tipo_medio' => 'Tipo de medio',
+				'tipo_medios_id' => 'Tipo de medio',
 				'perfil_medio' => 'Perfil del medio',
 				'programa' => 'Programa',
-				'seccion' => 'Sección',
-				'suplemento' => 'Suplemento',
-				'columna' => 'Columna',
 				//parte de documental
+				'es_valido' => '¿Es valido para biodiversitas?',
 				'grado_academico' => 'Grado académico',
 				'sigla_institucion' => 'Sigla institución',
 				'sigla_dependencia' => 'Sigla dependencia',
@@ -372,11 +370,11 @@ class Directorio extends CActiveRecord
 		->addSearchCondition('correos',$this->correos_totales,true,'OR')
 		->addSearchCondition('correo',$this->correos_totales,true,'OR');
 
-		$criteria->compare('id',$this->id);
+		$criteria->compare('t.id',$this->id);
 		$criteria->compare('es_internacional',$this->es_internacional);
 		$criteria->compare('es_institucion',$this->es_institucion);
-		$criteria->compare('nombre',$this->nombre,true);
-		$criteria->compare('apellido',$this->apellido,true);
+		$criteria->compare('t.nombre',$this->nombre,true);
+		$criteria->compare('t.apellido',$this->apellido,true);
 		$criteria->compare('institucion',$this->institucion,true);
 		$criteria->compare('correo',$this->correo,true);
 		$criteria->compare('correo_alternativo',$this->correo_alternativo,true);
@@ -405,8 +403,8 @@ class Directorio extends CActiveRecord
 		$criteria->compare('cp_alternativo',$this->cp_alternativo,true);
 		$criteria->compare('observaciones',$this->observaciones,true);
 		$criteria->compare('veces_consulta',$this->veces_consulta,true);
-		$criteria->compare('fec_alta',$this->fec_alta,true);
-		$criteria->compare('fec_act',$this->fec_act,true);
+		$criteria->compare('t.fec_alta',$this->fec_alta,true);
+		$criteria->compare('t.fec_act',$this->fec_act,true);
 		$criteria->compare('t.usuarios_id',$this->usuarios_id);
 		$criteria->compare('institucion_id',$this->institucion_id);
 		$criteria->compare('sector_id',$this->sector_id);
@@ -420,21 +418,21 @@ class Directorio extends CActiveRecord
 		$criteria->compare('tipo_asentamiento_id1',$this->tipo_asentamiento_id1);
 		$criteria->compare('tipos.tipo_id', $this->tipo);
 		//parte de medios
-		$criteria->compare('medios.grupo', $this->grupo, true);
+		$criteria->compare('medios.grupos_id', $this->grupos_id);
 		$criteria->compare('medios.medio', $this->medio, true);
-		$criteria->compare('medios.tipo_medio', $this->tipo_medio, true);
+		$criteria->compare('medios.tipo_medios_id', $this->tipo_medios_id);
 		$criteria->compare('medios.perfil_medio', $this->perfil_medio, true);
 		$criteria->compare('medios.programa', $this->programa, true);
-		$criteria->compare('medios.seccion', $this->seccion, true);
-		$criteria->compare('medios.suplemento', $this->suplemento, true);
-		$criteria->compare('medios.columna', $this->columna, true);
 		//parte de documental
+		$criteria->compare('documental.es_valido', $this->es_valido);
 		$criteria->compare('documental.grado_academico', $this->grado_academico, true);
 		$criteria->compare('documental.sigla_institucion', $this->sigla_institucion, true);
 		$criteria->compare('documental.sigla_dependencia', $this->sigla_dependencia, true);
 		$criteria->compare('documental.dependencia', $this->dependencia, true);
 		$criteria->compare('documental.subdependencia', $this->subdependencia, true);
 		$criteria->compare('documental.actividad', $this->actividad, true);
+		
+		$criteria->order = 't.id DESC';
 
 		return new CActiveDataProvider($this, array(
 				'criteria'=>$criteria, 'pagination'=>array('pageSize'=>50),

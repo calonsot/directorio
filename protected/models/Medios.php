@@ -10,9 +10,6 @@
  * @property string $tipo_medio
  * @property string $perfil_medio
  * @property string $programa
- * @property string $seccion
- * @property string $suplemento
- * @property string $columna
  * @property string $fec_alta
  * @property string $fec_act
  * @property integer $usuarios_id
@@ -51,13 +48,13 @@ class Medios extends CActiveRecord
 		return array(
 			//array('id, fec_alta, fec_act, usuarios_id', 'required'),
 		    array('id', 'required'),
-			array('id, usuarios_id', 'numerical', 'integerOnly'=>true),
-			array('grupo, medio, tipo_medio, perfil_medio, programa, seccion, suplemento, columna', 'length', 'max'=>255),
+			array('id, usuarios_id, grupos_id, tipo_medios_id', 'numerical', 'integerOnly'=>true),
+			array('medio, perfil_medio, programa', 'length', 'max'=>255),
 			//pone los vacios con null
-			array('grupo, medio, tipo_medio, perfil_medio, programa, seccion, suplemento, columna', 'default', 'setOnEmpty'=>true, 'value'=>null),
+			array('medio, perfil_medio, programa', 'default', 'setOnEmpty'=>true, 'value'=>null),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, grupo, medio, tipo_medio, perfil_medio, programa, seccion, suplemento, columna, fec_alta, fec_act, usuarios_id', 'safe', 'on'=>'search'),
+			array('id, grupos_id, medio, tipo_medios_id, perfil_medio, programa, fec_alta, fec_act, usuarios_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -71,6 +68,8 @@ class Medios extends CActiveRecord
 		return array(
 			'usuarios' => array(self::BELONGS_TO, 'Usuarios', 'usuarios_id'),
 			'id0' => array(self::BELONGS_TO, 'Directorio', 'id'),
+			'grupos' => array(self::BELONGS_TO, 'Grupos', 'grupos_id'),
+			'tipo_medios' => array(self::BELONGS_TO, 'TipoMedios', 'tipo_medios_id'),
 		);
 	}
 
@@ -81,14 +80,11 @@ class Medios extends CActiveRecord
 	{
 		return array(
 			'id' => 'Identificador único',
-			'grupo' => 'Grupo',
+			'grupos_id' => 'Grupo especifico',
 			'medio' => 'Medio',
-			'tipo_medio' => 'Tipo de medio',
+			'tipo_medios_id' => 'Tipo de medio',
 			'perfil_medio' => 'Perfil del medio',
 			'programa' => 'Programa',
-			'seccion' => 'Sección',
-			'suplemento' => 'Suplemento',
-			'columna' => 'Columna',
 			'fec_alta' => 'Fecha de creación',
 			'fec_act' => 'Fecha de la ultima actualización',
 			'usuarios_id' => 'Dueño',
@@ -107,14 +103,11 @@ class Medios extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('grupo',$this->grupo,true);
+		$criteria->compare('grupos_id',$this->grupos_id);
 		$criteria->compare('medio',$this->medio,true);
-		$criteria->compare('tipo_medio',$this->tipo_medio,true);
+		$criteria->compare('tipo_medios',$this->tipo_medios);
 		$criteria->compare('perfil_medio',$this->perfil_medio,true);
 		$criteria->compare('programa',$this->programa,true);
-		$criteria->compare('seccion',$this->seccion,true);
-		$criteria->compare('suplemento',$this->suplemento,true);
-		$criteria->compare('columna',$this->columna,true);
 		$criteria->compare('fec_alta',$this->fec_alta,true);
 		$criteria->compare('fec_act',$this->fec_act,true);
 		$criteria->compare('usuarios_id',$this->usuarios_id);
