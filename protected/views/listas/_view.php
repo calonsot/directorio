@@ -48,16 +48,16 @@ function reloadGrid(data) {
 
 	<?php if (!$data->esta_activa) { ?>
 
-	<div align="right">
+	<br>
 		<?php echo CHtml::ajaxSubmitButton('Activar',array('listas/activa','id'=>$data->id), 
 		array('success'=>'reloadGrid')); ?>
-	</div>
-	<?php } else { ?>
 	
-	<div align="right">
+	<?php } else { ?>
+	<br>
+	
 		<?php echo CHtml::ajaxSubmitButton('Activar',array('listas/activa','id'=>$data->id), 
 		array('success'=>'reloadGrid'), array('disabled'=>'disabled')); ?>
-	</div>
+	
 
 	<?php } ?>
 	<?php $this->endWidget(); ?>

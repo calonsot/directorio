@@ -61,7 +61,8 @@
 
 .grid-view table.items tr.odd
 {
-	background: #E5F1F4;
+	/*background: #E5F1F4;*/
+	background: #E2E2E2;
 }
 
 .grid-view table.items tr.selected

@@ -77,6 +77,7 @@ class DirectorioController extends Controller
 	 */
 	public function actionCreate()
 	{
+		//$this->layout='//layouts/column1';
 		$datos=$this->dameInfoUsuario();
 
 		if ($datos['super_usuario']==1 || $datos['admin']==1)
@@ -143,6 +144,13 @@ class DirectorioController extends Controller
 						$model_c->usuarios_id=Yii::app()->user->id_usuario;
 						$model_c->id=$model->id;
 
+						$tablas=explode(",", trim($datos['tablas_adicionales']));
+
+						if ($datos['super_usuario']==1 || in_array("biodiversitas", $tablas))
+						{
+							$model_c->es_valido=1;
+						}
+
 						if($model_c->save())
 						{
 							//parte de tipos_directorio
@@ -158,7 +166,8 @@ class DirectorioController extends Controller
 			}
 
 			$this->render('create',array(
-					'model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 'model_f'=>$model_f, 'model_nuevo_td'=>$model_nuevo_td,
+					'model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 'model_f'=>$model_f,
+					'model_nuevo_td'=>$model_nuevo_td, 'datos'=>$datos,
 			));
 
 		} else {
@@ -319,7 +328,7 @@ class DirectorioController extends Controller
 
 			$this->render('update',array(
 					'model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 'model_f'=>$model_f,
-					'model_td'=>$model_td, 'model_nuevo_td'=>$model_nuevo_td,
+					'model_td'=>$model_td, 'model_nuevo_td'=>$model_nuevo_td, 'datos'=>$datos,
 			));
 
 		} else {
@@ -952,7 +961,7 @@ class DirectorioController extends Controller
 				case 'fec_alta':
 					$atributos[$contador]=$a;
 					break;
-						
+
 				case 'grupos_id':
 					$atributos[$contador]=array(
 					'name'=>$a,

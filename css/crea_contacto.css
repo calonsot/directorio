@@ -17,11 +17,21 @@
 	display: inline;
 }
 
-#casetas
+#titulo_datos_especificos
 {
-	padding: 10px;
-	background-color: #CDC9C9;
-	width: 100%;
+	background-color: #666666;
+	
+}
+
+#datos_especificos
+{
+	background-color: #666666;
+	
+}
+
+.todos_los_campos 
+{
+	background-color: #F8F8F8;;
 }
 
 

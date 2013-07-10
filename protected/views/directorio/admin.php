@@ -1,3 +1,6 @@
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/actualiza_rows.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/actualiza_rows.css" />
+
 <h1>Busca y administra tus contactos</h1>
 
 <?php
@@ -39,7 +42,7 @@ Yii::app()->clientScript->registerScript('search', "
 
 <script>
 function reloadGrid(data) {
-    $.fn.yiiGridView.update('directorio-grid');
+    //$.fn.yiiGridView.update('directorio-grid');
     alert('Los contactos se exportarón');
 }
 
@@ -77,6 +80,11 @@ or <b>=</b>).
 		
 		)
 ); ?>
+</div>
+
+<div id="popup_box">    <!-- OUR PopupBox DIV-->
+    <h1>Porfavor se cuidadoso con estos cambios.</h1>
+    <a id="popupBoxClose">Cerrar</a>    
 </div>
 
 <?php echo CHtml::ajaxSubmitButton('Eliminar',array('directorio/ajaxupdate2','act'=>'doDelete'), 

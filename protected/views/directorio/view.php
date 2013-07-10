@@ -41,7 +41,7 @@ $this->menu=array(
 		'attributes'=>array(
 				array(
 						'label'=>'',
-						'value'=>'<b><font style="color:#FFA500">--------------------------------------------DATOS PRINCIPALES------------------------------------------------------</style></b>',
+						'value'=>'<ul><li><h2>Datos principales</h2></li></ul>',
 						'type'=>'raw',
 				),
 				'id',
@@ -80,7 +80,7 @@ $this->menu=array(
 				array(
 						'label'=>'',
 						'type'=>'raw',
-						'value'=>'<b><font style="color:#FFA500">---------------------------------------------------DOMICILIO------------------------------------------------------------</style></b>',
+						'value'=>'<ul><li><h2>Domicilio</h2></li></ul>',
 						'type'=>'raw',
 				),
 				'direccion',
@@ -102,7 +102,7 @@ $this->menu=array(
 				),
 				array(
 						'label'=>'',
-						'value'=>'<b><font style="color:#FFA500">------------------------------------------DOMICILIO ALTERNATIVO------------------------------------------------</style></b>',
+						'value'=>'<ul><li><h2>Domicilio alternativo</h2></li></ul>',
 						'type'=>'raw',
 				),
 				'direccion_alternativa',
@@ -124,14 +124,14 @@ $this->menu=array(
 				),
 				array(
 						'label'=>'',
-						'value'=>'<b><font style="color:#FFA500">---------------------------------------------DATOS ASISTENTE-----------------------------------------------------</style></b>',
+						'value'=>'<ul><li><h2>Datos asistente</h2></li></ul>',
 						'type'=>'raw',
 				),
 				'nombre_asistente',
 				'apellido_asistente',
 				array(
 						'label'=>'',
-						'value'=>'<b><font style="color:#FFA500">-------------------------------------------DATOS ADICIONALES----------------------------------------------------</style></b>',
+						'value'=>'<ul><li><h2>Datos adicionales</h2></li></ul>',
 						'type'=>'raw',
 				),
 				'veces_consulta',
@@ -145,7 +145,7 @@ $this->menu=array(
 				),
 				array(
 						'label'=>'',
-						'value'=>'<b><font style="color:#FFA500">-------------------------------------------------DATOS MEDIOS---------------------------------------------------------</style></b>',
+						'value'=>'<ul><li><h2>Datos de Medios</h2></li></ul>',
 						'type'=>'raw',
 				),
 				array(
@@ -170,7 +170,7 @@ $this->menu=array(
 				),
 				array(
 				'label'=>'',
-				'value'=>'<b><font style="color:#FFA500">--------------------------------------DATOS CENTRO DOCUMENTAL---------------------------------------------</style></b>',
+				'value'=>'<ul><li><h2>Datos de Biodiversitas</h2></li></ul>',
 				'type'=>'raw',
 				),
 				array(

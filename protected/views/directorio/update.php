@@ -28,4 +28,4 @@ echo $model->es_institucion ? $model->institucion : $model->nombre.' '.$model->a
 ?></h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 
-		'model_f'=>$model_f, 'model_td'=>$model_td, 'model_nuevo_td'=>$model_nuevo_td,)); ?>
+		'model_f'=>$model_f, 'model_td'=>$model_td, 'model_nuevo_td'=>$model_nuevo_td, 'datos'=>$datos)); ?>

@@ -27,7 +27,8 @@ table.detail-view th
 
 table.detail-view tr.odd
 {
-	background:#E5F1F4;
+	/*background:#E5F1F4;*/
+	background:#E2E2E2;
 }
 
 table.detail-view tr.even

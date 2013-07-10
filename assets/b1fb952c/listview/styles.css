@@ -54,3 +54,14 @@
 	background:url(down.gif) right center no-repeat;
 	padding-right: 10px;
 }
+
+div.items div:nth-child(odd)
+{
+	/*background:#E5F1F4;*/
+	background:#E2E2E2;
+}
+
+div.items div:nth-child(even)
+{
+	background:#F8F8F8;
+}

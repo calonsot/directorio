@@ -11,8 +11,8 @@
 $this->breadcrumbs=array(
 	//'Directorios'=>array('index'),
 	'Crea un contacto',
-);*/
-
+);
+*/
 $this->menu=array(
 	//array('label'=>'List Directorio', 'url'=>array('index')),
 	array('label'=>'Administra tus contactos', 'url'=>array('admin')),
@@ -21,4 +21,5 @@ $this->menu=array(
 
 <h1>Crea un contacto</h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 'model_f'=>$model_f, 'model_nuevo_td'=>$model_nuevo_td,)); ?>
+<?php echo $this->renderPartial('_form', array('model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 
+		'model_f'=>$model_f, 'model_nuevo_td'=>$model_nuevo_td, 'datos'=>$datos, )); ?>

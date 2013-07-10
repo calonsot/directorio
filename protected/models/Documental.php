@@ -79,7 +79,7 @@ class Documental extends CActiveRecord
 	{
 		return array(
 			'id' => 'Identificador único',
-			'es_valido' => '¿Es valido para biodiversitas?',
+			'es_valido' => '¿Es valido para envio biodiversitas?',
 			'grado_academico' => 'Grado académico',
 			'sigla_institucion' => 'Sigla institución',
 			'sigla_dependencia' => 'Sigla dependencia',

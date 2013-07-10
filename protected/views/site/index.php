@@ -8,14 +8,15 @@ $this->pageTitle=Yii::app()->name;
 	Bienvenido al <i><?php echo CHtml::encode(Yii::app()->name); ?> </i>
 </h1>
 
-<p>Puedes empezar por:</p>
-<ul>
-	<li>Crear un <?php echo CHtml::link(CHtml::encode('contacto.'), array('directorio/create')) ?>
-	</li>
-	<li>Crear una <?php echo CHtml::link(CHtml::encode('lista.'), array('listas/create')) ?>
-	</li>
-	<li>Buscar un  <?php echo CHtml::link(CHtml::encode('contacto.'), array('directorio/admin')) ?>
-	</li>
-	<li>Buscar una <?php echo CHtml::link(CHtml::encode('lista.'), array('listas/admin')) ?>
-	</li>
-</ul>
+<table width="80" align="center">
+	<tr>
+		<td width="25%"><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/busca_usuario.png', 'busca usuario'), array('directorio/admin')) ?>
+		</td>
+		<td width="25%"><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/crea_usuario.png', 'crea usuario'), array('directorio/create')) ?>
+		</td>
+		<td width="25%"><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/busca_lista.png', 'busca lista'), array('listas/admin')) ?>
+		</td>
+		<td width="25%"><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/crea_lista.png', 'crea lista'), array('listas/create')) ?>
+		</td>
+	</tr>
+</table>
