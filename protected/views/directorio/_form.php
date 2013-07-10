@@ -74,7 +74,7 @@
 						<h2>Biodiversitas</h2>
 					</legend>
 					<?php $this->renderPartial('_biodiversitas',array(
-							'model_c'=>$model_c, 'form'=>$form, 'tablas'=>$tablas,
+							'model_c'=>$model_c, 'form'=>$form, 'tablas'=>$tablas, 'datos'=>$datos,
 					)); ?>
 				</fieldset> <?php  } ?> <?php if ($datos['super_usuario']==1 || in_array("medios", $tablas)) { ?>
 				<fieldset class="todos_los_campos">

@@ -87,6 +87,7 @@ class DirectorioController extends Controller
 			$model_c=new Documental();
 			$model_f=new Fotos();
 			$model_nuevo_td=new TiposDirectorio();
+			$tablas=explode(",", trim($datos['tablas_adicionales']));
 
 			// Uncomment the following line if AJAX validation is needed
 			// $this->performAjaxValidation($model);
@@ -104,10 +105,8 @@ class DirectorioController extends Controller
 				if ($archivo != null)
 				{
 					if (!file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
-					{
 						mkdir(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id);
-					}
-
+						
 					if (file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
 					{
 						$fecha=date("Y-m-d_H-i-s");
@@ -130,38 +129,50 @@ class DirectorioController extends Controller
 
 				if($model->save())
 				{
-					//parte de medios
-					$model_m->attributes=$_POST['Medios'];
-					$model_m->fec_alta=self::fechaAlta();
-					$model_m->usuarios_id=Yii::app()->user->id_usuario;
-					$model_m->id=$model->id;
+					if ($datos['super_usuario']==1 || in_array("medios", $tablas))
+					{
+						//parte de medios
+						$model_m->attributes=$_POST['Medios'];
+						$model_m->fec_alta=self::fechaAlta();
+						$model_m->usuarios_id=Yii::app()->user->id_usuario;
+						$model_m->id=$model->id;
+						
+						//parte de biodiversitas vacio
+						$model_c->fec_alta=self::fechaAlta();
+						$model_c->usuarios_id=Yii::app()->user->id_usuario;
+						$model_c->id=$model->id;
+							
+						if (!$model_m->save() || !$model_c->save()) //salva la parte de medios y biodiversitas
+							throw new CHttpException(NULL,'La acción de medios no se pudo completar, favor de intentarlo más tarde.');
+					}
 
-					if($model_m->save())
+					if ($datos['super_usuario']==1 || in_array("biodiversitas", $tablas))
 					{
 						//parte de centro documental
 						$model_c->attributes=$_POST['Documental'];
 						$model_c->fec_alta=self::fechaAlta();
 						$model_c->usuarios_id=Yii::app()->user->id_usuario;
 						$model_c->id=$model->id;
+						
+						//parte de medios vacio
+						$model_m->fec_alta=self::fechaAlta();
+						$model_m->usuarios_id=Yii::app()->user->id_usuario;
+						$model_m->id=$model->id;
 
-						$tablas=explode(",", trim($datos['tablas_adicionales']));
-
-						if ($datos['super_usuario']==1 || in_array("biodiversitas", $tablas))
-						{
+						if ($datos['super_usuario']==1 || Yii::app()->user->id_usuario==5)
 							$model_c->es_valido=1;
-						}
 
-						if($model_c->save())
-						{
-							//parte de tipos_directorio
-							$model_nuevo_td->attributes=$_POST['TiposDirectorio'];
-							$model_nuevo_td->fec_alta=self::fechaAlta();
-							$model_nuevo_td->directorio_id=$model->id;
-
-							if($model_nuevo_td->save())
-								$this->redirect(array('view','id'=>$model->id));
-						}
+						if (!$model_c->save() || !$model_m->save()) //salva la parte de medios
+							throw new CHttpException(NULL,'La acción de biodiversitas no se pudo completar, favor de intentarlo más tarde.');
 					}
+
+					//parte de tipos_directorio
+					$model_nuevo_td->attributes=$_POST['TiposDirectorio'];
+					$model_nuevo_td->fec_alta=self::fechaAlta();
+					$model_nuevo_td->directorio_id=$model->id;
+
+					if($model_nuevo_td->save())
+						$this->redirect(array('view','id'=>$model->id));
 				}
 			}
 
@@ -193,15 +204,16 @@ class DirectorioController extends Controller
 			$model_td=TiposDirectorio::model()->findAllByAttributes(array('directorio_id'=>$id)); //contiene arreglo de tipos
 			$model_nuevo_td=new TiposDirectorio();
 			$guardar=0;
+			$tablas=explode(",", trim($datos['tablas_adicionales']));
 
 			$tipos=count($model_td);
 
 			if ($model_foto == null)
-			{
 				$model_f=new Fotos();
-			} else {
+
+			else
 				$model_f=Fotos::model()->findByPk($model->fotos_id);
-			}
+
 
 			// Uncomment the following line if AJAX validation is needed
 			// $this->performAjaxValidation($model);
@@ -217,9 +229,8 @@ class DirectorioController extends Controller
 				if ($archivo != null)
 				{
 					if (!file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
-					{
 						mkdir(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id);
-					}
+
 
 					if (file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
 					{
@@ -242,85 +253,89 @@ class DirectorioController extends Controller
 				}
 
 				if (isset($_POST['estado_manual']) && $_POST['estado_manual'] != '')
-				{
 					$model->estado=$_POST['estado_manual'];
-				}
+
 
 				if (isset($_POST['estado_manual_alternativo']) && $_POST['estado_manual_alternativo'] != '')
-				{
 					$model->estado_alternativo=$_POST['estado_manual_alternativo'];
-				}
+
 
 				if ($model->save()) //salve el directorio
 				{
-					$model_m->attributes=$_POST['Medios'];
+					if ($datos['super_usuario']==1 || in_array("medios", $tablas))
+					{
+						$model_m->attributes=$_POST['Medios'];
 
-					if ($model_m->save()) //salva la parte de medios
+						if (!$model_m->save()) //salva la parte de medios
+							throw new CHttpException(NULL,'La acción de medios no se pudo completar, favor de intentarlo más tarde.');
+					}
+
+					if ($datos['super_usuario']==1 || in_array("biodiversitas", $tablas))
 					{
 						$model_c->attributes=$_POST['Documental'];
 
-						if ($model_c->save()) //salva la parte de centro documental
+						if (!$model_c->save()) //salva la parte de centro documental
+							throw new CHttpException(NULL,'La acción biodiversitas no se pudo completar, favor de intentarlo más tarde.');
+					}
+
+					if ($tipos > 1) //parte de tipos (muchos)
+					{
+						for ($i=0;$i<$tipos;$i++)
 						{
-							if ($tipos > 1) //parte de tipos (muchos)
+							$model_td[$i]->attributes=$_POST['TiposDirectorio'][$i+1];
+
+							if ($model_td[$i]->save())
+								$guardar+=1;
+						}
+
+						if ($guardar==$tipos)
+						{
+							$model_nuevo_td->attributes=$_POST['TiposDirectorio'];
+
+							if ($model_nuevo_td->tipo_id != 1)
 							{
-								for ($i=0;$i<$tipos;$i++)
-								{
-									$model_td[$i]->attributes=$_POST['TiposDirectorio'][$i+1];
+								$model_nuevo_td->directorio_id=$model->id;
+								$model_nuevo_td->fec_alta=self::fechaAlta();
 
-									if ($model_td[$i]->save())
-										$guardar+=1;
-								}
+								if ($model_nuevo_td->save())
+									$this->redirect(array('view','id'=>$model->id));
 
-								if ($guardar==$tipos)
-								{
-									$model_nuevo_td->attributes=$_POST['TiposDirectorio'];
-
-									if ($model_nuevo_td->tipo_id != 1)
-									{
-										$model_nuevo_td->directorio_id=$model->id;
-										$model_nuevo_td->fec_alta=self::fechaAlta();
-
-										if ($model_nuevo_td->save())
-											$this->redirect(array('view','id'=>$model->id));
-
-									} else {
-										$this->redirect(array('view','id'=>$model->id));
-									}
-								}
-
-							} else {   //una sola clasificacion
-
-								$model_td[0]->attributes=$_POST['TiposDirectorio'][1];
-
-								if ($model_td[0]->tipo_id != 1)    //si es diferente del default
-								{
-									$model_nuevo_td->attributes=$_POST['TiposDirectorio'];
-
-									if (isset($model_nuevo_td->tipo_id))
-									{
-										if ($model_nuevo_td->tipo_id != 1)
-										{
-											$model_nuevo_td->directorio_id=$model->id;
-											$model_nuevo_td->fec_alta=self::fechaAlta();
-
-											if ($model_nuevo_td->save() && $model_td[0]->save())
-												$this->redirect(array('view','id'=>$model->id));
-
-										} else {           //no salva nada
-											$this->redirect(array('view','id'=>$model->id));
-										}
-
-									} else {              //salva solo el primero
-
-										if ($model_td[0]->saveAttributes(array('tipo_id')))
-											$this->redirect(array('view','id'=>$model->id));
-									}
-
-								} else {                  //si es el default
-									if ($model_td[0]->save())
-										$this->redirect(array('view','id'=>$model->id));
-								}
+							} else {
+								$this->redirect(array('view','id'=>$model->id));
 							}
+						}
+
+					} else {   //una sola clasificacion
+
+						$model_td[0]->attributes=$_POST['TiposDirectorio'][1];
+
+						if ($model_td[0]->tipo_id != 1)    //si es diferente del default
+						{
+							$model_nuevo_td->attributes=$_POST['TiposDirectorio'];
+
+							if (isset($model_nuevo_td->tipo_id))
+							{
+								if ($model_nuevo_td->tipo_id != 1)
+								{
+									$model_nuevo_td->directorio_id=$model->id;
+									$model_nuevo_td->fec_alta=self::fechaAlta();
+
+									if ($model_nuevo_td->save() && $model_td[0]->save())
+										$this->redirect(array('view','id'=>$model->id));
+
+								} else {           //no salva nada
+									$this->redirect(array('view','id'=>$model->id));
+								}
+
+							} else {              //salva solo el primero
+
+								if ($model_td[0]->saveAttributes(array('tipo_id')))
+									$this->redirect(array('view','id'=>$model->id));
+							}
+
+						} else {                  //si es el default
+							if ($model_td[0]->save())
+								$this->redirect(array('view','id'=>$model->id));
 						}
 					}
 				}

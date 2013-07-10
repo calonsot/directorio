@@ -1,7 +1,7 @@
 
 <div id="datos_documental">
 
-	<?php if (!$model_c->isNewRecord) { ?>
+	<?php if (!$model_c->isNewRecord && ($datos['super_usuario']==1 || Yii::app()->user->id_usuario==5)) { ?>
 	<div class="row">
 		<?php echo $form->labelEx($model_c,'es_valido'); ?>
 		<?php echo $form->dropDownList($model_c, 'es_valido', array(0=>"No", 1=>"Sí"), 

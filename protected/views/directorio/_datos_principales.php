@@ -1,3 +1,35 @@
+<? /*
+$sql_a = Yii::app()->db->createCommand()
+->select('institucion')
+->from('directorio')
+->where("institucion LIKE '%areas%'")
+->queryColumn();
+print_r($sql_a);
+$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
+		//'model'=>$model,
+		'id'=>'institucion',
+		'name'=>'institucion',
+		//'attribute'=>'institucion',
+		'source'=>CJSON::encode($sql_a),
+		// additional javascript options for the autocomplete plugin
+		'options'=>
+         array(
+               'showAnim'=>'fold',
+               'select'=>"js:function(institucion, ui) {
+                  $('#institucion').val(ui.item.id);
+                         }"
+                ),
+                //'select'=>array(1)),
+		
+		'htmlOptions'=>array(
+				'style'=>'height:20px;',
+				'placeholder'=>'Pon la institucion...'
+
+		),
+)); */
+?>
+
+
 
 <?php if (!$model->isNewRecord) { ?>
 
