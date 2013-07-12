@@ -11,12 +11,6 @@
 	<?php } ?>
 
 	<div class="row">
-		<?php echo $form->labelEx($model_c,'grado_academico'); ?>
-		<?php echo $form->textField($model_c,'grado_academico',array('size'=>60,'maxlength'=>255,'id'=>'grado_academico')); ?>
-		<?php echo $form->error($model_c,'grado_academico'); ?>
-	</div>
-
-	<div class="row">
 		<?php echo $form->labelEx($model_c,'sigla_institucion'); ?>
 		<?php echo $form->textField($model_c,'sigla_institucion',array('size'=>60,'maxlength'=>255,'id'=>'sigla_institucion')); ?>
 		<?php echo $form->error($model_c,'sigla_institucion'); ?>

@@ -21,18 +21,6 @@
 		<?php echo $form->error($model,'nombre'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'fec_alta'); ?>
-		<?php echo $form->textField($model,'fec_alta'); ?>
-		<?php echo $form->error($model,'fec_alta'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'fec_act'); ?>
-		<?php echo $form->textField($model,'fec_act'); ?>
-		<?php echo $form->error($model,'fec_act'); ?>
-	</div>
-
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>

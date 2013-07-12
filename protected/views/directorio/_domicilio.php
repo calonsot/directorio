@@ -1,6 +1,10 @@
 
 <div id="datos_domicilio">
 
+	<?php echo $form->labelEx($model,'es_internacional', array('id'=>'etiqueta')); ?>
+	<?php echo $form->checkBox($model,'es_internacional'); ?>
+	<?php echo $form->error($model,'es_internacional'); ?>
+
 	<div id="datos_internacional" style="display: none">
 		<div class="row">
 			<?php echo $form->labelEx($model,'paises_id'); ?>

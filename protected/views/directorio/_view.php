@@ -9,7 +9,7 @@
 	
 	if ($data->fotos_id != '' && $data->fotos_id !=null) {
 		echo CHtml::image(Fotos::model()->findByPk($data->fotos_id)->ruta,
-				$data->es_institucion ? $data->institucion : $data->nombre.' '.$data->apellido, array('height'=>'130px', 'align'=>'right'));
+				DirectorioController::personaoInstitucion($data), array('height'=>'130px', 'align'=>'right'));
 	}else {
 		echo CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'130px', 'align'=>'right'));
 	}
@@ -18,12 +18,12 @@
 
 	<?php 
 	
-	echo "<h3>".CHtml::link(CHtml::encode($data->es_institucion ? $data->institucion : $data->nombre.' '.$data->apellido), array('view', 'id'=>$data->id))."</h3>";
+	echo "<h3>".CHtml::link(CHtml::encode($data->grado_academico).' '.DirectorioController::personaoInstitucion($data), array('view', 'id'=>$data->id))."</h3>";
 	?>
 	
-	<b><?php echo CHtml::encode($data->getAttributeLabel('es_institucion')); ?>:</b>
-	<?php echo CHtml::encode($data->es_institucion ? 'Sí' : 'No'); ?>
-	<br /> <b><?php echo CHtml::encode($data->getAttributeLabel('correo')); ?>:</b>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('vip')); ?>:</b>
+	<?php echo CHtml::encode($data->vip); ?>
+	<br><b><?php echo CHtml::encode($data->getAttributeLabel('correo')); ?>:</b>
 	<?php echo CHtml::encode($data->correo); ?>
 	<br /> <b><?php echo CHtml::encode($data->getAttributeLabel('sector_id')); ?>:</b>
 	<?php echo Sector::model()->findByPk($data->sector_id)->nombre; ?>

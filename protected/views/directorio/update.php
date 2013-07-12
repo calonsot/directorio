@@ -24,7 +24,7 @@ $this->menu=array(
 
 <h1>
 <?php 
-echo $model->es_institucion ? $model->institucion : $model->nombre.' '.$model->apellido; 
+echo $model->grado_academico.' '.DirectorioController::personaoInstitucion($model); 
 ?></h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model, 'model_m'=>$model_m, 'model_c'=>$model_c, 

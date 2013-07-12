@@ -6,7 +6,7 @@
  * The followings are the available columns in table 'directorio':
  * @property integer $id
  * @property integer $es_internacional
- * @property integer $es_institucion
+ * @property integer $vip
  * @property string $nombre
  * @property string $apellido
  * @property string $institucion
@@ -17,6 +17,7 @@
  * @property string $telefono_oficina
  * @property string $telefono_casa
  * @property string $telefonos
+ * @property string $grado_academico
  * @property string $puesto
  * @property string $adscripcion
  * @property string $nombre_asistente
@@ -90,9 +91,9 @@ class Directorio extends CActiveRecord
 	 * @var string saca todos los telefonos
 	 */
 	public $telefonos_totales;
-	
+
 	/**
-	 * 
+	 *
 	 * @var integer el tipo de clasificacion
 	 */
 	public $tipo;
@@ -112,7 +113,6 @@ class Directorio extends CActiveRecord
 	 * @var string (PARTE DE CENTRO DUCUMENTAL)
 	 */
 	public $es_valido;
-	public $grado_academico;
 	public $sigla_institucion;
 	public $sigla_dependencia;
 	public $dependencia;
@@ -145,13 +145,11 @@ class Directorio extends CActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		//$validator = new EmptyNullValidator();
-		//$validator->validateAttribute($object, $attribute)
 
 		return array(
 				//array('usuarios_id', 'required'),
-				array('id, es_internacional, es_institucion, cp, cp_alternativo, domicilio_alt_principal, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1', 'numerical', 'integerOnly'=>true),
-				array('nombre, apellido, institucion, correo, correo_alternativo, telefono_particular, telefono_oficina, telefono_casa, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo', 'length', 'max'=>255),
+				array('id, es_internacional, vip, cp, cp_alternativo, domicilio_alt_principal, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1', 'numerical', 'integerOnly'=>true),
+				array('nombre, apellido, institucion, correo, correo_alternativo, telefono_particular, telefono_oficina, telefono_casa, grado_academico, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo', 'length', 'max'=>255),
 				array('veces_consulta', 'length', 'max'=>20),
 				array('correos, telefonos, observaciones', 'safe'),
 				//valida el campo para mail
@@ -160,11 +158,25 @@ class Directorio extends CActiveRecord
 		array('nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, observaciones', 'default', 'setOnEmpty'=>true, 'value'=>null),
 		// The following rule is used by search().
 		// Please remove those attributes that should not be searched.
-		array('id, es_internacional, es_institucion, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, domicilio_alt_principal, fec_alta, fec_act, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1,
+		array('id, es_internacional, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, domicilio_alt_principal, fec_alta, fec_act, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1,
 				alias, telefonos_totales, correos_totales, tipo,
 				grupos_id, medio, tipo_medios_id, perfil_medio, programa,
-				es_valido, grado_academico, sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad',
+				es_valido, sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad',
 				'safe', 'on'=>'search'),
+		);
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see CModel::behaviors()
+	 */
+	public function behaviors() {
+		return array(
+				'ERememberFiltersBehavior' => array(
+						'class' => 'application.components.ERememberFiltersBehavior',
+						'defaults'=>array(),           /* optional line */
+						'defaultStickOnClear'=>false   /* optional line */
+				),
 		);
 	}
 
@@ -173,9 +185,8 @@ class Directorio extends CActiveRecord
 	 * @see CActiveRecord::beforeSave()
 	 */
 	public function beforeSave()
-	{	
-		if(($this->es_institucion==1 && trim($this->institucion) != '')
-		|| ($this->es_institucion==0 && (trim($this->nombre != '') || trim($this->apellido != ''))))
+	{
+		if(trim($this->institucion) != '' || trim($this->nombre != '') || trim($this->apellido != ''))
 		{
 
 			if ($this->correo != '' || $this->correo_alternativo != '' || trim($this->correos) != ''
@@ -237,10 +248,10 @@ class Directorio extends CActiveRecord
 		$tipos=TiposDirectorio::model()->findAllByAttributes(array('directorio_id'=>$this->id));
 		$num_tipos=count($tipos);
 		$tipos_borrados=TiposDirectorio::model()->deleteAllByAttributes(array('directorio_id'=>$this->id));
-		
+
 		if ($medios->delete() && $documental->delete() && $num_tipos==$tipos_borrados)
 			return parent::beforeDelete();
-		
+
 		else
 			return false;
 	}
@@ -279,17 +290,18 @@ class Directorio extends CActiveRecord
 		return array(
 				'id' => 'Identificador único',
 				'es_internacional' => '¿Es internacional?',
-				'es_institucion' => '¿Es una institución?',
+				'vip' => 'Grado VIP',
 				'nombre' => 'Nombre(s)',
 				'apellido' => 'Apellido(s)',
 				'institucion' => 'Nombre de la institución',
 				'correo' => 'Correo',
 				'correo_alternativo' => 'Correo alternativo',
 				'correos' => 'Muchos correos',
-				'telefono_particular' => 'Telefóno particular',
+				'telefono_particular' => 'Telefóno particular (celular)',
 				'telefono_oficina' => 'Telefóno oficina',
 				'telefono_casa' => 'Telefóno casa',
 				'telefonos' => 'Muchos telefónos',
+				'grado_academico' => 'Grado académico',
 				'puesto' => 'Puesto del contacto',
 				'adscripcion' => 'Adscripción',
 				'nombre_asistente' => 'Nombre(s) del asistente',
@@ -310,10 +322,10 @@ class Directorio extends CActiveRecord
 				'cp_alternativo' => 'Código postal alternativo',
 				'observaciones' => 'Observaciones',
 				'veces_consulta' => 'Número de veces consultado',
-				'domicilio_alt_principal' => '¿Es el domiclio alternativo para Biodiversitas?',
+				'domicilio_alt_principal' => '¿Es el domiclio alternativo para envio Biodiversitas?',
 				'fec_alta' => 'Fecha de creación',
 				'fec_act' => 'Fecha de la ultima actualización',
-				'tipo' => 'Tipo de clasificación',
+				'tipo' => 'Área(s)',
 				'usuarios_id' => 'Dueño',
 				'institucion_id' => 'Institución',
 				'sector_id' => 'Sector',
@@ -334,7 +346,6 @@ class Directorio extends CActiveRecord
 				'programa' => 'Programa',
 				//parte de documental
 				'es_valido' => '¿Es valido para envio biodiversitas?',
-				'grado_academico' => 'Grado académico',
 				'sigla_institucion' => 'Sigla institución',
 				'sigla_dependencia' => 'Sigla dependencia',
 				'dependencia' => 'Dependencia',
@@ -372,7 +383,7 @@ class Directorio extends CActiveRecord
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('es_internacional',$this->es_internacional);
-		$criteria->compare('es_institucion',$this->es_institucion);
+		$criteria->compare('vip',$this->vip);
 		$criteria->compare('t.nombre',$this->nombre,true);
 		$criteria->compare('t.apellido',$this->apellido,true);
 		$criteria->compare('institucion',$this->institucion,true);
@@ -383,6 +394,7 @@ class Directorio extends CActiveRecord
 		$criteria->compare('telefono_oficina',$this->telefono_oficina,true);
 		$criteria->compare('telefono_casa',$this->telefono_casa,true);
 		$criteria->compare('telefonos',$this->telefonos,true);
+		$criteria->compare('grado_academico',$this->grado_academico,true);
 		$criteria->compare('puesto',$this->puesto,true);
 		$criteria->compare('adscripcion',$this->adscripcion,true);
 		$criteria->compare('nombre_asistente',$this->nombre_asistente,true);
@@ -425,13 +437,12 @@ class Directorio extends CActiveRecord
 		$criteria->compare('medios.programa', $this->programa, true);
 		//parte de documental
 		$criteria->compare('documental.es_valido', $this->es_valido);
-		$criteria->compare('documental.grado_academico', $this->grado_academico, true);
 		$criteria->compare('documental.sigla_institucion', $this->sigla_institucion, true);
 		$criteria->compare('documental.sigla_dependencia', $this->sigla_dependencia, true);
 		$criteria->compare('documental.dependencia', $this->dependencia, true);
 		$criteria->compare('documental.subdependencia', $this->subdependencia, true);
 		$criteria->compare('documental.actividad', $this->actividad, true);
-		
+
 		$criteria->order = 't.id DESC';
 
 		return new CActiveDataProvider($this, array(

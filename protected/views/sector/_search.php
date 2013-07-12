@@ -12,8 +12,8 @@
 )); ?>
 
 	<div class="row">
-		<?php echo $form->label($model,'idsector'); ?>
-		<?php echo $form->textField($model,'idsector'); ?>
+		<?php echo $form->label($model,'id'); ?>
+		<?php echo $form->textField($model,'id'); ?>
 	</div>
 
 	<div class="row">

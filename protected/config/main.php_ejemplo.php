@@ -7,8 +7,13 @@
 // CWebApplication properties can be configured here.
 return array(
 		'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-		'name'=>'Directorio de la CONABIO',
+		'name'=>'Nombre de tu sitio',
 		'defaultController'=>'site',
+		
+		//parte de recordar estado de cgridview
+		'import'=>array('application.components.ERememberFiltersBehavior'),
+		//limpia los estaods de los filtros del cgridview
+		'import' =>array('application.components.EButtonColumnWithClearFilters'),
 
 		//'catchAllRequest'=>file_exists(dirname(__FILE__).'/.maintenance')
 		//? array('site/maintenance') : null,
@@ -36,7 +41,7 @@ return array(
 
 				'gii'=>array(
 						'class'=>'system.gii.GiiModule',
-						'password'=>'RP#86.lq',
+						'password'=>'tu-passwd',
 						// If removed, Gii defaults to localhost only. Edit carefully to taste.
 				//'ipFilters'=>array('127.0.0.1','::1'),
 				),
@@ -77,10 +82,10 @@ return array(
 		// uncomment the following to use a MySQL database
 
 		'db'=>array(
-		'connectionString' => 'mysql:host=localhost;dbname=directorio',
+		'connectionString' => 'mysql:host=localhost;dbname=tu-base',
 		'emulatePrepare' => true,
-		'username' => 'directorio',
-		'password' => 'directorio2013',
+		'username' => 'usuario',
+		'password' => 'tu-passwd',
 		'charset' => 'utf8',
 		),
 
@@ -109,6 +114,6 @@ return array(
 		// using Yii::app()->params['paramName']
 		'params'=>array(
 		// this is used in contact page
-		'adminEmail'=>'calonso@conabio.gob.mx',
+		'adminEmail'=>'tu-correo-admin',
 		),
 );

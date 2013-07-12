@@ -13,27 +13,12 @@
 )); ?>
 
 	<p class="note">
-		Campos con <span class="required">*</span> son necesarios. <br> Campos
-		con <span style="color: #FFA500;">*</span> se necesita al menos un
-		campo.
+		Campos con <span style="color: #FFA500;">*</span> se necesita al menos un campo.
 	</p>
 
 	<?php echo $form->errorSummary($model); ?>
 
-	<table width="100%">
-		<tr>
-			<td width="100%">
-				<fieldset class="todos_los_campos">
-					<legend>
-						<span id="titulo_datos_especificos"><h2>Datos especificos</h2> </span>
-					</legend>
-					<?php $this->renderPartial('_datos_especificos',array(
-							'model'=>$model, 'form'=>$form,
-					)); ?>
-				</fieldset>
-			</td>
-		</tr>
-	</table>
+	<br><br>
 
 	<table width="100%">
 		<tr>
@@ -100,7 +85,7 @@
 						<h2>Domicilio alternativo</h2>
 					</legend>
 					<?php $this->renderPartial('_domicilio_alternativo',array(
-							'model'=>$model, 'form'=>$form,
+							'model'=>$model, 'form'=>$form, 'datos'=>$datos,
 					)); ?>
 				</fieldset>
 			</td>

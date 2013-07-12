@@ -1,35 +1,3 @@
-<? /*
-$sql_a = Yii::app()->db->createCommand()
-->select('institucion')
-->from('directorio')
-->where("institucion LIKE '%areas%'")
-->queryColumn();
-print_r($sql_a);
-$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
-		//'model'=>$model,
-		'id'=>'institucion',
-		'name'=>'institucion',
-		//'attribute'=>'institucion',
-		'source'=>CJSON::encode($sql_a),
-		// additional javascript options for the autocomplete plugin
-		'options'=>
-         array(
-               'showAnim'=>'fold',
-               'select'=>"js:function(institucion, ui) {
-                  $('#institucion').val(ui.item.id);
-                         }"
-                ),
-                //'select'=>array(1)),
-		
-		'htmlOptions'=>array(
-				'style'=>'height:20px;',
-				'placeholder'=>'Pon la institucion...'
-
-		),
-)); */
-?>
-
-
 
 <?php if (!$model->isNewRecord) { ?>
 
@@ -48,23 +16,57 @@ $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
 
 <div class="row">
 	<?php echo $form->labelEx($model,'nombre', array('id'=>'etiqueta')); ?>
-	<span class="required" id="datos_nombre">*</span><br>
+	<span style="color: #FFA500;">*</span><br>
 	<?php echo $form->textField($model,'nombre',array('size'=>60,'maxlength'=>255, 'id'=>'nombre')); ?>
 	<?php echo $form->error($model,'nombre'); ?>
 </div>
 
 <div class="row">
 	<?php echo $form->labelEx($model,'apellido', array('id'=>'etiqueta')); ?>
-	<span class="required" id="datos_apellido">*</span><br>
+	<span style="color: #FFA500;">*</span><br>
 	<?php echo $form->textField($model,'apellido',array('size'=>60,'maxlength'=>255, 'id'=>'apellido')); ?>
 	<?php echo $form->error($model,'apellido'); ?>
 </div>
 
 <div class="row">
 	<?php echo $form->labelEx($model,'institucion', array('id'=>'etiqueta')); ?>
-	<span class="required" id="datos_institucion" style="display: none;">*</span><br>
+	<span style="color: #FFA500;">*</span><br>
 	<?php echo $form->textField($model,'institucion',array('size'=>60,'maxlength'=>255, 'id'=>'institucion')); ?>
 	<?php echo $form->error($model,'institucion'); ?>
+</div>
+
+<div class="row">
+	<?php echo $form->labelEx($model,'grado_academico'); ?>
+	<?php echo $form->textField($model,'grado_academico',array('size'=>60,'maxlength'=>255)); ?>
+	<?php echo $form->error($model,'grado_academico'); ?>
+</div>
+
+<div class="row">
+	<?php echo $form->labelEx($model,'puesto'); ?>
+	<?php echo $form->textField($model,'puesto',array('size'=>60,'maxlength'=>255)); ?>
+	<?php echo $form->error($model,'puesto'); ?>
+</div>
+
+<div class="row">
+	<?php echo $form->labelEx($model,'adscripcion'); ?>
+	<?php echo $form->textField($model,'adscripcion',array('size'=>60,'maxlength'=>255)); ?>
+	<?php echo $form->error($model,'adscripcion'); ?>
+</div>
+
+<div class="row">
+	<?php echo $form->labelEx($model,'sector_id'); ?>
+	<?php echo $form->dropDownList($model, 'sector_id',  CHtml::listData(Sector::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'), 
+			array('empty'=>'---Selecciona el tipo de sector---', 'id'=>'sector'
+				)); ?>
+	<?php echo $form->error($model,'sector_id'); ?>
+</div>
+
+<div class="row">
+	<?php echo $form->labelEx($model,'vip'); ?>
+	<?php echo  $form->dropDownList($model, 'vip', array(1=>'1', 2=>'2', 3=>'3', 4=>'4', 5=>'5', 6=>'6', 7=>'7',
+			8=>'8', 9=>'9', 10=>'10',
+	)) ?>
+	<?php echo $form->error($model,'vip'); ?>
 </div>
 
 <?php if ($model->isNewRecord) { ?>
@@ -94,7 +96,7 @@ if ($model_td[0]->tipo_id != 1)
 {
 	?>
 <div class="row">
-	<?php echo CHtml::label('¿Deseas añadir otro tipo de clasificación?',''); ?>
+	<?php echo CHtml::label('¿Deseas añadir otro tipo de área?',''); ?>
 	<?php echo $form->dropDownList($model_nuevo_td, 'tipo_id',  CHtml::listData(Tipo::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'), 
 			array('options'=>array(1=>array('selected'=>'selected')),
 							)); ?>
@@ -126,7 +128,7 @@ if ($model_td[0]->tipo_id != 1)
 					?>
 
 <div class="row">
-	<?php echo CHtml::label('¿Deseas añadir otro tipo de clasificación?',''); ?>
+	<?php echo CHtml::label('¿Deseas añadir otro tipo de área?',''); ?>
 	<?php echo $form->dropDownList($model_nuevo_td, 'tipo_id',  CHtml::listData(Tipo::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'), 
 			array('options'=>array(1=>array('selected'=>'selected')),
 							)); ?>
@@ -137,14 +139,6 @@ if ($model_td[0]->tipo_id != 1)
 				}
 }
 ?>
-
-<div class="row">
-	<?php echo $form->labelEx($model,'sector_id'); ?>
-	<?php echo $form->dropDownList($model, 'sector_id',  CHtml::listData(Sector::model()->findAll(array('order'=>'nombre ASC')), 'id', 'nombre'), 
-			array('empty'=>'---Selecciona el tipo de sector---', 'id'=>'sector'
-				)); ?>
-	<?php echo $form->error($model,'sector_id'); ?>
-</div>
 
 <div class="row">
 	<?php echo $form->labelEx($model,'correo', array('id'=>'etiqueta')); ?>
@@ -217,18 +211,6 @@ if ($model_td[0]->tipo_id != 1)
 		<?php echo $form->textArea($model,'telefonos',array('rows'=>6, 'cols'=>50)); ?>
 		<?php echo $form->error($model,'telefonos'); ?>
 	</div>
-</div>
-
-<div class="row">
-	<?php echo $form->labelEx($model,'puesto'); ?>
-	<?php echo $form->textField($model,'puesto',array('size'=>60,'maxlength'=>255)); ?>
-	<?php echo $form->error($model,'puesto'); ?>
-</div>
-
-<div class="row">
-	<?php echo $form->labelEx($model,'adscripcion'); ?>
-	<?php echo $form->textField($model,'adscripcion',array('size'=>60,'maxlength'=>255)); ?>
-	<?php echo $form->error($model,'adscripcion'); ?>
 </div>
 
 <div class="row">

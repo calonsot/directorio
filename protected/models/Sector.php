@@ -40,11 +40,11 @@ class Sector extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombre, fec_alta, fec_act', 'required'),
+			array('nombre', 'required'),
 			array('nombre', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('idsector, nombre, fec_alta, fec_act', 'safe', 'on'=>'search'),
+			array('id, nombre, fec_alta, fec_act', 'safe', 'on'=>'search'),
 		);
 	}
 

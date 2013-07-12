@@ -20,14 +20,14 @@ $this->menu=array(
 	<table border="1" style="display: table-row;">
 		<tr>
 			<td width="80%"><?php 
-			echo $model->es_institucion ? $model->institucion : $model->nombre.' '.$model->apellido;
+			echo $model->grado_academico.' '.DirectorioController::personaoInstitucion($model);
 			?>
 			</td>
 			<td><?php 
 			$foto=Fotos::model()->findByPk($model->fotos_id);
 			if ($foto != null) {
 			?> <?php echo CHtml::image($foto->ruta,
-				$model->es_institucion ? $model->institucion : $model->nombre.' '.$model->apellido, array('height'=>'110px', 'align'=>'right')); ?>
+				DirectorioController::personaoInstitucion($model), array('height'=>'110px', 'align'=>'right')); ?>
 				<?php } else {
 					echo CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'100px', 'align'=>'right'));
 				}?></td>
@@ -44,27 +44,22 @@ $this->menu=array(
 						'value'=>'<ul><li><h2>Datos principales</h2></li></ul>',
 						'type'=>'raw',
 				),
-				'id',
+				'nombre',
+				'apellido',
+				'institucion',
+				'grado_academico',
+				'puesto',
+				'adscripcion',
 				array(
-						'name'=>'es_internacional',
-						'value'=>$model->es_internacional==1 ? ("Sí"):("No"),
-				),
-				array(
-						'name'=>'es_institucion',
-						'value'=>$model->es_institucion==1 ? ("Sí"):("No"),
+						'name'=>'sector_id',
+						'value'=>Sector::model()->findByPk($model->sector_id)->nombre,
 				),
 				array(
 						'name'=>'tipos.tipo_id',
 						'type'=>'raw',
 						'value'=>$tipos,
 				),
-				array(
-						'name'=>'sector_id',
-						'value'=>Sector::model()->findByPk($model->sector_id)->nombre,
-				),
-				'institucion',
-				'nombre',
-				'apellido',
+				'vip',
 				'correo',
 				'correo_alternativo',
 				'correos',
@@ -72,8 +67,6 @@ $this->menu=array(
 				'telefono_oficina',
 				'telefono_casa',
 				'telefonos',
-				'puesto',
-				'adscripcion',
 				'pagina',
 				'red_social',
 				'observaciones',
@@ -82,6 +75,10 @@ $this->menu=array(
 						'type'=>'raw',
 						'value'=>'<ul><li><h2>Domicilio</h2></li></ul>',
 						'type'=>'raw',
+				),
+				array(
+						'name'=>'es_internacional',
+						'value'=>$model->es_internacional==1 ? ("Sí"):("No"),
 				),
 				'direccion',
 				'asentamiento',
@@ -134,6 +131,7 @@ $this->menu=array(
 						'value'=>'<ul><li><h2>Datos adicionales</h2></li></ul>',
 						'type'=>'raw',
 				),
+				'id',
 				'veces_consulta',
 				'fec_alta',
 				'fec_act',
@@ -176,10 +174,6 @@ $this->menu=array(
 				array(
 				'name'=>'es_valido',
 				'value'=>$model_c->es_valido==1 ? ("Sí"):("No"),
-				),
-				array(
-				'name'=>'grado_academico',
-				'value'=>$model_c->grado_academico,
 				),
 				array(
 				'name'=>'sigla_institucion',

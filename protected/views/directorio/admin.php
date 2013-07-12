@@ -77,7 +77,6 @@ or <b>=</b>).
 		'dataProvider'=>$model->search(),
 		'filter'=>$model,
 		'columns'=>$this->despliegaColumnas(),
-		
 		)
 ); ?>
 </div>

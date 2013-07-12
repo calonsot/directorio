@@ -22,7 +22,6 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
-		'grado_academico',
 		'sigla_institucion',
 		'sigla_dependencia',
 		'dependencia',

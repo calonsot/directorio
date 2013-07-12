@@ -64,7 +64,7 @@ class TiposDirectorio extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-				'tipo_id' => 'Tipo(s) de clasificación',
+				'tipo_id' => 'Área(s)',
 				'directorio_id' => 'Directorio',
 				'fec_alta' => 'Fec Alta',
 				'fec_act' => 'Fec Act',

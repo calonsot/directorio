@@ -38,7 +38,7 @@ class UsuariosController extends Controller
 				),
 				array('allow', // allow admin user to perform 'admin' and 'delete' actions
 						'actions'=>array('index','view','admin','delete'),
-						'users'=>array('admin'),
+						'users'=>array('calonso'),
 				),
 				array('deny',  // deny all users
 						'users'=>array('*'),
@@ -70,8 +70,9 @@ class UsuariosController extends Controller
 
 		if(isset($_POST['Usuarios']))
 		{
-			$model->fec_alta=self::fechaAlta();
 			$model->attributes=$_POST['Usuarios'];
+			$model->fec_alta=self::fechaAlta();
+			
 			if($model->save())
 				$this->redirect(array('/site/login'));
 		}
@@ -98,6 +99,8 @@ class UsuariosController extends Controller
 			if(isset($_POST['Usuarios']))
 			{
 				$model->attributes=$_POST['Usuarios'];
+				$model->fec_act=self::fechaAlta();
+				
 				if($model->save())
 					$this->redirect(array('view','id'=>$model->id));
 			}

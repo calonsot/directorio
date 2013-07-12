@@ -1,6 +1,14 @@
 
 <div id="datos_otro_domicilio">
 
+	<?php if ($datos['super_usuario']==1 || Yii::app()->user->id_usuario==5) { ?>
+	<div class="row">
+		<?php echo $form->labelEx($model,'domicilio_alt_principal', array('id'=>'etiqueta')); ?>
+		<?php echo $form->checkBox($model,'domicilio_alt_principal'); ?>
+		<?php echo $form->error($model,'domicilio_alt_principal'); ?>
+	</div>
+	<?php } ?>
+
 	<div id="datos_internacional_alternativo" style="display: none">
 		<div class="row">
 			<?php echo $form->labelEx($model,'paises_id1'); ?>

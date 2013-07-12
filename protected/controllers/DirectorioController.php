@@ -106,7 +106,7 @@ class DirectorioController extends Controller
 				{
 					if (!file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
 						mkdir(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id);
-						
+
 					if (file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
 					{
 						$fecha=date("Y-m-d_H-i-s");
@@ -136,7 +136,7 @@ class DirectorioController extends Controller
 						$model_m->fec_alta=self::fechaAlta();
 						$model_m->usuarios_id=Yii::app()->user->id_usuario;
 						$model_m->id=$model->id;
-						
+
 						//parte de biodiversitas vacio
 						$model_c->fec_alta=self::fechaAlta();
 						$model_c->usuarios_id=Yii::app()->user->id_usuario;
@@ -144,16 +144,15 @@ class DirectorioController extends Controller
 							
 						if (!$model_m->save() || !$model_c->save()) //salva la parte de medios y biodiversitas
 							throw new CHttpException(NULL,'La acción de medios no se pudo completar, favor de intentarlo más tarde.');
-					}
 
-					if ($datos['super_usuario']==1 || in_array("biodiversitas", $tablas))
+					} elseif ($datos['super_usuario']==1 || in_array("biodiversitas", $tablas))
 					{
 						//parte de centro documental
 						$model_c->attributes=$_POST['Documental'];
 						$model_c->fec_alta=self::fechaAlta();
 						$model_c->usuarios_id=Yii::app()->user->id_usuario;
 						$model_c->id=$model->id;
-						
+
 						//parte de medios vacio
 						$model_m->fec_alta=self::fechaAlta();
 						$model_m->usuarios_id=Yii::app()->user->id_usuario;
@@ -164,6 +163,21 @@ class DirectorioController extends Controller
 
 						if (!$model_c->save() || !$model_m->save()) //salva la parte de medios
 							throw new CHttpException(NULL,'La acción de biodiversitas no se pudo completar, favor de intentarlo más tarde.');
+							
+					} else
+					{
+						//parte de medios vacio
+						$model_m->fec_alta=self::fechaAlta();
+						$model_m->usuarios_id=Yii::app()->user->id_usuario;
+						$model_m->id=$model->id;
+
+						//parte de biodiversitas vacio
+						$model_c->fec_alta=self::fechaAlta();
+						$model_c->usuarios_id=Yii::app()->user->id_usuario;
+						$model_c->id=$model->id;
+							
+						if (!$model_m->save() || !$model_c->save()) //salva la parte de medios y biodiversitas
+							throw new CHttpException(NULL,'La acción de medios no se pudo completar, favor de intentarlo más tarde.');
 					}
 
 					//parte de tipos_directorio
@@ -404,10 +418,14 @@ class DirectorioController extends Controller
 		if ($datos['super_usuario']==1 || $datos['admin']==1)
 		{
 			$model=new Directorio('search');
-			$model->unsetAttributes();  // clear any default values
+			//$model->unsetAttributes();  // clear any default values
 
 			if(isset($_GET['Directorio']))
 				$model->attributes=$_GET['Directorio'];
+
+			//parte de limpiar el estado del cgridview
+			if (intval(Yii::app()->request->getParam('clearFilters'))==1)
+				EButtonColumnWithClearFilters::clearFilters($this,$model);
 
 			$this->render('admin',array(
 					'model'=>$model,
@@ -830,10 +848,10 @@ class DirectorioController extends Controller
 
 		if ($model!=null)
 		{
-			return CHtml::image($model->ruta, $model->nombre, array('width'=>'70px', 'height'=>'70px'));
+			return CHtml::image($model->ruta, $model->nombre, array('height'=>'75px'));
 
 		} else {
-			return CHtml::image('../../imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'70px', 'height'=>'70px'));
+			return CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'70px', 'height'=>'70px'));
 		}
 	}
 
@@ -870,11 +888,18 @@ class DirectorioController extends Controller
 		$atributos[0]=array(
 				'id'=>'casillas',
 				'class'=>'CCheckBoxColumn',
-				'selectableRows' => '8000',
+				'selectableRows' => '50',
 		);
 
 		$atributos[1]=array(
-				'class'=>'CButtonColumn',
+				'class'=>'EButtonColumnWithClearFilters',
+				//'clearVisible'=>false,
+				//'onClick_BeforeClear'=>'alert('this js fragment executes before clear');',
+				//'onClick_AfterClear'=>'alert('this js fragment executes after clear');',
+				//'clearHtmlOptions'=>array('class'=>'custom-clear'),
+				'imageUrl'=>Yii::app()->request->baseUrl.'/imagenes/aplicacion/delete.png',
+				//'url'=>'Yii::app()->controller->createUrl(Yii::app()->controller->action->ID,array("clearFilters"=>1))',
+		'label'=>'Limpia la búsqueda',
 		);
 
 		foreach ($atributo as $at)
@@ -910,16 +935,6 @@ class DirectorioController extends Controller
 					);
 					break;
 
-				case 'es_institucion':
-
-					$atributos[$contador]=array(
-					'name'=>$a,
-					'header'=>'¿Inst?',
-					'filter'=>array('1'=>'Sí','0'=>'No'),
-					'value'=>'($data->es_institucion=="1")?("Sí"):("No")',
-					);
-					break;
-
 				case 'sector_id':
 
 					$atributos[$contador]=array(
@@ -939,6 +954,19 @@ class DirectorioController extends Controller
 
 				case 'institucion':
 					$atributos[$contador]=$a;
+					break;
+
+				case 'grado_academico':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'value'=>'$data->'.$a,
+					);
+					break;
+						
+				case 'vip':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					);
 					break;
 
 				case 'correo':
@@ -1022,13 +1050,6 @@ class DirectorioController extends Controller
 					);
 					break;
 
-				case 'grado_academico':
-					$atributos[$contador]=array(
-					'name'=>$a,
-					'value'=>'$data->documental->'.$a,
-					);
-					break;
-
 				case 'sigla_institucion':
 					$atributos[$contador]=array(
 					'name'=>$a,
@@ -1104,6 +1125,11 @@ class DirectorioController extends Controller
 		return $atributos;
 	}
 
+	/**
+	 *
+	 * @param integer $id del directorio
+	 * @return string $cadena los nombres de los tipos relacionados
+	 */
 	public static function dameTipos ($id)
 	{
 		$cadena="<ul>";
@@ -1121,6 +1147,15 @@ class DirectorioController extends Controller
 		}
 
 		return $cadena.="</ul>";
+	}
+
+	public static function personaoInstitucion ($model)
+	{
+		if (trim($model->nombre) != "" || trim($model->apellido) != "")
+			return $model->nombre.' '.$model->apellido;
+
+		elseif (trim($model->institucion) != "")
+		return $model->institucion;
 	}
 
 	/**
