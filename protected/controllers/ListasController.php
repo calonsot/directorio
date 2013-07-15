@@ -261,20 +261,21 @@ class ListasController extends Controller
 				{
 					if ($correos!='')
 					{
-						if ($model_cont->es_institucion == 1)
+						if (trim($model_cont->nombre) != '' || trim($model_cont->apellido) != '')
 						{
 							foreach ($correos as $c)
 							{
-								$cadena[$c]="\"".$model_cont->institucion."\" ".$c;
+								$cadena[$c]="\"".$model_cont->nombre." ".$model_cont->apellido."\" ".$c;
 							}
-
+								
 							$formato_mail=true;
+
 
 						} else {
 
 							foreach ($correos as $c)
 							{
-								$cadena[$c]="\"".$model_cont->nombre." ".$model_cont->apellido."\" ".$c;
+								$cadena[$c]="\"".$model_cont->institucion."\" ".$c;
 							}
 
 							$formato_mail=true;

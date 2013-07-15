@@ -136,8 +136,7 @@ class Controller extends CController
 		$columnas=array('Columnas de directorio'=>array(), 'Columnas de medios'=>array(), 'Columnas de centro documental'=>array());
 
 		$columnas['Columnas de directorio']=Directorio::model()->attributeLabels();
-		unset($columnas['Columnas de directorio']['id'],$columnas['Columnas de directorio']['fec_alta'], $columnas['Columnas de directorio']['fec_act'], $columnas['Columnas de directorio']['usuarios_id'],
-				$columnas['Columnas de directorio']['institucion_id'], $columnas['Columnas de directorio']['ciudad_id'], $columnas['Columnas de directorio']['ciudad_id1'],
+		unset($columnas['Columnas de directorio']['institucion_id'], $columnas['Columnas de directorio']['ciudad_id'], $columnas['Columnas de directorio']['ciudad_id1'],
 				$columnas['Columnas de directorio']['fotos_id'], $columnas['Columnas de directorio']['codigo_postal_id'], $columnas['Columnas de directorio']['codigo_postal_id1']);
 
 		$columnas['Columnas de medios']=Medios::model()->attributeLabels();

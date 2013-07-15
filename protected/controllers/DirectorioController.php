@@ -734,7 +734,7 @@ class DirectorioController extends Controller
 				foreach($autoIdAll as $autoId)
 				{
 					$model=$this->loadModel($autoId);
-					$exporta->cadena.=$model->id.",";
+					$exporta->cadena.=$model->id.", ";
 
 					if($exporta->saveAttributes(array('cadena')))
 						echo 'ok';
