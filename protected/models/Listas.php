@@ -68,18 +68,18 @@ class Listas extends CActiveRecord
 
 	 if ($this->esta_activa == 1)
 	 {
-	 	$activas=Listas::model()->findAllByAttributes(array('esta_activa'=>1));
-
+	 	$activas=Listas::model()->findAllByAttributes(array('esta_activa'=>1, 'usuarios_id'=>Yii::app()->user->id_usuario));
+	 	
 	 	foreach ($activas as $act)
 	 	{
 	 		$act->esta_activa=0;
-	 		$act->save();
+	 		$act->saveAttributes(array('esta_activa'));
 	 	}
 	 }
 
 	 return parent::beforeSave();
 	}
-
+	
 	/**
 	 * @return array relational rules.
 	 */
