@@ -899,7 +899,7 @@ class DirectorioController extends Controller
 				//'clearHtmlOptions'=>array('class'=>'custom-clear'),
 				'imageUrl'=>Yii::app()->request->baseUrl.'/imagenes/aplicacion/delete.png',
 				//'url'=>'Yii::app()->controller->createUrl(Yii::app()->controller->action->ID,array("clearFilters"=>1))',
-		'label'=>'Limpia la búsqueda',
+				'label'=>'Limpia la búsqueda',
 		);
 
 		foreach ($atributo as $at)
@@ -962,7 +962,7 @@ class DirectorioController extends Controller
 					'value'=>'$data->'.$a,
 					);
 					break;
-						
+
 				case 'vip':
 					$atributos[$contador]=array(
 					'name'=>$a,
@@ -1117,6 +1117,13 @@ class DirectorioController extends Controller
 					'value'=>'Usuarios::model()->findByPk($data->usuarios_id)->usuario',
 					);
 					break;
+
+				case 'observaciones':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					);
+					break;
+
 			}
 
 			$contador++;

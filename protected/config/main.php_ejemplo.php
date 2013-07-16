@@ -9,8 +9,8 @@ return array(
 		'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 		'name'=>'Nombre de tu sitio',
 		'defaultController'=>'site',
-		
-		//parte de recordar estado de cgridview
+
+		//parte de recordar estado de los filtros de cgridview
 		'import'=>array('application.components.ERememberFiltersBehavior'),
 		//limpia los estaods de los filtros del cgridview
 		'import' =>array('application.components.EButtonColumnWithClearFilters'),
@@ -32,19 +32,19 @@ return array(
 
 		// autoloading model and component classes
 		'import'=>array(
-				'application.models.*',
-				'application.components.*',
+		'application.models.*',
+		'application.components.*',
 		),
 		//modulos
 		'modules'=>array(
-				// uncomment the following to enable the Gii tool
+		// uncomment the following to enable the Gii tool
 
-				'gii'=>array(
-						'class'=>'system.gii.GiiModule',
-						'password'=>'tu-passwd',
-						// If removed, Gii defaults to localhost only. Edit carefully to taste.
-				//'ipFilters'=>array('127.0.0.1','::1'),
-				),
+		'gii'=>array(
+		'class'=>'system.gii.GiiModule',
+		'password'=>'tu-passwd',
+		// If removed, Gii defaults to localhost only. Edit carefully to taste.
+		//'ipFilters'=>array('127.0.0.1','::1'),
+		),
 
 		),
 		// application components
@@ -52,7 +52,11 @@ return array(
 		'user'=>array(
 		// enable cookie-based authentication
 		'allowAutoLogin'=>true,
-		'authTimeout' => 60*60*24*365*10,
+		'authTimeout' => 200,
+		),
+
+		'session' => array(
+		'timeout' => 200,
 		),
 
 		'email'=>array(
