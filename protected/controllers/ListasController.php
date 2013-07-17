@@ -242,16 +242,26 @@ class ListasController extends Controller
 	public function ponDatosContactos($model, $vista=null)
 	{
 		Yii::import('ext.csv.ECSVExport');
+		$cadena_encabezado=array();
 		$cadena=array();
 		$cadena_final=array();
 		$formato_mail=false;
 		$contactos=explode(',', $model->cadena);
 		$atributos=explode(',', $model->atributos);
-		$contador=0;
+		$contador=1;
 
+		foreach ($atributos as $a)
+		{
+			$cadena_encabezado[$a."-attr"]=$a;
+		}
+		
+		$cadena_final[0]=$cadena_encabezado;
+		
 		foreach ($contactos as $id)
 		{
 			$model_cont=Directorio::model()->findByPk($id);
+			$model_cont_medios=Medios::model()->findByPk($id);
+			$model_cont_documental=Documental::model()->findByPk($id);
 
 			if ($model_cont != null)
 			{
@@ -267,7 +277,7 @@ class ListasController extends Controller
 							{
 								$cadena[$c]="\"".$model_cont->nombre." ".$model_cont->apellido."\" ".$c;
 							}
-								
+
 							$formato_mail=true;
 
 
@@ -284,9 +294,29 @@ class ListasController extends Controller
 
 				} else {
 
-					foreach ($atributos as $a)
+					foreach ($atributos as $att)
 					{
-						$cadena[$a]=$model_cont->{trim($a)};
+						$a=trim($att);
+
+						if ($a=='grupos_id' || $a=='medio' || $a=='tipo_medios_id' || $a=='perfil_medio' || $a=='programa')
+						{
+							if ($a=='grupos_id')
+								$cadena[$a]="\"".Grupos::model()->findByPk($model_cont_medios->{trim($a)})->nombre."\"";
+
+							elseif ($a=='tipo_medios_id')
+							$cadena[$a]="\"".TipoMedios::model()->findByPk($model_cont_medios->{trim($a)})->nombre."\"";
+
+							else
+								$cadena[$a]="\"".$model_cont_medios->{trim($a)}."\"";
+
+						} elseif ($a=='es_valido' || $a=='sigla_institucion' || $a=='sigla_dependencia'
+								|| $a=='dependencia' || $a=='subdependencia' || $a=='actividad')
+						{
+							$cadena[$a]="\"".$model_cont_documental->{trim($a)}."\"";
+
+						} else {
+							$cadena[$a]="\"".$model_cont->{trim($a)}."\"";
+						}
 					}
 
 					$cadena_final[$contador]=$cadena;
@@ -308,7 +338,7 @@ class ListasController extends Controller
 				$csv->toCSV($model->nombre.".csv");
 
 		} else {
-			$csv = new ECSVExport($cadena_final,true, true, '|', ' ');
+			$csv = new ECSVExport($cadena_final,true, false, ',', ' ');
 
 			if ($vista===null)
 				echo $csv->toCSV();
