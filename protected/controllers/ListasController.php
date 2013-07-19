@@ -254,9 +254,9 @@ class ListasController extends Controller
 		{
 			$cadena_encabezado[$a."-attr"]=$a;
 		}
-		
+
 		$cadena_final[0]=$cadena_encabezado;
-		
+
 		foreach ($contactos as $id)
 		{
 			$model_cont=Directorio::model()->findByPk($id);
@@ -315,7 +315,11 @@ class ListasController extends Controller
 							$cadena[$a]="\"".$model_cont_documental->{trim($a)}."\"";
 
 						} else {
-							$cadena[$a]="\"".$model_cont->{trim($a)}."\"";
+							if ($a=='sector_id')
+								$cadena[$a]="\"".Sector::model()->findByPk($model_cont->{trim($a)})->nombre."\"";
+
+							else
+								$cadena[$a]="\"".$model_cont->{trim($a)}."\"";
 						}
 					}
 
