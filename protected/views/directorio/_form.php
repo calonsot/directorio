@@ -13,12 +13,13 @@
 )); ?>
 
 	<p class="note">
-		Campos con <span style="color: #FFA500;">*</span> se necesita al menos un campo.
+		Campos con <span style="color: #FFA500;">*</span> se necesita al menos
+		un campo.
 	</p>
 
 	<?php echo $form->errorSummary($model); ?>
 
-	<br><br>
+	<br> <br>
 
 	<table width="100%">
 		<tr>
@@ -26,17 +27,26 @@
 
 				<fieldset class="todos_los_campos">
 					<legend>
+						<h2>Datos de la Foto</h2>
+					</legend>
+					<?php $this->renderPartial('_foto',array(
+							'model'=>$model, 'form'=>$form, 'model_f'=>$model_f, 
+					)); ?>
+				</fieldset>
+
+				<fieldset class="todos_los_campos">
+					<legend>
 						<h2>Datos Principales</h2>
 					</legend>
 					<?php if ($model->isNewRecord) { ?>
 					<?php $this->renderPartial('_datos_principales',array(
-							'model'=>$model, 'model_f'=>$model_f, 'model_nuevo_td'=>$model_nuevo_td,
+							'model'=>$model, 'model_nuevo_td'=>$model_nuevo_td,
 							'form'=>$form,
 					)); ?>
 
 					<?php } else { ?>
 					<?php $this->renderPartial('_datos_principales',array(
-							'model'=>$model, 'model_f'=>$model_f, 'model_nuevo_td'=>$model_nuevo_td,
+							'model'=>$model, 'model_nuevo_td'=>$model_nuevo_td,
 							'model_td'=>$model_td, 'form'=>$form,
 					)); ?>
 

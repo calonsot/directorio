@@ -4,27 +4,40 @@
 
 $(document).ready(
 		function() {
-					
-			//-----------------------PARTE DE LAS CAJAS-------------------------//
-
+			
+			function datosListas() {
+				$('#estado, #datos_municipio_lista, .datos_ciudad_id, #datos_asentamiento_lista').slideUp();
+				$('#datos_municipio, #datos_ciudad, #datos_asentamiento').slideDown();
+				$('#datos_manual').slideUp();
+				$('#datos_listas, #estado_manual, #datos_estado_manual').slideDown();
+			}
+			
+			function datosManual() {
+				$('#estado, #datos_municipio_lista, .datos_ciudad_id, #datos_asentamiento_lista, #datos_manual').slideDown();
+				$('#datos_municipio, #datos_ciudad, #datos_asentamiento').slideUp();
+				$('#datos_listas').slideUp();
+				$('#datos_listas, #datos_estado_manual').slideUp();
+			}
+			
+			
+			
+			//-----------------------PARTE DEL BOTON DE LA FOTO-------------------------//
+			
+			
 			/**
-			 * Pone los datos para poner la institucion
+			 * Pone los datos para poner si es internacional
 			 */
-			$('#Directorio_es_institucion').click(function() {
+			$('#quita_foto').click(
+					function() {
 
-				var isChecked = $(this).attr('checked') ? true : false;
+						$('#foto_predeterminada').slideDown();
+						$('#foto_de_carga').slideUp();
+						$('#foto_vacia').val('0');
 
-				if (isChecked) {
-	
-					$('#datos_nombre, #datos_apellido').slideUp();
-					$('#datos_institucion').slideDown();
-					
-				} else {
-					
-					$('#datos_institucion').slideUp();
-					$('#datos_nombre, #datos_apellido').slideDown();
-				}
 			});
+			
+			
+			//-----------------------PARTE DE LAS CAJAS-------------------------//
 			
 			
 			/**
@@ -36,134 +49,41 @@ $(document).ready(
 						var isChecked = $(this).attr('checked') ? true : false;
 
 						if (isChecked) {
-							$('#datos_internacional, #datos_internacional_alternativo, #datos_manual, #datos_manual_alternativo').slideDown();
+							$('#datos_internacional, #datos_manual').slideDown();
 							
 						} else {
-							$('#pais_id, #pais_id_alternativo').val('').removeAttr('checked').removeAttr('selected');
-							$('#datos_internacional, #datos_internacional_alternativo, #datos_manual, #datos_manual_alternativo, #datos_listas, #datos_listas_alternativas').slideUp();
+							$('#pais_id').val('').removeAttr('checked').removeAttr('selected');
+							$('#datos_internacional, #datos_manual, #datos_listas').slideUp();
+							$('#estado_manual').slideUp();
+							$('#estado').slideDown();
 						}
 
 			});
 			
 			
-			/**
-			 * Pone el enlace de la caja domicilio y si no esta seleccionado lo
-			 * quita
-			 */
-			$('#caja_domicilio').click(
-					function() {
-
-						var isChecked = $(this).attr(
-								'checked') ? true : false;
-						$('#enlace_domicilio').slideToggle();
-
-						if (!isChecked) {
-							$('#datos_domicilio').slideUp();
-							$('#direccion').val('');
-							reseteaDomicilio();
-						}
-
-					});
-
 			
 			/**
-			 * Pone el enlace de la caja domicilio y si no esta seleccionado lo
-			 * quita
+			 * Pone los datos para poner si es internacional el domicilio alternativo
 			 */
-			$('#caja_otro_domicilio').click(
+			$('#Directorio_es_internacional_alternativo').click(
 					function() {
 
-						var isChecked = $('#caja_otro_domicilio').attr(
-								'checked') ? true : false;
-						$('#enlace_otro_domicilio').slideToggle();
-						
-						if (!isChecked) {
-							$('#datos_otro_domicilio').slideUp();
-							$('#direcccion_alternativa').val('');
-							reseteaDomicilioAlternativo();
-						}
+						var isChecked = $(this).attr('checked') ? true : false;
 
-					});
-			
-			
-			
-			/**
-			 * Pone el enlace de la caja medios si no esta seleccionado lo quita 
-			 * 
-			 */
-			$('#caja_medios').click(
-					function() {
-
-						var isChecked = $(this).attr(
-								'checked') ? true : false;
-						$('#enlace_medios').slideToggle();
-						
-						if (!isChecked) {
+						if (isChecked) {
+							$('#datos_internacional_alternativo, #datos_manual_alternativo').slideDown();
 							
-							$('#grupo, #medio, #tipo_medio, #perfil_medio, #programa, #seccion, #suplemento, #columna').val('');
-							$('#datos_medios').slideUp();
+						} else {
+							$('#pais_id_alternativo').val('').removeAttr('checked').removeAttr('selected');
+							$('#datos_internacional_alternativo, #datos_manual_alternativo, #datos_listas_alternativas').slideUp();
+							$('#estado_manual_alternativo').slideUp();
+							$('#estado_alternativo').slideDown();
 						}
 
-					});
-			
-			
-			
-			
-			/**
-			 * Pone el enlace de la caja cntro documental sino esta seleccionado lo quita 
-			 * 
-			 */
-			$('#caja_documental').click(
-					function() {
-
-						var isChecked = $(this).attr(
-								'checked') ? true : false;
-						$('#enlace_documental').slideToggle();
-						
-						if (!isChecked) {
-							
-							$('#grado_academico, #sigla_institucion, #sigla_dependencia, #dependencia, #subdependencia, #actividad').val('');
-							$('#datos_documental').slideUp();
-						}
-
-					});
-			
-			
-			
-			
-			/**
-			 * Pone el enlace de la caja encargado y si no esta seleccionado lo
-			 * quita
-			 */
-			$('#caja_asistente').click(
-					function() {
-
-						var isChecked = $('#caja_asistente').attr(
-								'checked') ? true : false;
-						$('#enlace_asistente').slideToggle();
-						
-						if (!isChecked) {
-							$('#datos_asistente').slideUp();
-						}
-
-					});
+			});
 			
 			
 			//-----------------------ENLACES DE LOS ATAJOS-------------------------//
-			
-			/**
-			 * Liga de regreso a los datos principales
-			 */
-			$('#enlace_principal').click(
-					function() {
-
-						$('#datos_principal').slideDown();
-						$('#datos_domicilio').slideUp();
-						$('#datos_otro_domicilio').slideUp();
-						$('#datos_asistente').slideUp();
-						$('#datos_medios').slideUp();
-						$('#datos_documental').slideUp();
-					});
 			
 			
 			/**
@@ -217,68 +137,12 @@ $(document).ready(
 			
 			
 			/**
-			 * Pone los datos de medios y las ligas para regresar
-			 */
-			$('#enlace_medios').click(
-					function() {
-
-						$('#enlace_principal').slideDown();
-						$('#datos_principal').slideUp();
-						$('#datos_domicilio').slideUp();
-						$('#datos_otro_domicilio').slideUp();
-						$('#datos_asistente').slideUp();
-						$('#datos_medios').slideDown();
-						$('#datos_documental').slideUp();
-					});
-			
-			
-			
-			/**
-			 * Pone los datos del centro documental y las ligas para regresar
-			 */
-			$('#enlace_documental').click(
-					function() {
-
-						$('#enlace_principal').slideDown();
-						$('#datos_principal').slideUp();
-						$('#datos_domicilio').slideUp();
-						$('#datos_otro_domicilio').slideUp();
-						$('#datos_asistente').slideUp();
-						$('#datos_medios').slideUp();
-						$('#datos_documental').slideDown();
-					});
-			
-			
-			
-			
-			/**
-			 * Pone los datos del asistente y las ligas para regresar
-			 */
-			$('#enlace_asistente').click(
-					function() {
-
-						$('#enlace_principal').slideDown();
-						$('#datos_principal').slideUp();
-						$('#datos_domicilio').slideUp();
-						$('#datos_otro_domicilio').slideUp();
-						$('#datos_asistente').slideDown();
-						$('#datos_medios').slideUp();
-						$('#datos_documental').slideUp();
-					});
-			
-			
-			
-			
-			/**
 			 * Pone los para el domicilio internacion (manual)
 			 */
 			$('#datos_manual').click(
 					function() {
 
-						$('#estado, #datos_municipio_lista, .datos_ciudad_id, #datos_asentamiento_lista').slideUp();
-						$('#datos_municipio, #datos_ciudad, #datos_asentamiento').slideDown();
-						$(this).slideUp();
-						$('#datos_listas, #datos_estado_manual').slideDown();
+						datosListas();
 						
 					});
 			
@@ -289,10 +153,7 @@ $(document).ready(
 			$('#datos_listas').click(
 					function() {
 
-						$('#estado, #datos_municipio_lista, .datos_ciudad_id, #datos_asentamiento_lista, #datos_manual').slideDown();
-						$('#datos_municipio, #datos_ciudad, #datos_asentamiento').slideUp();
-						$(this).slideUp();
-						$('#datos_listas, #datos_estado_manual').slideUp();
+						datosManual();
 						
 					});
 			
@@ -307,9 +168,10 @@ $(document).ready(
 						$('#estado_alternativo, #datos_municipio_lista_alternativa, .datos_ciudad_id_alternativa, #datos_asentamiento_lista_alternativa').slideUp();
 						$('#datos_municipio_alternativo, #datos_ciudad_alternativa, #datos_asentamiento_alternativo').slideDown();
 						$(this).slideUp();
-						$('#datos_listas_alternativas, #datos_estado_manual_alternativo').slideDown();
+						$('#datos_listas_alternativas, #estado_manual_alternativo, #datos_estado_manual_alternativo').slideDown();
 						
 					});
+			
 			
 			
 			/**

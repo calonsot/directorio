@@ -78,14 +78,14 @@ class Documental extends CActiveRecord
 	{
 		return array(
 			'id' => 'Identificador único',
-			'es_valido' => '¿Es valido para envio biodiversitas?',
+			'es_valido' => '¿Es válido para envío biodiversitas?',
 			'sigla_institucion' => 'Sigla institución',
 			'sigla_dependencia' => 'Sigla dependencia',
 			'dependencia' => 'Dependencia',
 			'subdependencia' => 'Subdependencia',
 			'actividad' => 'Actividad',
 			'fec_alta' => 'Fecha de creación',
-			'fec_act' => 'Fecha de ultima actualización',
+			'fec_act' => 'Fecha de última actualización',
 			'usuarios_id' => 'Dueño',
 		);
 	}

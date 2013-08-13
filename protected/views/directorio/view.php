@@ -17,7 +17,7 @@ $this->menu=array(
 ?>
 
 <h1>
-	<table border="1" style="display: table-row;">
+	<table style="display: table-row;">
 		<tr>
 			<td width="80%"><?php 
 			echo $model->grado_academico.' '.DirectorioController::personaoInstitucion($model);
@@ -26,9 +26,12 @@ $this->menu=array(
 			<td><?php 
 			$foto=Fotos::model()->findByPk($model->fotos_id);
 			if ($foto != null) {
-			?> <?php echo CHtml::image($foto->ruta,
+				if (strpos($foto->ruta, 'blank-profile.jpg') === false) {?> 
+				<?php echo CHtml::image($foto->ruta,
 				DirectorioController::personaoInstitucion($model), array('height'=>'110px', 'align'=>'right')); ?>
-				<?php } else {
+				<?php } else {?> <?php 
+				echo CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'100px', 'align'=>'right'));
+				} ?> <?php } else {
 					echo CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'100px', 'align'=>'right'));
 				}?></td>
 		</tr>

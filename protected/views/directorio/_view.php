@@ -6,10 +6,16 @@
 <div class="view">
 
 	<?php 
-	
-	if ($data->fotos_id != '' && $data->fotos_id !=null) {
-		echo CHtml::image(Fotos::model()->findByPk($data->fotos_id)->ruta,
-				DirectorioController::personaoInstitucion($data), array('height'=>'130px', 'align'=>'right'));
+
+	if ($data->fotos_id != '' && $data->fotos_id !=null)
+	{
+		if (strpos(Fotos::model()->findByPk($data->fotos_id)->ruta, 'blank-profile.jpg') === false) {
+			echo CHtml::image(Fotos::model()->findByPk($data->fotos_id)->ruta,
+					DirectorioController::personaoInstitucion($data), array('height'=>'130px', 'align'=>'right'));
+
+		} else {
+			echo CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'130px', 'align'=>'right'));
+		}
 	}else {
 		echo CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'130px', 'align'=>'right'));
 	}
@@ -17,13 +23,13 @@
 	?>
 
 	<?php 
-	
+
 	echo "<h3>".CHtml::link(CHtml::encode($data->grado_academico).' '.DirectorioController::personaoInstitucion($data), array('view', 'id'=>$data->id))."</h3>";
 	?>
-	
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('vip')); ?>:</b>
 	<?php echo CHtml::encode($data->vip); ?>
-	<br><b><?php echo CHtml::encode($data->getAttributeLabel('correo')); ?>:</b>
+	<br> <b><?php echo CHtml::encode($data->getAttributeLabel('correo')); ?>:</b>
 	<?php echo CHtml::encode($data->correo); ?>
 	<br /> <b><?php echo CHtml::encode($data->getAttributeLabel('sector_id')); ?>:</b>
 	<?php echo Sector::model()->findByPk($data->sector_id)->nombre; ?>

@@ -18,6 +18,7 @@ $this->menu=array(
 	//array('label'=>'List Directorio', 'url'=>array('index')),
 	array('label'=>'Crea un contacto', 'url'=>array('create')),
 	array('label'=>'Ve la información de este contacto', 'url'=>array('view', 'id'=>$model->id)),
+	array('label'=>'Elimina este contacto', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'¿Estás seguro que deseas eliminar este contacto?')),
 	array('label'=>'¿Buscas otro contacto?', 'url'=>array('admin')),
 );
 ?>

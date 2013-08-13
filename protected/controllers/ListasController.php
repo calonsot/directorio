@@ -211,13 +211,16 @@ class ListasController extends Controller
 		if ($lista != null) {
 			$fileName = "\"".$lista->nombre.".csv\"";
 
-			header('Content-Description: File Transfer');
-			header('Content-Type: application/octet-stream');
+			//header('Content-Description: File Transfer');
+		//	header('Content-Type: application/octet-stream');
+			header('Content-Encoding: UTF-8');
+			header('Content-type: text/csv; charset=UTF-8');
 			header('Content-Disposition: attachment; filename=' . $fileName);
-			header('Content-Transfer-Encoding: binary');
+			//header('Content-Transfer-Encoding: binary');
 			header('Expires: 0');
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 
+			echo "\xEF\xBB\xBF";
 			$this->ponDatosContactos($lista);
 
 		} else {
@@ -301,25 +304,25 @@ class ListasController extends Controller
 						if ($a=='grupos_id' || $a=='medio' || $a=='tipo_medios_id' || $a=='perfil_medio' || $a=='programa')
 						{
 							if ($a=='grupos_id')
-								$cadena[$a]="\"".Grupos::model()->findByPk($model_cont_medios->{trim($a)})->nombre."\"";
+								$cadena[$a]=Grupos::model()->findByPk($model_cont_medios->{trim($a)})->nombre;
 
 							elseif ($a=='tipo_medios_id')
-							$cadena[$a]="\"".TipoMedios::model()->findByPk($model_cont_medios->{trim($a)})->nombre."\"";
+							$cadena[$a]=TipoMedios::model()->findByPk($model_cont_medios->{trim($a)})->nombre;
 
 							else
-								$cadena[$a]="\"".$model_cont_medios->{trim($a)}."\"";
+								$cadena[$a]=$model_cont_medios->{trim($a)};
 
 						} elseif ($a=='es_valido' || $a=='sigla_institucion' || $a=='sigla_dependencia'
 								|| $a=='dependencia' || $a=='subdependencia' || $a=='actividad')
 						{
-							$cadena[$a]="\"".$model_cont_documental->{trim($a)}."\"";
+							$cadena[$a]=$model_cont_documental->{trim($a)};
 
 						} else {
 							if ($a=='sector_id')
-								$cadena[$a]="\"".Sector::model()->findByPk($model_cont->{trim($a)})->nombre."\"";
+								$cadena[$a]=Sector::model()->findByPk($model_cont->{trim($a)})->nombre;
 
 							else
-								$cadena[$a]="\"".$model_cont->{trim($a)}."\"";
+								$cadena[$a]=$model_cont->{trim($a)};
 						}
 					}
 
@@ -342,7 +345,7 @@ class ListasController extends Controller
 				$csv->toCSV($model->nombre.".csv");
 
 		} else {
-			$csv = new ECSVExport($cadena_final,true, false, ',', ' ');
+			$csv = new ECSVExport($cadena_final,true, false, '|', ' ');
 
 			if ($vista===null)
 				echo $csv->toCSV();

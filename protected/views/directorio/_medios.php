@@ -9,7 +9,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model_m,'medio'); ?>
-		<?php echo $form->textField($model_m,'medio',array('size'=>60,'maxlength'=>255,'id'=>'medio')); ?>
+		<?php echo $form->textField($model_m,'medio',array('size'=>55,'maxlength'=>255,'id'=>'medio')); ?>
 		<?php echo $form->error($model_m,'medio'); ?>
 	</div>
 
@@ -22,13 +22,13 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model_m,'perfil_medio'); ?>
-		<?php echo $form->textField($model_m,'perfil_medio',array('size'=>60,'maxlength'=>255,'id'=>'perfil_medio')); ?>
+		<?php echo $form->textField($model_m,'perfil_medio',array('size'=>55,'maxlength'=>255,'id'=>'perfil_medio')); ?>
 		<?php echo $form->error($model_m,'perfil_medio'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model_m,'programa'); ?>
-		<?php echo $form->textField($model_m,'programa',array('size'=>60,'maxlength'=>255,'id'=>'programa')); ?>
+		<?php echo $form->textField($model_m,'programa',array('size'=>55,'maxlength'=>255,'id'=>'programa')); ?>
 		<?php echo $form->error($model_m,'programa'); ?>
 	</div>
 </div>

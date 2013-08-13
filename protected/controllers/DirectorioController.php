@@ -238,30 +238,41 @@ class DirectorioController extends Controller
 				$model->fec_act=self::fechaAlta();
 
 				$model_f->attributes=$_POST['Fotos'];
-				$archivo=CUploadedFile::getInstance($model_f, 'nombre');
 
-				if ($archivo != null)
+				if (isset($_POST['foto_vacia']) && $_POST['foto_vacia'] == '0')
 				{
-					if (!file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
-						mkdir(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id);
+					$fecha=date("Y-m-d_H-i-s");
+					$identificador=$fecha.'_';
+					$model_f->ruta='../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.'blank-profile.jpg';
+					$model_f->saveAttributes(array('ruta'));
 
+				} else {
 
-					if (file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
+					$archivo=CUploadedFile::getInstance($model_f, 'nombre');
+
+					if ($archivo != null)
 					{
-						$fecha=date("Y-m-d_H-i-s");
-						$identificador=$fecha.'_';
-						$model_f->fec_alta=self::fechaAlta();
-						$model_f->nombre=$archivo->getName();
-						$model_f->formato=$archivo->getType();
-						$model_f->peso=$archivo->getSize();
-						$model_f->cadena=$identificador;
-						$ruta=dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
-						$model_f->ruta='../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
+						if (!file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
+							mkdir(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id);
 
-						if ($model_f->save())
+
+						if (file_exists(dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id))
 						{
-							$archivo->saveAs($ruta);
-							$model->fotos_id=$model_f->id;
+							$fecha=date("Y-m-d_H-i-s");
+							$identificador=$fecha.'_';
+							$model_f->fec_alta=self::fechaAlta();
+							$model_f->nombre=$archivo->getName();
+							$model_f->formato=$archivo->getType();
+							$model_f->peso=$archivo->getSize();
+							$model_f->cadena=$identificador;
+							$ruta=dirname(__FILE__).'/../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
+							$model_f->ruta='../../imagenes/contactos/'.$model->usuarios_id.'/'.$identificador.$archivo;
+
+							if ($model_f->save())
+							{
+								$archivo->saveAs($ruta);
+								$model->fotos_id=$model_f->id;
+							}
 						}
 					}
 				}
@@ -848,10 +859,16 @@ class DirectorioController extends Controller
 
 		if ($model!=null)
 		{
-			return CHtml::image($model->ruta, $model->nombre, array('height'=>'75px'));
-
+			if (strpos($model->ruta, 'blank-profile.jpg') === false) 
+			{
+				return CHtml::image($model->ruta, $model->nombre, array('height'=>'70px'));
+			
+			} else {
+				return CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('height'=>'70px'));
+			}
+		
 		} else {
-			return CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('width'=>'70px', 'height'=>'70px'));
+			return CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('height'=>'70px'));
 		}
 	}
 
