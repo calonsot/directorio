@@ -32,6 +32,8 @@ class Controller extends CController
 
 	public function dameInfoUsuario()
 	{
+		$this->verificaLogin();
+
 		$results = Yii::app()->db->createCommand()
 		->select('r.*')
 		->from('usuarios u')
@@ -54,16 +56,25 @@ class Controller extends CController
 
 	/**
 	 *
-	 * @return string retorna el id si esta activo, vacio de lo contrario
+	 * @param boolean $dameId si queremos que retorne el id
 	 */
-	public function verificaLogin()
+	public function verificaLogin($dameId=null)
 	{
 		if(isset(Yii::app()->user->id_usuario))
 		{
-			return Yii::app()->user->id_usuario;
+			if ($dameId)
+				return Yii::app()->user->id_usuario;
 
 		} else {
-			return '';
+			if (isset(Yii::app()->user->id)) {
+
+			$this->setIdUsuario(Yii::app()->user->id);
+
+			if ($dameId)
+				return $this->verificaLogin(true);
+			} else {
+				
+			}
 		}
 	}
 
@@ -120,12 +131,11 @@ class Controller extends CController
 	{
 		$estado = Estado::model()->findByPk($data);
 
-		if ($estado != null) {
+		if ($estado != null)
 			return $estado->nombre;
 
-		} else {
+		else
 			return '';
-		}
 	}
 
 	/**

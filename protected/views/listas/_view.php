@@ -3,13 +3,6 @@
 /* @var $data Listas */
 ?>
 
-<script>
-function reloadGrid(data) {
-    location.reload();
-}
-</script>
-
-
 <?php $form=$this->beginWidget('CActiveForm', array(
 		'enableAjaxValidation'=>true,
 )); ?>
@@ -17,7 +10,9 @@ function reloadGrid(data) {
 
 <div class="view">
 
-	<?php echo CHtml::link(CHtml::encode($data->nombre), array('view', 'id'=>$data->id)); ?>
+	<?php echo "<h3>".CHtml::link(CHtml::encode($data->nombre)."</h3>", array('view', 'id'=>$data->id)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('formatos_id')); ?>:</b>
+	<?php echo CHtml::encode(Formatos::model()->findByPk((int) $data->formatos_id)->nombre); ?>
 	<br /> <b><?php echo CHtml::encode($data->getAttributeLabel('atributos')); ?>:</b>
 	<?php echo CHtml::encode($data->atributos); ?>
 	<br /> <b><?php echo CHtml::encode($data->getAttributeLabel('esta_activa')); ?>:</b>
@@ -27,10 +22,7 @@ function reloadGrid(data) {
 	<?php	
 	if ($data->cadena != '' && $data->cadena != null) {
 	?>
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('cadena')); ?>:</b>
-	<?php echo CHtml::encode($this->ponDatosContactos($data)); ?>
-	<br />
+	
 	<?php 
 	echo CHtml::link('Descarga esta lista', Yii::app()->createUrl('listas/imprimelista?id='.$data->id), array('class'=>'exporta_lista'));
 	echo "<br>";
@@ -45,21 +37,16 @@ function reloadGrid(data) {
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('veces_consulta')); ?>:</b>
 	<?php echo CHtml::encode($data->veces_consulta); ?>
-
-	<?php if (!$data->esta_activa) { ?>
-
-	<br>
-		<?php echo CHtml::ajaxSubmitButton('Activar',array('listas/activa','id'=>$data->id), 
-		array('success'=>'reloadGrid')); ?>
 	
-	<?php } else { ?>
+	<br><b><?php echo CHtml::encode($data->getAttributeLabel('fec_alta')); ?>:</b>
+	<?php echo CHtml::encode($data->fec_alta); ?>
+	
+	<br><b><?php echo CHtml::encode($data->getAttributeLabel('fec_act')); ?>:</b>
+	<?php echo CHtml::encode($data->fec_act); ?>
 	<br>
 	
-		<?php echo CHtml::ajaxSubmitButton('Activar',array('listas/activa','id'=>$data->id), 
-		array('success'=>'reloadGrid'), array('disabled'=>'disabled')); ?>
+	<?php echo $this->cambiaBoton($data); ?>
 	
-
-	<?php } ?>
 	<?php $this->endWidget(); ?>
 
 </div>

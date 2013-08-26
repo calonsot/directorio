@@ -2,6 +2,13 @@
  * Script para la vista listas/create
  */
 
+/**
+ * Funcion para cambiar el boton de activar
+ */
+function reloadGrid(data) {
+			    location.reload();
+			}
+
 $(document).ready(
 		function() {
 			
@@ -25,12 +32,16 @@ $(document).ready(
 					if ($(this).val() == 3 || $(this).val() == 4) 
 					{
 						$('#columnas').val('').removeAttr('selected').attr("disabled","disabled");
-						$('#datos_columnas').slideUp();
+						$('#datos_columnas, #capa_atributos').slideUp();
 						$('#atributos').val('nombre, apellido, institucion, correo, correo_alternativo, correos');
 						
+					} else if($(this).val() == 5 || $(this).val() == 6) {
+						$('#columnas').val('').removeAttr('selected').attr("disabled","disabled");
+						$('#datos_columnas, #capa_atributos').slideUp();
+						$('#atributos').val('correo, correo_alternativo, correos');
+						
 					} else {
-						$('#atributos').val('');
-						$('#datos_columnas').slideDown();
+						$('#datos_columnas, #capa_atributos').slideDown();
 						$('#columnas').removeAttr('disabled');
 					}
 				});

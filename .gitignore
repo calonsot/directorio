@@ -1,3 +1,9 @@
-assets/
-protected/runtime/
+protected/runtime/*
 themes/classic/views/
+imagenes/contactos
+hs_err_pid*
+.buildpath
+.project
+.settings/
+protected/config/main.php
+assets/5f907535

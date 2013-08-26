@@ -36,7 +36,9 @@
 		<?php echo $form->error($model,'esta_activa'); ?>
 	</div>
 
-	<div class="row">
+	<?php if ($model->isNewRecord || (!$model->isNewRecord && $model->formatos_id < 3)) { ?>
+	
+	<div class="row" id="capa_atributos">
 		<?php echo $form->labelEx($model,'atributos'); ?>
 		<?php echo $form->textArea($model,'atributos',array('rows'=>6, 'cols'=>50, 'id'=>'atributos')); ?>
 		<?php echo $form->error($model,'atributos'); ?>
@@ -47,7 +49,23 @@
 		<?php echo CHtml::dropDownList('columnas', '',  $this->columnasTablas(),
 				array('id'=>'columnas', 'multiple'=>'multiple', 'size'=>'15')); ?>
 	</div>
-
+	
+	<?php } else { ?>
+	
+		<div class="row" style="display: none" id="capa_atributos">
+			<?php echo $form->labelEx($model,'atributos'); ?>
+			<?php echo $form->textArea($model,'atributos',array('rows'=>6, 'cols'=>50, 'id'=>'atributos')); ?>
+			<?php echo $form->error($model,'atributos'); ?>
+		</div>
+		
+		<div id="datos_columnas" style="display: none">
+			<?php echo CHtml::label('Columnas para incluir en la lista','columnas'); ?>
+			<?php echo CHtml::dropDownList('columnas', '',  $this->columnasTablas(),
+					array('id'=>'columnas', 'multiple'=>'multiple', 'size'=>'15')); ?>
+		</div>
+			
+	<?php } ?>
+	
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar'); ?>
 	</div>

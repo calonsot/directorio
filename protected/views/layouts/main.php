@@ -48,12 +48,13 @@
 				array('label'=>'Directorio', 'url'=>array('/directorio/index'), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'Mis listas', 'url'=>array('/listas/index'), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'Mi cuenta', 'url'=>Yii::app()->createUrl('usuarios/view',array(
-						'id'=>$this->verificaLogin())), 'visible'=>!Yii::app()->user->isGuest),
+						'id'=>$this->verificaLogin(true))), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'Estadisticas(Biodiversitas)', 'url'=>array('/documental/estadisticas'), 'visible'=>!Yii::app()->user->isGuest),
+				array('label'=>'Información(para importar)', 'url'=>array('/site/informacion'), 'visible'=>!Yii::app()->user->isGuest),
 				//array('label'=>'(Ningúna lista activa)', 'url'=>Yii::app()->createUrl('usuarios/view',array(
-				//'id'=>$this->verificaLogin())), 'visible'=>!Yii::app()->user->isGuest),
+				//'id'=>$this->verificaLogin(true))), 'visible'=>!Yii::app()->user->isGuest),
 				//array('label'=>Listas::model()->findByAttributes(array('esta_activa'=>1))->nombre.'(lista activa)', 'url'=>Yii::app()->createUrl('usuarios/view',array(
-				//'id'=>$this->verificaLogin())), 'visible'=>!Yii::app()->user->isGuest),
+				//'id'=>$this->verificaLogin(true))), 'visible'=>!Yii::app()->user->isGuest),
 				//array('label'=>'Dudas y sugerencias', 'url'=>array('/site/contact')),
 				//array('label'=>'Importa contactos desde archivo', 'url'=>array('/directorio/importacontactos'), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'Iniciar sesión', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),

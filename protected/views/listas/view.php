@@ -1,11 +1,14 @@
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/crea_lista.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/muestra_listas.css" />
+
 <?php
 /* @var $this ListasController */
 /* @var $model Listas */
 /*
-$this->breadcrumbs=array(
-		'Listases'=>array('index'),
-		$model->id,
-);*/
+ $this->breadcrumbs=array(
+ 		'Listases'=>array('index'),
+ 		$model->id,
+ );*/
 
 $this->menu=array(
 		array('label'=>'Crear una lista', 'url'=>array('create')),
@@ -15,13 +18,23 @@ $this->menu=array(
 );
 ?>
 
+<?php $form=$this->beginWidget('CActiveForm', array(
+		'enableAjaxValidation'=>true,
+)); ?>
+
 <h1>
 	<?php echo $model->nombre; ?>
 </h1>
 
+
 <?php $this->widget('zii.widgets.CDetailView', array(
 		'data'=>$model,
 		'attributes'=>array(
+		array(
+		'header'=>'',
+		'type'=>'raw',
+		'value'=>$this->cambiaBoton($model)
+		),
 		array(
 		'name'=>'id',
 		'label'=>'Identificador único',
@@ -30,11 +43,25 @@ $this->menu=array(
 		'name'=>'formatos_id',
 		'value'=>Formatos::model()->findByPk($model->formatos_id)->nombre,
 		),
-		'esta_activa',
-		'cadena',
-		'atributos',
+		array(
+		'name'=>'esta_activa',
+		'value'=>$model->esta_activa ? 'Sí': 'No'
+		),
+				'atributos',
+				array(
+		'name'=>'cadena',
+		'value'=>$this->ponDatosContactos($model, true),
+		'type'=>'raw',
+		),
 		'fec_alta',
 		'fec_act',
 		'veces_consulta',
+		array(
+		'header'=>'',
+		'type'=>'raw',
+		'value'=>CHtml::link('Descarga esta lista', Yii::app()->createUrl('listas/imprimelista?id='.$model->id), array('class'=>'exporta_lista'))
+		)
 	),
-)); ?>
+));
+
+$this->endWidget(); ?>

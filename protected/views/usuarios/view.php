@@ -9,7 +9,7 @@ $this->breadcrumbs=array(
 
 $this->pageTitle=Yii::app()->name . ' - Mi cuenta';
 
-if (Yii::app()->user->id_usuario == $model->id) {
+if ($this->verificaLogin(true) == $model->id) {
 	
 $this->menu=array(
 	//array('label'=>'Lista de usuarios', 'url'=>array('index')),

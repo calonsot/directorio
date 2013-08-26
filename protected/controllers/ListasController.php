@@ -208,15 +208,21 @@ class ListasController extends Controller
 	{
 		$lista=Listas::model()->findByPk($id);
 
-		if ($lista != null) {
-			$fileName = "\"".$lista->nombre.".csv\"";
-
-			//header('Content-Description: File Transfer');
-		//	header('Content-Type: application/octet-stream');
+		if ($lista != null)
+		{
 			header('Content-Encoding: UTF-8');
-			header('Content-type: text/csv; charset=UTF-8');
+
+			if ((int) $lista->formatos_id % 2)
+			{
+				header('Content-type: text/txt; charset=UTF-8');
+				$fileName = "\"".$lista->nombre.".csv\"";
+					
+			} else {
+				header('Content-type: text/csv; charset=UTF-8');
+				$fileName = "\"".$lista->nombre.".txt\"";
+			}
+
 			header('Content-Disposition: attachment; filename=' . $fileName);
-			//header('Content-Transfer-Encoding: binary');
 			header('Expires: 0');
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 
@@ -270,28 +276,38 @@ class ListasController extends Controller
 			{
 				$correos=$this->dameLosCorreos($model_cont->correo, $model_cont->correo_alternativo, $model_cont->correos);
 
-				if ($model->formatos_id == 3 || $model->formatos_id == 4)
+				if ($model->formatos_id == 3 || $model->formatos_id == 4 || $model->formatos_id == 5 || $model->formatos_id == 6)
 				{
 					if ($correos!='')
 					{
-						if (trim($model_cont->nombre) != '' || trim($model_cont->apellido) != '')
+						if($model->formatos_id == 5 || $model->formatos_id == 6)
 						{
 							foreach ($correos as $c)
-							{
-								$cadena[$c]="\"".$model_cont->nombre." ".$model_cont->apellido."\" ".$c;
-							}
+								array_push($cadena, $c);
 
 							$formato_mail=true;
-
 
 						} else {
 
-							foreach ($correos as $c)
+							if (trim($model_cont->nombre) != '' || trim($model_cont->apellido) != '')
 							{
-								$cadena[$c]="\"".$model_cont->institucion."\" ".$c;
+								foreach ($correos as $c)
+									//$cadena[$c]="\"".$model_cont->nombre." ".$model_cont->apellido."\" - ".$c;
+									array_push($cadena, $model_cont->nombre." ".$model_cont->apellido." - ".$c);
+									
+								$formato_mail=true;
+									
+							} else {
+									
+								foreach ($correos as $c)
+									//$cadena[$c]="\"".$model_cont->institucion."\" - ".$c;
+									array_push($cadena, $model_cont->institucion." - ".$c);
+
+								$formato_mail=true;
 							}
 
-							$formato_mail=true;
+							//$cadena_final[$contador]=$cadena;
+							//$contador++;
 						}
 					}
 
@@ -339,19 +355,47 @@ class ListasController extends Controller
 		{
 			$csv = new ECSVExport(array($cadena),true, false, null, ' ');
 
-			if ($vista===null) {
-				echo $csv->toCSV();
-			} else
-				$csv->toCSV($model->nombre.".csv");
+			if ($vista===null)
+				echo str_replace(',', "\n", $csv->toCSV());
+
+			else
+				//$csv->toCSV($model->nombre.".csv"); //manda directo al CSV
+				return $this->imprimeListaWeb($csv->toCSV(), true);
 
 		} else {
 			$csv = new ECSVExport($cadena_final,true, false, '|', ' ');
 
 			if ($vista===null)
 				echo $csv->toCSV();
+
 			else
-				$csv->toCSV($model->nombre.".csv");
+				//$csv->toCSV($model->nombre.".csv");
+				return $this->imprimeListaWeb($csv->toCSV());
 		}
+	}
+
+	/**
+	 *
+	 * @param String $datos cadena de toda la lista
+	 * @return string la cadena con formato de web
+	 */
+	public function imprimeListaWeb ($datos, $soloCorreos=null)
+	{
+		if ($soloCorreos)
+			$dat=split(",",$datos);
+
+		else
+			$dat=split("\n",str_replace('|', '*', $datos));
+
+		$cadena='<ol>';
+
+		foreach ($dat as $d)
+		{
+			if ($d !== '')
+				$cadena.='<li>'.$d.'</li>';
+		}
+
+		return $cadena.='</ol>';
 	}
 
 	/**
@@ -366,9 +410,9 @@ class ListasController extends Controller
 		$correos_totales='';
 
 		if ($correo != '' && $correo != null)
-			$correos_totales.=$correo.",";
+			$correos_totales.=$correo.',';
 		if ($correo_alt != '' && $correo_alt != null)
-			$correos_totales.=$correo_alt.",";
+			$correos_totales.=$correo_alt.',';
 		if ($correos != '' && $correos != null)
 		{
 			$correos_separados=explode(',', $correos);
@@ -376,7 +420,7 @@ class ListasController extends Controller
 			foreach ($correos_separados as $c)
 			{
 				if ($c != '' && $c != null)
-					$correos_totales.=$c.",";
+					$correos_totales.=$c.',';
 			}
 		}
 
@@ -389,9 +433,8 @@ class ListasController extends Controller
 		}
 
 		if (count($correos_finales) == 0)
-		{
 			$correos_finales='';
-		}
+
 
 		return $correos_finales;
 	}
@@ -418,6 +461,18 @@ class ListasController extends Controller
 
 		else
 			throw new Exception("Lo sentimos no se pudo hacer la opracion",500);
+	}
+
+	public function cambiaBoton($data)
+	{
+		if (!$data->esta_activa)
+			return CHtml::ajaxSubmitButton('Activar',array('listas/activa','id'=>$data->id),
+					array('success'=>'reloadGrid'));
+
+		else
+		 return CHtml::ajaxSubmitButton('Activar',array('listas/activa','id'=>$data->id),
+		 		array('success'=>'reloadGrid'), array('disabled'=>'disabled'));
+
 	}
 
 	/**
