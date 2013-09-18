@@ -224,6 +224,14 @@ ATENCION:
 }?>
 	</div>
 </ul>
+<?php } else { ?>
+<?php echo "<br><br><b>No hay ningún pendiente.</b><br><br>"; ?>
+<p>
+<?php echo CHtml::link('Descarga el PDF para el envío nacional', array('listas/exportapdf'), array('target'=>'_blank')); ?>
+</p>
+<p>
+<?php echo CHtml::link('Descarga el PDF para el envío internacional', array('listas/exportapdf?caso=1'), array('target'=>'_blank')); ?>
+</p>
 <?php } ?>
 
 

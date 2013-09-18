@@ -20,3 +20,5 @@ $this->pageTitle=Yii::app()->name;
 		</td>
 	</tr>
 </table>
+
+<?php //$datos=MYPDF::datosBiodiversitas(); print_r($datos); ?>

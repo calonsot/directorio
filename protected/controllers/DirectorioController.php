@@ -859,14 +859,14 @@ class DirectorioController extends Controller
 
 		if ($model!=null)
 		{
-			if (strpos($model->ruta, 'blank-profile.jpg') === false) 
+			if (strpos($model->ruta, 'blank-profile.jpg') === false)
 			{
 				return CHtml::image($model->ruta, $model->nombre, array('height'=>'70px'));
-			
+					
 			} else {
 				return CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('height'=>'70px'));
 			}
-		
+
 		} else {
 			return CHtml::image(Yii::app()->request->baseUrl.'/imagenes/aplicacion/blank-profile.jpg', 'sin foto de perfil', array('height'=>'70px'));
 		}
@@ -1100,6 +1100,14 @@ class DirectorioController extends Controller
 					'name'=>$a,
 					'value'=>'$data->documental->'.$a,
 					);
+					break;
+
+				case 'nombre_asistente':
+					$atributos[$contador]=$a;
+					break;
+						
+				case 'apellido_asistente':
+					$atributos[$contador]=$a;
 					break;
 
 				case 'estado':

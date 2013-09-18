@@ -29,7 +29,7 @@ class ListasController extends Controller
 		return array(
 
 				array('allow', // allow authenticated user to perform 'create' and 'update' actions
-						'actions'=>array('index','view','create','update','admin','delete', 'imprimelista', 'activa', 'exportaword'),
+						'actions'=>array('index','view','create','update','admin','delete', 'imprimelista', 'activa', 'exportaword', 'exportapdf'),
 						'users'=>array('@','admin'),
 				),
 				array('deny',  // deny all users
@@ -241,6 +241,35 @@ class ListasController extends Controller
 
 		echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-1252\">";
 		echo "<b>My first document</b>";
+	}
+
+	/**
+	 * Exporta el PDF para las listas
+	 */
+	public function actionExportaPdf($caso=0)
+	{
+		Yii::import('ext.tcpdf.*');
+
+		$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		
+		$caso ? $contactos=$pdf->datosBiodiversitas($caso, 'paises_id ASC, paises_id1 ASC') : $contactos=$pdf->datosBiodiversitas($caso);
+		spl_autoload_register(array('YiiBase','autoload'));
+
+		$pdf->SetCreator(PDF_CREATOR);
+		$pdf->SetHeaderData('_blank.png', PDF_HEADER_LOGO_WIDTH, "Reporte de impresión de etiquetas para el envío de biodiversitas", "Datos para el envío nacional, ".count($contactos)." contactos");
+		$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+		$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+		$pdf->AddPage();
+
+		if ($pdf->PageNo() == 1)
+			$pdf->setPrintHeader(false);
+
+		$pdf->esqueletoEtiquetas($contactos);
+		$pdf->lastPage();
+		$pdf->Output('envio_biodiversitas_'.date('Y-m-d_H-i-s'));
+		Yii::app()->end();
+
 	}
 
 	/**
