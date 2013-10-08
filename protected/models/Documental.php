@@ -6,6 +6,7 @@
  * The followings are the available columns in table 'documental':
  * @property integer $id
  * @property integer $es_valido
+ * @property integer $confirmo
  * @property string $sigla_institucion
  * @property string $sigla_dependencia
  * @property string $dependencia
@@ -48,13 +49,13 @@ class Documental extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('id', 'required'),
-			array('id, es_valido, usuarios_id', 'numerical', 'integerOnly'=>true),
+			array('id, es_valido, confirmo, usuarios_id', 'numerical', 'integerOnly'=>true),
 			array('sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad', 'length', 'max'=>255),
 			//pone los vacios como null
 			array('sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad', 'default', 'setOnEmpty'=>true, 'value'=>null),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, es_valido, sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad, fec_alta, fec_act, usuarios_id', 'safe', 'on'=>'search'),
+			array('id, es_valido, confirmo, sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad, fec_alta, fec_act, usuarios_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -79,6 +80,7 @@ class Documental extends CActiveRecord
 		return array(
 			'id' => 'Identificador único',
 			'es_valido' => '¿Es válido para envío biodiversitas?',
+			'confirmo' => '¿Confirmó datos para biodiversitas?',
 			'sigla_institucion' => 'Sigla institución',
 			'sigla_dependencia' => 'Sigla dependencia',
 			'dependencia' => 'Dependencia',
@@ -103,6 +105,7 @@ class Documental extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('es_valido',$this->es_valido);
+		$criteria->compare('confirmo',$this->confirmo);
 		$criteria->compare('sigla_institucion',$this->sigla_institucion,true);
 		$criteria->compare('sigla_dependencia',$this->sigla_dependencia,true);
 		$criteria->compare('dependencia',$this->dependencia,true);

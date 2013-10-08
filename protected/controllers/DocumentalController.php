@@ -192,7 +192,7 @@ class DocumentalController extends Controller
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND d.usuarios_id=5 AND td.tipo_id=6')
+		->where('doc.es_valido=1 AND td.tipo_id=6')
 		->group('sector_id')
 		->order('sector_id')
 		->queryAll();
@@ -202,7 +202,7 @@ class DocumentalController extends Controller
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND d.usuarios_id=5 AND td.tipo_id=1')
+		->where('doc.es_valido=1 AND td.tipo_id=1')
 		->queryRow();
 		
 		$sinClasificarIds=Yii::app()->db->createCommand()
@@ -210,7 +210,7 @@ class DocumentalController extends Controller
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND d.usuarios_id=5 AND td.tipo_id=1')
+		->where('doc.es_valido=1 AND td.tipo_id=1')
 		->queryAll();
 
 		return array('resultados'=>$resultados, 'sinClasificar'=>$sinClasificar, 'sinClasificarIds'=>$sinClasificarIds,);
@@ -227,7 +227,7 @@ class DocumentalController extends Controller
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND d.usuarios_id=5 AND td.tipo_id=6 AND d.es_internacional=1 AND 
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=1 AND 
 				((d.paises_id IS NOT NULL AND domicilio_alt_principal=0) OR (d.paises_id1 IS NOT NULL AND domicilio_alt_principal=1))')
 		->group('d.paises_id')
 		->queryAll();
@@ -237,7 +237,7 @@ class DocumentalController extends Controller
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND d.usuarios_id=5 AND td.tipo_id=6 AND d.es_internacional=0')
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=0')
 		->queryRow();
 
 		$sinClasificar=Yii::app()->db->createCommand()
@@ -245,7 +245,7 @@ class DocumentalController extends Controller
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND d.usuarios_id=5 AND td.tipo_id=6 AND d.es_internacional=1 AND 
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=1 AND 
 				((d.paises_id IS NULL AND domicilio_alt_principal=0) OR (d.paises_id1 IS NULL AND domicilio_alt_principal=1))')
 		->queryRow();
 		
@@ -254,7 +254,7 @@ class DocumentalController extends Controller
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND d.usuarios_id=5 AND td.tipo_id=6 AND d.es_internacional=1 AND
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=1 AND
 				((d.paises_id IS NULL AND domicilio_alt_principal=0) OR (d.paises_id1 IS NULL AND domicilio_alt_principal=1))')
 		->queryAll();
 
@@ -272,7 +272,7 @@ class DocumentalController extends Controller
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND d.usuarios_id=5 AND td.tipo_id=6 AND d.es_internacional=0 AND 
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=0 AND 
 				((d.estado IS NOT NULL AND domicilio_alt_principal=0) OR (d.estado_alternativo IS NOT NULL AND domicilio_alt_principal=1))')
 		->group('CONVERT(d.estado, UNSIGNED)')
 		->queryAll();
@@ -282,7 +282,7 @@ class DocumentalController extends Controller
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND d.usuarios_id=5 AND td.tipo_id=6 AND d.es_internacional=0')
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=0')
 		->queryRow();
 	
 		$sinClasificar=Yii::app()->db->createCommand()
@@ -290,7 +290,7 @@ class DocumentalController extends Controller
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND d.usuarios_id=5 AND td.tipo_id=6 AND d.es_internacional=0 AND
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=0 AND
 				((d.estado IS NULL AND domicilio_alt_principal=0) OR (d.estado_alternativo IS NULL AND domicilio_alt_principal=1))')
 		->queryRow();
 		
@@ -299,7 +299,7 @@ class DocumentalController extends Controller
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND d.usuarios_id=5 AND td.tipo_id=6 AND d.es_internacional=0 AND
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=0 AND
 				((d.estado IS NULL AND domicilio_alt_principal=0) OR (d.estado_alternativo IS NULL AND domicilio_alt_principal=1))')
 		->queryAll();
 	

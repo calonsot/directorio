@@ -179,6 +179,10 @@ $this->menu=array(
 				'value'=>$model_c->es_valido==1 ? ("Sí"):("No"),
 				),
 				array(
+				'name'=>'confirmo',
+				'value'=>$model_c->confirmo==1 ? ("Sí"):("No"),
+				),
+				array(
 				'name'=>'sigla_institucion',
 				'value'=>$model_c->sigla_institucion,
 				),

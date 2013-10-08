@@ -252,6 +252,7 @@ class ListasController extends Controller
 
 		$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		
+		//$caso ? $contactos=$pdf->datosBiodiversitas($caso, 'paises_id ASC, paises_id1 ASC', true) : $contactos=$pdf->datosBiodiversitas($caso, null, true); //query personalizado
 		$caso ? $contactos=$pdf->datosBiodiversitas($caso, 'paises_id ASC, paises_id1 ASC') : $contactos=$pdf->datosBiodiversitas($caso);
 		spl_autoload_register(array('YiiBase','autoload'));
 

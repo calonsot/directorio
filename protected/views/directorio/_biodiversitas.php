@@ -8,8 +8,16 @@
 						array('id'=>'es_valida')); ?>
 		<?php echo $form->error($model_c,'es_valido'); ?>
 	</div>
+	
 	<?php } ?>
 
+	<div class="row">
+		<?php echo $form->labelEx($model_c,'confirmo'); ?>
+		<?php echo $form->dropDownList($model_c, 'confirmo', array(0=>"No", 1=>"Sí"), 
+						array('id'=>'confirmo')); ?>
+		<?php echo $form->error($model_c,'confirmo'); ?>
+	</div>
+	
 	<div class="row">
 		<?php echo $form->labelEx($model_c,'sigla_institucion'); ?>
 		<?php echo $form->textField($model_c,'sigla_institucion',array('size'=>55,'maxlength'=>255,'id'=>'sigla_institucion')); ?>

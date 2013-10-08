@@ -1066,6 +1066,14 @@ class DirectorioController extends Controller
 					'value'=>'($data->documental->es_valido=="1")?("Sí"):("No")',
 					);
 					break;
+					
+				case 'confirmo':
+					$atributos[$contador]=array(
+					'name'=>$a,
+					'filter'=>array('1'=>'Sí','0'=>'No'),
+					'value'=>'($data->documental->confirmo=="1")?("Sí"):("No")',
+					);
+					break;
 
 				case 'sigla_institucion':
 					$atributos[$contador]=array(

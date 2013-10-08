@@ -88,21 +88,37 @@ class MYPDF extends TCPDF {
 	}
 
 	/**
-	 * Regresa los datos para biodiversitas
+	 *
+	 * @param number $caso si es internacional o nacional
+	 * @param string $orden el orden con el cual se ordena el pdf
+	 * @param string $personalizado si es un query personalizado, por si falto algo
 	 */
-	public function datosBiodiversitas ($caso=0, $orden='cp ASC, cp_alternativo ASC')
+	public function datosBiodiversitas ($caso=0, $orden='cp ASC, cp_alternativo ASC', $personalizado=false)
 	{
-		return $resultados=Yii::app()->db->createCommand()
-		->select('d.*, doc.sigla_institucion, doc.dependencia, doc.sigla_dependencia,
-				doc.sigla_institucion, doc.subdependencia, doc.actividad')
-				->from('directorio d')
-				->leftJoin('documental doc', 'doc.id=d.id')
-				->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-				->where('doc.es_valido=1 AND d.usuarios_id=5 AND td.tipo_id=6 AND
-						((d.es_internacional='.$caso.' AND d.domicilio_alt_principal=0) OR
-						(d.es_internacional_alternativo='.$caso.' AND d.domicilio_alt_principal=1))')
-						->order($orden)
-						->queryAll();
+		if ($personalizado)
+			return $resultados=Yii::app()->db->createCommand()
+			->select('d.*, doc.confirmo, doc.sigla_institucion, doc.dependencia, doc.sigla_dependencia,
+					doc.sigla_institucion, doc.subdependencia, doc.actividad')
+					->from('directorio d')
+					->leftJoin('documental doc', 'doc.id=d.id')
+					->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
+					->where('doc.es_valido=1 AND d.usuarios_id != 5 AND td.tipo_id=6 AND
+							((d.es_internacional='.$caso.' AND d.domicilio_alt_principal=0) OR
+							(d.es_internacional_alternativo='.$caso.' AND d.domicilio_alt_principal=1))')
+							->order($orden)
+							->queryAll();
+		else
+			return $resultados=Yii::app()->db->createCommand()
+			->select('d.*, doc.confirmo, doc.sigla_institucion, doc.dependencia, doc.sigla_dependencia,
+					doc.sigla_institucion, doc.subdependencia, doc.actividad')
+					->from('directorio d')
+					->leftJoin('documental doc', 'doc.id=d.id')
+					->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
+					->where('doc.es_valido=1 AND td.tipo_id=6 AND
+							((d.es_internacional='.$caso.' AND d.domicilio_alt_principal=0) OR
+							(d.es_internacional_alternativo='.$caso.' AND d.domicilio_alt_principal=1))')
+							->order($orden)
+							->queryAll();
 	}
 
 	/**
@@ -138,7 +154,11 @@ class MYPDF extends TCPDF {
 
 		if (!empty($nombre_apellido_r))
 		{
-			empty($grado_academico_r) ? $cadena.='<b>'.$nombre_apellido.'</b>' : $cadena.='<b>'.$contacto['grado_academico'].' '.$nombre_apellido.'</b>';
+			if ($contacto['confirmo'])
+				empty($grado_academico_r) ? $cadena.="<b><span style=\"background-color:#9BCD9B\">".$nombre_apellido.'</span></b>' :
+				$cadena.="<b><span style=\"background-color:#9BCD9B\">".$contacto['grado_academico'].' '.$nombre_apellido.'</span></b>';
+			else
+				empty($grado_academico_r) ? $cadena.='<b>'.$nombre_apellido.'</b>' : $cadena.='<b>'.$contacto['grado_academico'].' '.$nombre_apellido.'</b>';
 			$enNegritas=true;
 		}
 
@@ -150,21 +170,34 @@ class MYPDF extends TCPDF {
 
 		if (!empty($puesto_r))
 		{
-			$enNegritas ? $cadena.='<br>'.$puesto : $cadena.='<br><b>'.$puesto.'</b>';
+			if ($enNegritas)
+				$cadena.='<br>'.$puesto;
+			else
+				$contacto['confirmo'] ? $cadena.="<br><b><span style=\"background-color:#9BCD9B\">".$puesto.'</span></b>' : $cadena.='<br><b>'.$puesto.'</b>';
 			$enNegritas=true;
 		}
 		if (!empty($subdependencia_r))
 		{
-			$enNegritas ? $cadena.='<br>'.$subdependencia : $cadena.='<br><b>'.$subdependencia.'</b>';
+			if ($enNegritas)
+				$cadena.='<br>'.$subdependencia;
+			else
+				$contacto['confirmo'] ? $cadena.="<br><b><span style=\"background-color:#9BCD9B\">".$subdependencia.'</span></b>' : $cadena.='<br><b>'.$subdependencia.'</b>';
 			$enNegritas=true;
 		}
 		if (!empty($dependencia_r))
 		{
-			$enNegritas ? $cadena.='<br>'.$dependencia : $cadena.='<br><b>'.$dependencia.'</b>';
+			if ($enNegritas)
+				$cadena.='<br>'.$dependencia;
+			else
+				$contacto['confirmo'] ? $cadena.="<br><b><span style=\"background-color:#9BCD9B\">".$dependencia.'</span></b>' : $cadena.='<br><b>'.$dependencia.'</b>';
 			$enNegritas=true;
 		}
-		if ($es_institucion)
-			$enNegritas ? $cadena.='<br>'.$instFinal : $cadena.='<br><b>'.$instFinal.'</b>';
+		if ($es_institucion) {
+			if ($enNegritas)
+				$cadena.='<br>'.$instFinal;
+			else
+				$contacto['confirmo'] ? $cadena.="<br><b><span style=\"background-color:#9BCD9B\">".$instFinal.'</span></b>' : $cadena.='<br><b>'.$instFinal.'</b>';
+		}
 
 		if (strlen($contacto['cp']) == 5)
 			$cp=$contacto['cp'];
@@ -218,8 +251,7 @@ class MYPDF extends TCPDF {
 					$contacto['ciudad'], $contacto['ciudad_id'],
 					$contacto['estado'], $pais, $esInternacional);
 		}
-
-		return $cadena.$domicilio;
+		return $cadena.=$domicilio;
 	}
 
 	/**
