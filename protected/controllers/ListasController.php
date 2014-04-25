@@ -251,7 +251,7 @@ class ListasController extends Controller
 		Yii::import('ext.tcpdf.*');
 
 		$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		
+
 		//$caso ? $contactos=$pdf->datosBiodiversitas($caso, 'paises_id ASC, paises_id1 ASC', true) : $contactos=$pdf->datosBiodiversitas($caso, null, true); //query personalizado
 		$caso ? $contactos=$pdf->datosBiodiversitas($caso, 'paises_id ASC, paises_id1 ASC') : $contactos=$pdf->datosBiodiversitas($caso);
 		spl_autoload_register(array('YiiBase','autoload'));
@@ -285,7 +285,8 @@ class ListasController extends Controller
 		$cadena=array();
 		$cadena_final=array();
 		$formato_mail=false;
-		$contactos=explode(',', $model->cadena);
+		$contactos_todos=explode(',', $model->cadena);
+		$contactos=$vista ? array_slice($contactos_todos, 0, 100) : $contactos_todos;
 		$atributos=explode(',', $model->atributos);
 		$contador=1;
 
@@ -304,11 +305,10 @@ class ListasController extends Controller
 
 			if ($model_cont != null)
 			{
-				$correos=$this->dameLosCorreos($model_cont->correo, $model_cont->correo_alternativo, $model_cont->correos);
-
 				if ($model->formatos_id == 3 || $model->formatos_id == 4 || $model->formatos_id == 5 || $model->formatos_id == 6)
 				{
-					if ($correos!='')
+					$correos=$this->dameLosCorreos($model_cont->correo, $model_cont->correo_alternativo, $model_cont->correos);
+					if (!empty($correos))
 					{
 						if($model->formatos_id == 5 || $model->formatos_id == 6)
 						{
@@ -347,31 +347,87 @@ class ListasController extends Controller
 					{
 						$a=trim($att);
 
-						if ($a=='grupos_id' || $a=='medio' || $a=='tipo_medios_id' || $a=='perfil_medio' || $a=='programa')
+						switch ($a)
 						{
-							if ($a=='grupos_id')
-								$cadena[$a]=Grupos::model()->findByPk($model_cont_medios->{trim($a)})->nombre;
-
-							elseif ($a=='tipo_medios_id')
-							$cadena[$a]=TipoMedios::model()->findByPk($model_cont_medios->{trim($a)})->nombre;
-
-							else
-								$cadena[$a]=$model_cont_medios->{trim($a)};
-
-						} elseif ($a=='es_valido' || $a=='sigla_institucion' || $a=='sigla_dependencia'
-								|| $a=='dependencia' || $a=='subdependencia' || $a=='actividad')
-						{
-							$cadena[$a]=$model_cont_documental->{trim($a)};
-
-						} else {
-							if ($a=='sector_id')
-								$cadena[$a]=Sector::model()->findByPk($model_cont->{trim($a)})->nombre;
-
-							else
-								$cadena[$a]=$model_cont->{trim($a)};
+							//directorio
+							case 'es_internacional':
+							case 'es_internacional_alternativo':
+							case 'domicilio_alt_principal':
+								$cadena[$a]=$model_cont->{$a} == 0 ? 'No' : 'Sí';
+								break;
+							case 'estado':
+							case 'estado_alternativo':
+								$estado = Estado::model()->findByPk($model_cont->{$a});
+								$cadena[$a]=empty($estado) ? '' : $estado->nombre;
+								break;
+							case 'usuarios_id':
+								$usuario = Usuarios::model()->findByPk($model_cont->{$a});
+								$cadena[$a]=$usuario->nombre.' '.$usuario->apellido;
+								break;
+							case 'sector_id':
+								$cadena[$a]=Sector::model()->findByPk($model_cont->{$a})->nombre;
+								break;
+							case 'paises_id':
+								$pais = Paises::model()->findByPk($model_cont->{$a});
+								$cadena[$a]=empty($pais) ? 'México' : $pais->nombre;
+								break;
+							case 'paises_id1':
+								$pais = Paises::model()->findByPk($model_cont->{$a});
+								if (empty($pais) && $model_cont->es_internacional_alternativo == 1)
+									$cadena[$a]='México';
+								elseif (empty($pais) && $model_cont->es_internacional_alternativo == 0)
+									$cadena[$a]='';
+								else
+									$cadena[$a]=$pais->nombre;
+								break;
+							case 'tipo_asentamiento_id':
+							case 'tipo_asentamiento_id1':
+								$tipo_asen = TipoAsentamiento::model()->findByPk($model_cont->{$a});
+								$cadena[$a]=empty($tipo_asen) ? '' : $tipo_asen->nombre;
+								break;
+							case 'tipo':
+								$areas_concat='';
+								$areas=TiposDirectorio::model()->findAllByAttributes(array('directorio_id'=>$model_cont->id));
+								if ($areas != null) {
+									foreach ($areas as $area)
+										$areas_concat.=Tipo::model()->findByPk($area->tipo_id)->nombre.', ';
+								}
+								$cadena[$a]=substr($areas_concat, 0, -2);
+								break;
+								//medios
+							case 'grupos_id':
+								$cadena[$a]=Grupos::model()->findByPk($model_cont_medios->{$a})->nombre;
+								break;
+							case 'tipo_medios_id':
+								$cadena[$a]=TipoMedios::model()->findByPk($model_cont_medios->{$a})->nombre;
+								break;
+							case 'medio':
+							case 'perfil_medio':
+							case 'programa':
+								$cadena[$a]=$model_cont_medios->{$a};
+								break;
+								//biodiversitas
+							case 'es_valido':
+								$cadena[$a]=$model_cont->{$a} == 0 ? 'No' : 'Sí';
+								break;
+							case 'sigla_institucion':
+							case 'sigla_dependencia':
+							case 'dependencia':
+							case 'subdependencia':
+							case 'actividad':
+								$cadena[$a]=$model_cont_documental->{$a};
+								break;
+							default:
+								$cadena[$a]=$model_cont->{$a};
+								break;
 						}
+						
+						if (strpos($cadena[$a], "\"")) {
+							$quita_comillas=str_replace("\"", "'", $cadena[$a]);
+							$cadena[$a]="\"".$quita_comillas."\"";
+						} else
+							$cadena[$a]="\"".$cadena[$a]."\"";
 					}
-
 					$cadena_final[$contador]=$cadena;
 					$contador++;
 				}
@@ -393,11 +449,10 @@ class ListasController extends Controller
 				return $this->imprimeListaWeb($csv->toCSV(), true);
 
 		} else {
-			$csv = new ECSVExport($cadena_final,true, false, '|', ' ');
+			$csv = new ECSVExport($cadena_final,true, false, ',', ' ');
 
 			if ($vista===null)
 				echo $csv->toCSV();
-
 			else
 				//$csv->toCSV($model->nombre.".csv");
 				return $this->imprimeListaWeb($csv->toCSV());

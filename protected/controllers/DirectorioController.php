@@ -30,7 +30,7 @@ class DirectorioController extends Controller
 
 				array('allow', // allow admin user to perform 'admin' and 'delete' actions
 						'actions'=>array('index','view','create','update', 'admin','delete','damemunicipios', 'dameasentamientos', 'damecodigospostales', 'dameciudades',
-								'dameubicacion', 'dameubicacioninicio', 'dametipoasentamientos', 'dameciudad', 'dameestado', 'dameestadoalternativo', 'ajaxupdate', 'exporta', 'validacorreos', 'importacontactos'),
+								'dameubicacion', 'dameubicacioninicio', 'dametipoasentamientos', 'dameciudad', 'dameestado', 'dameestadoalternativo', 'ajaxupdate', 'exporta', 'exporta_todos', 'validacorreos', 'importacontactos'),
 						'users'=>array('@'),
 				),
 				array('deny',  // deny all users
@@ -432,8 +432,15 @@ class DirectorioController extends Controller
 			//$model->unsetAttributes();  // clear any default values
 
 			if(isset($_GET['Directorio']))
+			{
 				$model->attributes=$_GET['Directorio'];
-
+				if (isset($_GET['exporta_todos']))
+				{
+					echo $this->exporta_todos($model->search()->criteria);
+					exit;
+				}
+			}
+				
 			//parte de limpiar el estado del cgridview
 			if (intval(Yii::app()->request->getParam('clearFilters'))==1)
 				EButtonColumnWithClearFilters::clearFilters($this,$model);
@@ -705,11 +712,9 @@ class DirectorioController extends Controller
 
 	/**
 	 * Borra todos los registros seleccionados
-	 * @throws Exception ecepcion si no lo pudo borrar
 	 */
 	public function actionAjaxupdate()
 	{
-		$act = $_GET['act'];
 		$autoIdAll = $_POST['casillas'];
 
 		if(count($autoIdAll)>0)
@@ -717,20 +722,19 @@ class DirectorioController extends Controller
 			foreach($autoIdAll as $autoId)
 			{
 				$model=$this->loadModel($autoId);
-				if($act=='doDelete')
-					$model->delete();
-				if($model->save())
-					echo 'ok';
+				if ($model->delete())
+					echo 'Los contactos fueron eliminados satisfactoriamente.';
+				//if($model->save())
+					//echo 'ok';
 				else
-					throw new Exception("",500);
-
+					echo 'Hubo un error al eliminar los contactos, por favor intentalo de nuevo.';
 			}
-		}
+		} else 
+			echo 'Para eliminar algún contacto debes seleccionar al menos uno.';
 	}
 
 	/**
-	 * Borra todos los registros seleccionados
-	 * @throws Exception ecepcion si no lo pudo borrar
+	 * Exporta los registros seleccionados
 	 */
 	public function actionExporta()
 	{
@@ -738,24 +742,51 @@ class DirectorioController extends Controller
 
 		if(count($autoIdAll)>0)
 		{
-			$exporta=Listas::model()->findByAttributes(array('usuarios_id'=>Yii::app()->user->id_usuario, 'esta_activa'=>1));
+			$lista=Listas::model()->findByAttributes(array('usuarios_id'=>Yii::app()->user->id_usuario, 'esta_activa'=>1));
 
-			if ($exporta != null)
+			if ($lista != null)
 			{
 				foreach($autoIdAll as $autoId)
 				{
-					$model=$this->loadModel($autoId);
-					$exporta->cadena.=$model->id.", ";
-
-					if($exporta->saveAttributes(array('cadena')))
-						echo 'ok';
-
-					else
-						throw new Exception("Lo sentimos no se pudo hacer la opracion",500);
-
+					$lista->cadena.=$autoId.', ';
 				}
-			}
+				if($lista->saveAttributes(array('cadena')))
+					echo 'Los contactos fueron exportados satisfactoriamente.';
+				else
+					echo 'Hubo un error al exportar los contactos, por favor intentalo de nuevo.';
+			} else
+				echo "Aún no tienes alguna lista activa, por favor ve a la pestaña de \"Listas\" y activa o crea una nueva.";
+		} else
+			echo 'Para exportar los contactos debes seleccionar al menos uno.';
+	}
+
+	/**
+	 * Exporta todos los registros seleccionados
+	 */
+	private function exporta_todos($criteria)
+	{
+		if (!empty($criteria->condition)) {
+			$ids=Directorio::model()->findAll($criteria);
+			if(count($ids)>0)
+			{
+				$lista=Listas::model()->findByAttributes(array('usuarios_id'=>Yii::app()->user->id_usuario, 'esta_activa'=>1));
+				if ($lista != null)
+				{
+					foreach($ids as $id)
+					{
+						$lista->cadena.=$id['id'].", ";
+					}
+					if($lista->saveAttributes(array('cadena')))
+						return 'Los contactos fueron exportados satisfactoriamente.';
+					else
+						return 'Hubo un error al exportar los contactos, por favor intentalo de nuevo.';
+				} else
+					return "Aún no tienes alguna lista activa, por favor ve a la pestaña de \"Listas\" y activa o crea una nueva.";
+			} else
+				return 'Por favor realiza una búsqueda donde al menos despliegue contacto.';
 		}
+		else
+			return  'Por favor para exportar todos los contactos por lo menos realiza un filtro, son demasiados para exportar.';
 	}
 
 	/**
@@ -1066,7 +1097,7 @@ class DirectorioController extends Controller
 					'value'=>'($data->documental->es_valido=="1")?("Sí"):("No")',
 					);
 					break;
-					
+
 				case 'confirmo':
 					$atributos[$contador]=array(
 					'name'=>$a,
@@ -1113,7 +1144,7 @@ class DirectorioController extends Controller
 				case 'nombre_asistente':
 					$atributos[$contador]=$a;
 					break;
-						
+
 				case 'apellido_asistente':
 					$atributos[$contador]=$a;
 					break;

@@ -1,5 +1,8 @@
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/crea_lista.js"></script>
-<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/muestra_listas.css" />
+<script type="text/javascript"
+	src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/crea_lista.js"></script>
+<link
+	rel="stylesheet" type="text/css"
+	href="<?php echo Yii::app()->request->baseUrl; ?>/css/muestra_listas.css" />
 
 <?php
 /* @var $this ListasController */
@@ -35,10 +38,10 @@ $this->menu=array(
 		'type'=>'raw',
 		'value'=>$this->cambiaBoton($model)
 		),
-		array(
-		'name'=>'id',
-		'label'=>'Identificador único',
-		),
+		//array(
+		//'name'=>'id',
+		//'label'=>'Identificador único',
+		//),
 		array(
 		'name'=>'formatos_id',
 		'value'=>Formatos::model()->findByPk($model->formatos_id)->nombre,
@@ -47,21 +50,23 @@ $this->menu=array(
 		'name'=>'esta_activa',
 		'value'=>$model->esta_activa ? 'Sí': 'No'
 		),
-				'atributos',
-				array(
-		'name'=>'cadena',
-		'value'=>$this->ponDatosContactos($model, true),
-		'type'=>'raw',
-		),
 		'fec_alta',
 		'fec_act',
-		'veces_consulta',
+		//'veces_consulta',
 		array(
-		'header'=>'',
-		'type'=>'raw',
-		'value'=>CHtml::link('Descarga esta lista', Yii::app()->createUrl('listas/imprimelista?id='.$model->id), array('class'=>'exporta_lista'))
-		)
+			'header'=>'',
+			'type'=>'raw',
+			'value'=>CHtml::link('Descarga esta lista', Yii::app()->createUrl('listas/imprimelista?id='.$model->id), array('class'=>'exporta_lista'))
+		),
+		//'atributos',
+		array(
+			'name'=>'cadena',
+			'value'=>$this->ponDatosContactos($model, true),
+			'type'=>'raw',
+		),
 	),
 ));
+
+echo '<br>Predeterminadamente solo despliega los primeros 100 contactos, si deseas ver todos, por favor descarga la lista.';
 
 $this->endWidget(); ?>
