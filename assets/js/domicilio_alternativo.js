@@ -142,14 +142,14 @@ $(document).ready(
 				$('#asentamiento_lista_alternativa').removeAttr("disabled");
 				municipio_lista = $(this).val();
 		
-				$.post("/index.php/directorio/dameasentamientos", { 'municipio_lista': municipio_lista }, function(data){
+				$.post(path + "/index.php/directorio/dameasentamientos", { 'municipio_lista': municipio_lista }, function(data){
 					
 					tags=data.split('-|-');
 					$('#asentamiento_lista_alternativa').empty().append(tags[0]);
 					$('#municipio_alternativo').val(tags[1]);
 			    });	
 				
-			    $.post("/index.php/directorio/dameciudad", { 'municipio': municipio_lista }, function(data){
+			    $.post(path + "/index.php/directorio/dameciudad", { 'municipio': municipio_lista }, function(data){
 		
 			    	if (data != '0') 
 			    	{
@@ -196,11 +196,11 @@ $(document).ready(
 				
 				estado = $(this).val();
 			    
-				$.post("/index.php/directorio/damemunicipios", { 'estado': estado }, function(data){
+				$.post(path + "/index.php/directorio/damemunicipios", { 'estado': estado }, function(data){
 			        $('#municipio_lista_alternativa').empty().append(data);
 			    });
 				
-				$.post("/index.php/directorio/dameciudades", { 'estado': estado }, function(data){
+				$.post(path + "/index.php/directorio/dameciudades", { 'estado': estado }, function(data){
 			        $('#ciudad_id_alternativa').empty().append(data);
 			        $('#con_ciudad_alternativa').slideDown();
 			        $('#con_municipio_alternativo').slideDown();
@@ -217,7 +217,7 @@ $(document).ready(
 				$('#tipo_asentamiento_id_alternativo').removeAttr("disabled");
 				asentamiento_lista = $(this).val();
 				
-			    $.post("/index.php/directorio/dametipoasentamientos", { 'asentamiento_lista': asentamiento_lista }, function(data){
+			    $.post(path + "/index.php/directorio/dametipoasentamientos", { 'asentamiento_lista': asentamiento_lista }, function(data){
 			    	
 			    	datos = data.split("-|-");
 			    	$('#tipo_asentamiento_id_alternativo').empty().append(datos[0]);
@@ -261,7 +261,7 @@ $(document).ready(
 			    	if (asentamiento != '') {
 			    		$('#tipo_asentamiento_id_alternativo').removeAttr("disabled");
 			    		
-			    		$.post("/index.php/directorio/dametipoasentamientos", { 'asentamiento_lista': 'simple' }, function(data){
+			    		$.post(path + "/index.php/directorio/dametipoasentamientos", { 'asentamiento_lista': 'simple' }, function(data){
 					        $('#tipo_asentamiento_id_alternativo').empty().append(data);
 					    });
 			    	
@@ -282,7 +282,7 @@ $(document).ready(
 				
 				if (cp.length == 5) {
 					
-			    $.post("/index.php/directorio/dameubicacion", { 'cp': cp }, function(datos){
+			    $.post(path + "/index.php/directorio/dameubicacion", { 'cp': cp }, function(datos){
 	
 				if (datos != '0') 
 				{

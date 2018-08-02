@@ -1,3 +1,6 @@
+<script>
+	path = "<?php echo Yii::app()->request->baseUrl; ?>";
+</script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/crea_contacto.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/domicilio.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/domicilio_alternativo.js"></script>

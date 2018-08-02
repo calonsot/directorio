@@ -36,12 +36,12 @@ class DocumentalController extends Controller
 						'users'=>array('@'),
 				),
 				//array('allow', // allow admin user to perform 'admin' and 'delete' actions
-		//	'actions'=>array('admin','delete'),
-		//	'users'=>array('admin'),
-		//),
-		array('deny',  // deny all users
-				'users'=>array('*'),
-		),
+				//	'actions'=>array('admin','delete'),
+				//	'users'=>array('admin'),
+				//),
+				array('deny',  // deny all users
+						'users'=>array('*'),
+				),
 		);
 	}
 
@@ -149,7 +149,7 @@ class DocumentalController extends Controller
 	public function actionEstadisticas()
 	{
 		$this->layout='//layouts/column1';
-		
+
 		$datosSectores=$this->querySectores();
 		$datosPaises=$this->queryPaises();
 		$datosEstados=$this->queryEstados();
@@ -162,7 +162,7 @@ class DocumentalController extends Controller
 		$sinClasificarSectores=$datosSectores['sinClasificar'];
 		$sinClasificarPaises=$datosPaises['sinClasificar'];
 		$sinClasificarEstados=$datosEstados['sinClasificar'];
-		
+
 		$sinClasificarSectoresIds=$datosSectores['sinClasificarIds'];
 		$sinClasificarPaisesIds=$datosPaises['sinClasificarIds'];
 		$sinClasificarEstadosIds=$datosEstados['sinClasificarIds'];
@@ -204,7 +204,7 @@ class DocumentalController extends Controller
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
 		->where('doc.es_valido=1 AND td.tipo_id=1')
 		->queryRow();
-		
+
 		$sinClasificarIds=Yii::app()->db->createCommand()
 		->select('d.id')
 		->from('directorio d')
@@ -227,83 +227,128 @@ class DocumentalController extends Controller
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=1 AND 
-				((d.paises_id IS NOT NULL AND domicilio_alt_principal=0) OR (d.paises_id1 IS NOT NULL AND domicilio_alt_principal=1))')
-		->group('d.paises_id')
-		->queryAll();
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND
+				d.paises_id IS NOT NULL AND domicilio_alt_principal=0 AND d.es_internacional=1')
+				->group('d.paises_id')
+				->queryAll();
+
+		$resultados_alt=Yii::app()->db->createCommand()
+		->select('count(d.paises_id1) AS personas, paises_id1 AS pais')
+		->from('directorio d')
+		->leftJoin('documental doc', 'doc.id=d.id')
+		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND
+				d.paises_id1 IS NOT NULL AND domicilio_alt_principal=1 AND d.es_internacional_alternativo=1')
+				->group('d.paises_id1')
+				->queryAll();
+
+		foreach ($resultados_alt as $r_alt)
+		{
+			$encontro=false;
+			foreach ($resultados as $k => $r)
+			{				
+				if($r['pais'] == $r_alt['pais'])
+				{
+					$resultados[$k]['personas']=$resultados[$k]['personas']+1;
+					continue 2;
+				}
+			}
+				
+			if (!$encontro)
+				array_push($resultados, array('personas'=>1, 'pais'=>$r_alt['pais']));
+		}
 		
 		$deMexico=Yii::app()->db->createCommand()
 		->select('count(*) AS personas')
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=0')
-		->queryRow();
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND
+				((d.estado IS NOT NULL AND domicilio_alt_principal=0 AND d.es_internacional=0) OR (d.estado_alternativo IS NOT NULL AND domicilio_alt_principal=1 AND d.es_internacional_alternativo=0))')
+						->queryRow();
 
 		$sinClasificar=Yii::app()->db->createCommand()
 		->select('count(*) AS personas')
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=1 AND 
-				((d.paises_id IS NULL AND domicilio_alt_principal=0) OR (d.paises_id1 IS NULL AND domicilio_alt_principal=1))')
-		->queryRow();
-		
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND 
+				((d.paises_id IS NULL AND domicilio_alt_principal=0 AND d.es_internacional=1) OR (d.paises_id1 IS NULL AND domicilio_alt_principal=1 AND d.es_internacional_alternativo=1))')
+				->queryRow();
+
 		$sinClasificarIds=Yii::app()->db->createCommand()
 		->select('d.id')
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=1 AND
-				((d.paises_id IS NULL AND domicilio_alt_principal=0) OR (d.paises_id1 IS NULL AND domicilio_alt_principal=1))')
-		->queryAll();
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND
+				((d.paises_id IS NULL AND domicilio_alt_principal=0 AND d.es_internacional=1) OR (d.paises_id1 IS NULL AND domicilio_alt_principal=1 AND d.es_internacional_alternativo=1))')
+				->queryAll();
 
 		return array('resultados'=>$resultados, 'deMexico'=>$deMexico, 'sinClasificar'=>$sinClasificar, 'sinClasificarIds'=>$sinClasificarIds,);
 	}
-	
+
 	/**
 	 *
 	 * @return array, objetos del query
 	 */
 	private function queryEstados ()
-	{
+	{		
 		$resultados=Yii::app()->db->createCommand()
-		->select('count(d.estado) AS personas, estado AS estado')
+		->select('count(d.estado) AS personas, d.estado AS estado')
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=0 AND 
-				((d.estado IS NOT NULL AND domicilio_alt_principal=0) OR (d.estado_alternativo IS NOT NULL AND domicilio_alt_principal=1))')
-		->group('CONVERT(d.estado, UNSIGNED)')
-		->queryAll();
-	
-		$deMexico=Yii::app()->db->createCommand()
-		->select('count(*) AS personas')
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND
+				d.estado IS NOT NULL AND domicilio_alt_principal=0 AND d.es_internacional=0')
+						->group('CONVERT(d.estado, UNSIGNED)')
+						->queryAll();
+		
+		$resultados_alt=Yii::app()->db->createCommand()
+		->select('count(d.estado_alternativo) AS personas, d.estado_alternativo AS estado')
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=0')
-		->queryRow();
-	
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND
+				d.estado_alternativo IS NOT NULL AND domicilio_alt_principal=1 AND d.es_internacional_alternativo=0')
+						->group('CONVERT(d.estado_alternativo, UNSIGNED)')
+						->queryAll();
+		
+		foreach ($resultados_alt as $r_alt)
+		{
+			$encontro=false;
+			foreach ($resultados as $k => $r)
+			{
+				if($r['estado'] == $r_alt['estado'])
+				{
+					$resultados[$k]['personas']=$resultados[$k]['personas']+1;
+					continue 2;
+				}
+			}
+		
+			if (!$encontro)
+				array_push($resultados, array('personas'=>1, 'estado'=>$r_alt['estado']));
+		}
+				
 		$sinClasificar=Yii::app()->db->createCommand()
 		->select('count(*) AS personas')
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=0 AND
-				((d.estado IS NULL AND domicilio_alt_principal=0) OR (d.estado_alternativo IS NULL AND domicilio_alt_principal=1))')
-		->queryRow();
-		
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND
+				((d.estado IS NULL AND domicilio_alt_principal=0 AND d.es_internacional=0) OR (d.estado_alternativo IS NULL AND domicilio_alt_principal=1 AND d.es_internacional_alternativo=0))')
+				->queryRow();
+
 		$sinClasificarIds=Yii::app()->db->createCommand()
 		->select('d.id')
 		->from('directorio d')
 		->leftJoin('documental doc', 'doc.id=d.id')
 		->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
-		->where('doc.es_valido=1 AND td.tipo_id=6 AND d.es_internacional=0 AND
-				((d.estado IS NULL AND domicilio_alt_principal=0) OR (d.estado_alternativo IS NULL AND domicilio_alt_principal=1))')
-		->queryAll();
-	
-		return array('resultados'=>$resultados, 'deMexico'=>$deMexico, 'sinClasificar'=>$sinClasificar, 'sinClasificarIds'=>$sinClasificarIds,);
+		->where('doc.es_valido=1 AND td.tipo_id=6 AND
+				((d.estado IS NULL AND domicilio_alt_principal=0 AND d.es_internacional=0) OR (d.estado_alternativo IS NULL AND domicilio_alt_principal=1 AND d.es_internacional_alternativo=0))')
+				->queryAll();
+
+		return array('resultados'=>$resultados, 'sinClasificar'=>$sinClasificar, 'sinClasificarIds'=>$sinClasificarIds,);
 	}
 
 	/**
@@ -322,7 +367,7 @@ class DocumentalController extends Controller
 
 		return $valor;
 	}
-	
+
 	/**
 	 *
 	 * @param query $valores
@@ -331,15 +376,15 @@ class DocumentalController extends Controller
 	private function valoresGraficaPais ($valores)
 	{
 		$valor=array();
-	
+
 		foreach ($valores as $v)
 		{
 			array_push($valor, array(Paises::model()->findByPk((int) $v['pais'])->nombre, (int) $v['personas']));
 		}
-	
+
 		return $valor;
 	}
-	
+
 	/**
 	 *
 	 * @param query $valores
@@ -348,12 +393,12 @@ class DocumentalController extends Controller
 	private function valoresGraficaEstado ($valores)
 	{
 		$valor=array();
-	
+
 		foreach ($valores as $v)
 		{
 			array_push($valor, array(Estado::model()->findByPk((int) $v['estado'])->nombre, (int) $v['personas']));
 		}
-	
+
 		return $valor;
 	}
 

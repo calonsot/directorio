@@ -246,11 +246,11 @@ $(document).ready(
 				correo=$(this).val();
 				if ($('#Directorio_id').length == 0) 
 				{
-					$.post("/index.php/directorio/validacorreos", { 'correo': correo }, function(data){
+					$.post(path + "/index.php/directorio/validacorreos", { 'correo': correo }, function(data){
 						
 						if (data!='0') {
 							$('#datos_correo_repetido').slideDown();
-							$('#enlace_correo_repetido').attr('href','/index.php/directorio/'+data);
+							$('#enlace_correo_repetido').attr('href',path + "/index.php/directorio/"+data);
 						
 						} else {
 							$('#datos_correo_repetido').slideUp();
@@ -263,11 +263,11 @@ $(document).ready(
 								
 				id=$('#Directorio_id').val();
 				
-				$.post("/index.php/directorio/validacorreos", { 'correo': correo, 'id': id }, function(data){
+				$.post(path + "/index.php/directorio/validacorreos", { 'correo': correo, 'id': id }, function(data){
 					
 					if (data!='0') {
 						$('#datos_correo_repetido').slideDown();
-						$('#enlace_correo_repetido').attr('href','/index.php/directorio/'+data);
+						$('#enlace_correo_repetido').attr('href',path + "/index.php/directorio/"+data);
 					
 					} else {
 						$('#datos_correo_repetido').slideUp();
@@ -288,11 +288,11 @@ $(document).ready(
 				correo_alternativo=$(this).val();
 				if ($('#Directorio_alternativo_id').length == 0) 
 				{
-					$.post("/index.php/directorio/validacorreos", { 'correo_alternativo': correo_alternativo }, function(data){
+					$.post(path + "/index.php/directorio/validacorreos", { 'correo_alternativo': correo_alternativo }, function(data){
 						
 						if (data!='0') {
 							$('#datos_correo_alternativo_repetido').slideDown();
-							$('#enlace_correo_alternativo_repetido').attr('href','/index.php/directorio/'+data);
+							$('#enlace_correo_alternativo_repetido').attr('href',path + "/index.php/directorio/"+data);
 						
 						} else {
 							$('#datos_correo_alternativo_repetido').slideUp();
@@ -303,11 +303,11 @@ $(document).ready(
 				
 				id=$('#Directorio_id').val();
 				
-				$.post("/index.php/directorio/validacorreos", { 'correo_alternativo': correo_alternativo, 'id': id }, function(data){
+				$.post(path + "/index.php/directorio/validacorreos", { 'correo_alternativo': correo_alternativo, 'id': id }, function(data){
 					
 					if (data!='0') {
 						$('#datos_correo_alternativo_repetido').slideDown();
-						$('#enlace_correo_alternativo_repetido').attr('href','/index.php/directorio/'+data);
+						$('#enlace_correo_alternativo_repetido').attr('href',path + "/index.php/directorio/"+data);
 					
 					} else {
 						$('#datos_correo_alternativo_repetido').slideUp();
@@ -328,7 +328,7 @@ $(document).ready(
 				cp_id = $('#codigo_postal').val();
 				cp_id_alternativo = $('#codigo_postal_alternativo').val();
 					
-					$.post("/index.php/directorio/dameubicacioninicio", { 'cp_id': cp_id }, function(datos)
+					$.post(path + "/index.php/directorio/dameubicacioninicio", { 'cp_id': cp_id }, function(datos)
 							{					
 						if (datos != '0') 
 						{
@@ -377,7 +377,7 @@ $(document).ready(
 							
 							if (id != '') 
 							{
-							$.post("/index.php/directorio/dameestado", { 'id': id }, function(datos)
+							$.post(path + "/index.php/directorio/dameestado", { 'id': id }, function(datos)
 							{					
 								if (datos != '0') 
 								{
@@ -394,7 +394,7 @@ $(document).ready(
 					});
 					
 					
-					$.post("/index.php/directorio/dameubicacioninicio", { 'cp_id': cp_id_alternativo }, function(datos)
+					$.post(path + "/index.php/directorio/dameubicacioninicio", { 'cp_id': cp_id_alternativo }, function(datos)
 							{					
 						if (datos != '0') 
 						{
@@ -443,7 +443,7 @@ $(document).ready(
 							
 							if (id != '') 
 							{
-							$.post("/index.php/directorio/dameestadoalternativo", { 'id': id }, function(datos)
+							$.post(path + "/index.php/directorio/dameestadoalternativo", { 'id': id }, function(datos)
 							{					
 								if (datos != '0') 
 								{

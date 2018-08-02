@@ -92,7 +92,7 @@ jQuery('body').on('click','#elimina_seleccionados',function()
 					$('#notice').html('Hubo un error al eliminar los contactos, por favor intentalo de nuevo.');					
 				}, 								 
 				'type':'POST',
-				'url':'/directorio/index.php/directorio/ajaxupdate',
+				'url':"<?php echo Yii::app()->request->baseUrl; ?>/index.php/directorio/ajaxupdate",
 				'cache':false,
 				'data':jQuery(this).parents("form").serialize()
 				});
@@ -131,7 +131,7 @@ jQuery('body').on('click','#exporta_seleccionados',function()
 					$('#notice').html('Hubo un error al exportar los contactos, por favor intentalo de nuevo.');					
 				}, 								 
 				'type':'POST',
-				'url':'/directorio/index.php/directorio/exporta',
+				'url':"<?php echo Yii::app()->request->baseUrl; ?>/index.php/directorio/exporta",
 				'cache':false,
 				'data':jQuery(this).parents("form").serialize()
 				});
@@ -161,7 +161,7 @@ jQuery('body').on('click','#exporta_todos',function()
 					$('#notice').html('Hubo un error al exportar los contactos, por favor intentalo de nuevo.');
                 }, 								 
 				'type':'GET',
-				'url':'/directorio/index.php/directorio/admin?exporta_todos=1',
+				'url':"<?php echo Yii::app()->request->baseUrl; ?>/index.php/directorio/admin?exporta_todos=1",
 				'cache':false,
 				'data': jQuery(this).parents("form").serialize()
 				});
