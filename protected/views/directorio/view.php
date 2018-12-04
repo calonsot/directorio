@@ -170,7 +170,10 @@ $this->menu=array(
             'value'=>$model_m->programa,
         ),
         array(
-            'label' => '¿Suscrito a Ecos?',
+            'name'=>'comunicados_prensa',
+            'value'=>$model_m->comunicados_prensa == 1 ? 'Sí' : 'No',
+        ),
+        array(
             'name'=>'ecos',
             'value'=>$model_m->ecos == 1 ? 'Sí' : 'No',
         ),

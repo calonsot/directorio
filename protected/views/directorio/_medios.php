@@ -33,6 +33,13 @@
     </div>
 
     <div class="row">
+        <?php echo $form->labelEx($model_m,'comunicados_prensa'); ?>
+        <?php echo $form->dropDownList($model_m, 'comunicados_prensa', array(0=>"No", 1=>"Sí"),
+            array('id'=>'comunicados_prensa')); ?>
+        <?php echo $form->error($model_m,'comunicados_prensa'); ?>
+    </div>
+
+    <div class="row">
         <?php echo $form->labelEx($model_m,'ecos'); ?>
         <?php echo $form->dropDownList($model_m, 'ecos', array(0=>"No", 1=>"Sí"),
             array('id'=>'ecos')); ?>

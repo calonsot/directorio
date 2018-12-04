@@ -1090,6 +1090,15 @@ class DirectorioController extends Controller
                     );
                     break;
 
+                case 'comunicados_prensa':
+                    $atributos[$contador]=array(
+                        'name'=>$a,
+                        'value'=>'$data->medios->'.$a,
+                        'filter'=>array('1'=>'Sí','0'=>'No'),
+                        'value'=>'($data->medios->comunicados_prensa=="1")?("Sí"):("No")',
+                    );
+                    break;
+
                 case 'ecos':
                     $atributos[$contador]=array(
                         'name'=>$a,

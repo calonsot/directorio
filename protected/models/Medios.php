@@ -10,7 +10,8 @@
  * @property string $tipo_medio
  * @property string $perfil_medio
  * @property string $programa
- * @property integer @ecos
+ * @property integer $comunicados_prensa
+ * @property integer $ecos
  * @property string $fec_alta
  * @property string $fec_act
  * @property integer $usuarios_id
@@ -50,12 +51,12 @@ class Medios extends CActiveRecord
 			//array('id, fec_alta, fec_act, usuarios_id', 'required'),
 		    array('id', 'required'),
 			array('id, usuarios_id, grupos_id, tipo_medios_id', 'numerical', 'integerOnly'=>true),
-			array('medio, perfil_medio, programa, ecos', 'length', 'max'=>255),
+			array('medio, perfil_medio, programa, comunicados_prensa, ecos', 'length', 'max'=>255),
 			//pone los vacios con null
 			array('medio, perfil_medio, programa', 'default', 'setOnEmpty'=>true, 'value'=>null),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, grupos_id, medio, tipo_medios_id, perfil_medio, programa, ecos, fec_alta, fec_act, usuarios_id', 'safe', 'on'=>'search'),
+			array('id, grupos_id, medio, tipo_medios_id, perfil_medio, programa, comunicados_prensa, ecos, fec_alta, fec_act, usuarios_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -86,6 +87,7 @@ class Medios extends CActiveRecord
 			'tipo_medios_id' => 'Tipo de medio',
 			'perfil_medio' => 'Perfil del medio',
 			'programa' => 'Programa',
+			'comunicados_prensa' => '¿Enviar comunicados de prensa?',
 			'ecos' => '¿Suscrito a Ecos?',
 			'fec_alta' => 'Fecha de creación',
 			'fec_act' => 'Fecha de la ultima actualización',
@@ -110,6 +112,7 @@ class Medios extends CActiveRecord
 		$criteria->compare('tipo_medios',$this->tipo_medios);
 		$criteria->compare('perfil_medio',$this->perfil_medio,true);
 		$criteria->compare('programa',$this->programa,true);
+		$criteria->compare('comunicados_prensa',$this->comunicados_prensa);
 		$criteria->compare('ecos',$this->ecos);
 		$criteria->compare('fec_alta',$this->fec_alta,true);
 		$criteria->compare('fec_act',$this->fec_act,true);

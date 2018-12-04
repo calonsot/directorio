@@ -108,6 +108,7 @@ class Directorio extends CActiveRecord
     public $tipo_medios_id;
     public $perfil_medio;
     public $programa;
+    public $comunicados_prensa;
     public $ecos;
 
     /**
@@ -163,7 +164,7 @@ class Directorio extends CActiveRecord
             // Please remove those attributes that should not be searched.
             array('id, es_internacional, es_internacional_alternativo, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, domicilio_alt_principal, fec_alta, fec_act, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1,
 				alias, telefonos_totales, correos_totales, tipo,
-				grupos_id, medio, tipo_medios_id, perfil_medio, programa, ecos,
+				grupos_id, medio, tipo_medios_id, perfil_medio, programa, comunicados_prensa, ecos,
 				es_valido, confirmo, sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad',
                 'safe', 'on'=>'search'),
         );
@@ -348,6 +349,7 @@ class Directorio extends CActiveRecord
             'tipo_medios_id' => 'Tipo de medio',
             'perfil_medio' => 'Perfil del medio',
             'programa' => 'Programa',
+            'comunicados_prensa' => '¿Enviar comunicados de prensa?',
             'ecos' => '¿Suscrito a Ecos?',
             //parte de documental
             'es_valido' => '¿Es válido para envío biodiversitas?',
@@ -445,6 +447,7 @@ class Directorio extends CActiveRecord
         $criteria->compare('medios.tipo_medios_id', $this->tipo_medios_id);
         $criteria->compare('medios.perfil_medio', $this->perfil_medio, true);
         $criteria->compare('medios.programa', $this->programa, true);
+        $criteria->compare('medios.comunicados_prensa', $this->comunicados_prensa);
         $criteria->compare('medios.ecos', $this->ecos);
         //parte de documental
         $criteria->compare('documental.es_valido', $this->es_valido);
