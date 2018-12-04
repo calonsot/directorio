@@ -6,4 +6,4 @@ hs_err_pid*
 .project
 .settings/
 protected/config/main.php
-assets/5f907535
+.idea/
