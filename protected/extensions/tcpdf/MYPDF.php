@@ -121,6 +121,25 @@ class MYPDF extends TCPDF {
 							->queryAll();
 	}
 
+    /**
+     *
+     * @param number $caso si es internacional o nacional
+     * @param string $orden el orden con el cual se ordena el pdf
+     * @param string $personalizado si es un query personalizado, por si falto algo
+     */
+    public function datosBiodiversitasAlt ()
+    {
+        return $resultados=Yii::app()->db->createCommand()
+            ->select('d.*, doc.confirmo, doc.sigla_institucion, doc.dependencia, doc.sigla_dependencia,
+                doc.sigla_institucion, doc.subdependencia, doc.actividad')
+            ->from('directorio d')
+            ->leftJoin('documental doc', 'doc.id=d.id')
+            ->leftJoin('tipos_directorio td', 'td.directorio_id=d.id')
+            ->where('doc.es_valido_alt=1 AND td.tipo_id=6')
+            ->order('cp ASC, cp_alternativo ASC')
+            ->queryAll();
+    }
+
 	/**
 	 *
 	 * @param string $contacto

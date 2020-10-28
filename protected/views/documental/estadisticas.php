@@ -232,6 +232,9 @@ ATENCION:
 <p>
 <?php echo CHtml::link('Descarga el PDF para el envío internacional', array('listas/exportapdf?caso=1'), array('target'=>'_blank')); ?>
 </p>
+<p>
+<?php echo CHtml::link('Descarga el PDF para biodiversitas alternativo', array('listas/exportapdfalt'), array('target'=>'_blank')); ?>
+</p>
 <br>
 Existen <b><?php echo Documental::model()->count(array('condition' => 'confirmo=1')); ?></b> contactos con datos confirmados.
 <?php } ?>
