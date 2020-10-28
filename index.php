@@ -4,7 +4,7 @@ set_time_limit(10000);
 //defined('YII_DEBUG', true);
 
 // change the following paths if necessary
-$yii=dirname(__FILE__).'/../yii-1.1.13.e9e4a0/framework/yii.php';
+$yii=dirname(__FILE__).'/protected/vendors/yii-1.1.13.e9e4a0/framework/yii.php';
 $config=dirname(__FILE__).'/protected/config/main.php';
 
 // remove the following lines when in production mode
