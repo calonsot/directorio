@@ -5,7 +5,7 @@
 	<div class="row">
 		<?php echo $form->labelEx($model_c,'es_valido'); ?>
 		<?php echo $form->dropDownList($model_c, 'es_valido', array(0=>"No", 1=>"Sí"), 
-						array('id'=>'es_valida')); ?>
+						array('id'=>'es_valido')); ?>
 		<?php echo $form->error($model_c,'es_valido'); ?>
 	</div>
 	
@@ -17,6 +17,13 @@
 						array('id'=>'confirmo')); ?>
 		<?php echo $form->error($model_c,'confirmo'); ?>
 	</div>
+
+    <div class="row">
+        <?php echo $form->labelEx($model_c,'es_valido_alt'); ?>
+        <?php echo $form->dropDownList($model_c, 'es_valido_alt', array(0=>"No", 1=>"Sí"),
+            array('id'=>'es_valido_alt')); ?>
+        <?php echo $form->error($model_c,'es_valido_alt'); ?>
+    </div>
 	
 	<div class="row">
 		<?php echo $form->labelEx($model_c,'sigla_institucion'); ?>

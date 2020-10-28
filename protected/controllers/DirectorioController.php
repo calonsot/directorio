@@ -148,6 +148,7 @@ class DirectorioController extends Controller
                     } elseif ($datos['super_usuario']==1 || in_array("biodiversitas", $tablas))
                     {
                         //parte de centro documental
+                        print_r($_POST['Documental']);
                         $model_c->attributes=$_POST['Documental'];
                         $model_c->fec_alta=self::fechaAlta();
                         $model_c->usuarios_id=Yii::app()->user->id_usuario;
@@ -158,8 +159,8 @@ class DirectorioController extends Controller
                         $model_m->usuarios_id=Yii::app()->user->id_usuario;
                         $model_m->id=$model->id;
 
-                        if ($datos['super_usuario']==1 || Yii::app()->user->id_usuario==5)
-                            $model_c->es_valido=1;
+                        //if ($datos['super_usuario']==1 || Yii::app()->user->id_usuario==5)
+                        //    $model_c->es_valido=1;
 
                         if (!$model_c->save() || !$model_m->save()) //salva la parte de medios
                             throw new CHttpException(NULL,'La acción de biodiversitas no se pudo completar, favor de intentarlo más tarde.');
@@ -1121,6 +1122,14 @@ class DirectorioController extends Controller
                         'name'=>$a,
                         'filter'=>array('1'=>'Sí','0'=>'No'),
                         'value'=>'($data->documental->confirmo=="1")?("Sí"):("No")',
+                    );
+                    break;
+
+                case 'es_valido_alt':
+                    $atributos[$contador]=array(
+                        'name'=>$a,
+                        'filter'=>array('1'=>'Sí','0'=>'No'),
+                        'value'=>'($data->documental->es_valido_alt=="1")?("Sí"):("No")',
                     );
                     break;
 

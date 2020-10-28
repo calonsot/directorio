@@ -191,6 +191,10 @@ $this->menu=array(
             'value'=>$model_c->confirmo==1 ? ("Sí"):("No"),
         ),
         array(
+            'name'=>'es_valido_alt',
+            'value'=>$model_c->es_valido_alt==1 ? ("Sí"):("No"),
+        ),
+        array(
             'name'=>'sigla_institucion',
             'value'=>$model_c->sigla_institucion,
         ),

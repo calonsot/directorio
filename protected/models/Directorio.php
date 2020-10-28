@@ -117,6 +117,7 @@ class Directorio extends CActiveRecord
      */
     public $es_valido;
     public $confirmo;
+    public $es_valido_alt;
     public $sigla_institucion;
     public $sigla_dependencia;
     public $dependencia;
@@ -165,7 +166,7 @@ class Directorio extends CActiveRecord
             array('id, es_internacional, es_internacional_alternativo, nombre, apellido, institucion, correo, correo_alternativo, correos, telefono_particular, telefono_oficina, telefono_casa, telefonos, puesto, adscripcion, nombre_asistente, apellido_asistente, pagina, red_social, direccion, direccion_alternativa, asentamiento, asentamiento_alternativo, municipio, municipio_alternativo, ciudad, ciudad_alternativa, estado, estado_alternativo, cp, cp_alternativo, observaciones, veces_consulta, domicilio_alt_principal, fec_alta, fec_act, usuarios_id, institucion_id, sector_id, paises_id, paises_id1, ciudad_id, ciudad_id1, fotos_id, codigo_postal_id, codigo_postal_id1, tipo_asentamiento_id, tipo_asentamiento_id1,
 				alias, telefonos_totales, correos_totales, tipo,
 				grupos_id, medio, tipo_medios_id, perfil_medio, programa, comunicados_prensa, ecos,
-				es_valido, confirmo, sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad',
+				es_valido, confirmo, es_valido_alt, sigla_institucion, sigla_dependencia, dependencia, subdependencia, actividad',
                 'safe', 'on'=>'search'),
         );
     }
@@ -354,6 +355,7 @@ class Directorio extends CActiveRecord
             //parte de documental
             'es_valido' => '¿Es válido para envío biodiversitas?',
             'confirmo' => '¿Confirmó datos para biodiversitas?',
+            'es_valido_alt' => 'Biodiversitas (alternativo)',
             'sigla_institucion' => 'Sigla institución',
             'sigla_dependencia' => 'Sigla dependencia',
             'dependencia' => 'Dependencia',
@@ -452,6 +454,7 @@ class Directorio extends CActiveRecord
         //parte de documental
         $criteria->compare('documental.es_valido', $this->es_valido);
         $criteria->compare('documental.confirmo', $this->confirmo);
+        $criteria->compare('documental.es_valido_alt', $this->es_valido_alt);
         $criteria->compare('documental.sigla_institucion', $this->sigla_institucion, true);
         $criteria->compare('documental.sigla_dependencia', $this->sigla_dependencia, true);
         $criteria->compare('documental.dependencia', $this->dependencia, true);
