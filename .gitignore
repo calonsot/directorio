@@ -9,3 +9,4 @@ protected/config/main.php
 .idea/
 assets/
 !assets/js
+protected/data/*.sql
