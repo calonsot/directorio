@@ -496,10 +496,10 @@ class ListasController extends Controller
 	public function imprimeListaWeb ($datos, $soloCorreos=null)
 	{
 		if ($soloCorreos)
-			$dat=split(",",$datos);
+			$dat=explode(",",$datos);
 
 		else
-			$dat=split("\n",str_replace('|', '*', $datos));
+			$dat=explode("\n",str_replace('|', '*', $datos));
 
 		$cadena='<ol>';
 
